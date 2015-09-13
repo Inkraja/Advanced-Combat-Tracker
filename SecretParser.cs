@@ -33,9 +33,11 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok; ***")]
-[assembly: AssemblyVersion("1.0.6.5")]
+[assembly: AssemblyVersion("1.0.6.6")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
+// Added Incoming Damage (crit%taken, pen&taken, ...) to chat export (Holok)
+// Add shiny colours to agis, bump version to 1.0.6.6 (Inkraja https://github.com/Inkraja/Advanced-Combat-Tracker)
 
 
 namespace SecretParse_Plugin
@@ -404,7 +406,14 @@ namespace SecretParse_Plugin
             "HPS",
             "HealCrit%",
             "Evade%",
-            "AegisMismatch%"});
+            "AegisMismatch%",
+			"damagetaken",
+			"crit%taken",
+			"pen%taken",
+			"glance%taken",
+			"block%taken",
+			"evade%taken",
+			});
             this.checkedListBox_ExportFields.Location = new System.Drawing.Point(222, 110);
             this.checkedListBox_ExportFields.Name = "checkedListBox_ExportFields";
             this.checkedListBox_ExportFields.Size = new System.Drawing.Size(227, 139);
@@ -920,6 +929,12 @@ namespace SecretParse_Plugin
             checkedListBox_ExportFields.SetItemChecked(6, true);  // HealCrit%
             checkedListBox_ExportFields.SetItemChecked(7, true);  // Evade%
             checkedListBox_ExportFields.SetItemChecked(8, false); // AegisMismatch%
+			checkedListBox_ExportFields.SetItemChecked(9, true);  // damagetaken
+			checkedListBox_ExportFields.SetItemChecked(10, true); // crit%taken
+			checkedListBox_ExportFields.SetItemChecked(11, true); // pen%taken
+			checkedListBox_ExportFields.SetItemChecked(12, true); // glance%taken
+			checkedListBox_ExportFields.SetItemChecked(13, true); // block%taken
+			checkedListBox_ExportFields.SetItemChecked(14, true); // evade%taken
 
             exportFieldMap.Add("dps", 0);
             exportFieldMap.Add("crit%", 1);
@@ -930,6 +945,12 @@ namespace SecretParse_Plugin
             exportFieldMap.Add("healcrit%", 6);
             exportFieldMap.Add("evade%", 7);
             exportFieldMap.Add("aegismismatch%", 8);
+			exportFieldMap.Add("damagetaken", 9);
+			exportFieldMap.Add("crit%taken", 10);
+			exportFieldMap.Add("pen%taken", 11);
+			exportFieldMap.Add("glancet%taken", 12);
+			exportFieldMap.Add("block%taken", 13);
+			exportFieldMap.Add("evade%taken", 14);
         }
 
 
@@ -1239,6 +1260,30 @@ namespace SecretParse_Plugin
                     return GetSpecialHitPerc(Data.Items[OUT_DAMAGE].Items[ALL], SecretLanguage.Blocked).ToString("0'%", usCulture);
                 case "AegisMismatch%":
                     return GetSpecialHitMissPerc(Data.Items[OUT_DAMAGE].Items[ALL], SecretLanguage.Aegis).ToString("0'%", usCulture);
+                default:
+                    return VarName;
+            }
+        }
+
+        private string CombatantFormatIncSwitch(CombatantData Data, string VarName, CultureInfo usCulture)
+        {
+            if (!Data.AllInc.ContainsKey(ALL))
+            {
+                return "0%";
+            }
+
+            switch (VarName)
+            {
+				case "crit%taken":
+					return Data.Items[INC_DAMAGE].Items[ALL].CritPerc.ToString("0'%", usCulture);
+				case "pen%taken":
+					return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Penetrated).ToString("0'%", usCulture);
+				case "glance%taken":
+					return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Glancing).ToString("0'%", usCulture);
+				case "block%taken":
+					return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Blocked).ToString("0'%", usCulture);
+				case "evade%taken":
+				double missperc = 100.0*Data.Items[INC_DAMAGE].Items[ALL].Misses/Data.Items[INC_DAMAGE].Items[ALL].Hits; return missperc.ToString("0'%", usCulture);
                 default:
                     return VarName;
             }
@@ -1581,7 +1626,7 @@ namespace SecretParse_Plugin
                 string hitpoints = encounter.Damage.ToString("#,##0", usCulture);
                 string hdrOutput = "";
                 string hdrDamage = "<font face=LARGE_BOLD color=red> --- Damage</font><br>";
-                string hdrHeal = "<font face=LARGE_BOLD color=#25d425 >--- Heal</font><br>";
+                string hdrHeal = "<font face=LARGE_BOLD color=#25d425 >--- Heal</font><font face=LARGE_BOLD color=#09e4ea > --- Tank</font><br>";
                 string hdrMax = "<font face=LARGE_BOLD color=#be09cc>--- Max</font><br>";
                 string lineReduced = "({0} more)<br>";
                 List<String> lineDamage = new List<String>();
@@ -1624,6 +1669,7 @@ namespace SecretParse_Plugin
                         combatant += AddChatScriptField(entry, "block%");
                         combatant += AddChatScriptField(entry, "evade%");
                         if (aegis_hp != 0) combatant += AddChatScriptField(entry, "aegismismatch%");
+
                         lineDamage.Add(combatant + "<br>");
                     }
                 }
@@ -1650,6 +1696,13 @@ namespace SecretParse_Plugin
                         string combatant = string.Format("{0}", tempName);
                         combatant += AddChatScriptField(entry, "hps");
                         combatant += AddChatScriptField(entry, "healcrit%");
+						combatant += AddChatScriptField(entry, "damagetaken");
+						combatant += AddChatScriptField(entry, "crit%taken");
+						combatant += AddChatScriptField(entry, "pen%taken");
+						combatant += AddChatScriptField(entry, "glance%taken");
+						combatant += AddChatScriptField(entry, "block%taken");
+						combatant += AddChatScriptField(entry, "evade%taken");
+						
                         lineHeal.Add(combatant + "<br>");
                     }
                 }
@@ -1889,6 +1942,25 @@ namespace SecretParse_Plugin
                     case "aegismismatch%":
                         AfterField = "a";
                         break;
+					case "damagetaken":
+					BeforeField += "<font color=#0af9ff>";
+					   AfterField += "k";
+						break;
+					case "crit%taken":
+						AfterField = "c";
+						break;
+					case "pen%taken":
+						AfterField = "p";
+						break;
+					case "glance%taken":
+						AfterField = "g";
+						break;
+					case "block%taken":
+						AfterField = "b";
+						break;
+					case "evade%taken":
+						AfterField = "e </font> ";
+						break;
                 }
                 return string.Format("{0}{1}{2}", BeforeField, entry[fieldName], AfterField);
             }
@@ -2105,6 +2177,7 @@ namespace SecretParse_Plugin
                     row["healing"] = data.Healed.ToString("#,##0", usCulture);
                     row["dmg_script"] = ConvertValue(data.Damage, usCulture);
                     row["healing_script"] = ConvertValue(data.Healed, usCulture);
+					row["tanked_script"] = ConvertValue(data.Damage, usCulture);
 
                     row["dps%"] = "--".Equals(data.DamagePercent) ? "n/a" : data.DamagePercent;
                     row["hps%"] = "--".Equals(data.HealedPercent) ? "n/a" : data.HealedPercent;
@@ -2132,7 +2205,13 @@ namespace SecretParse_Plugin
                     row["aegisheal_script"] = (aegis_heal != 0)? ConvertValue(aegis_heal, usCulture) : "";
                     row["aegishps"] = aegis_hps.ToString(GetFloatCommas(), usCulture);
                     row["aegismismatch%"] = CombatantFormatSwitch(data, "AegisMismatch%", usCulture);
-
+					row["damagetaken"] = data.DamageTaken.ToString("#,##0", usCulture);
+					row["crit%taken"] = CombatantFormatIncSwitch(data, "crit%taken", usCulture);
+					row["pen%taken"] = CombatantFormatIncSwitch(data, "pen%taken", usCulture);
+					row["glance%taken"] = CombatantFormatIncSwitch(data, "glance%taken", usCulture);
+					row["block%taken"] = CombatantFormatIncSwitch(data, "block%taken", usCulture);
+					row["evade%taken"] = CombatantFormatIncSwitch(data, "evade%taken", usCulture);
+					
                     string name = row["name"];
                     lines.Add(name, row);
                     displayOrder.Add(GetScriptKey(data.Damage, data.Healed, name), name);
@@ -2162,6 +2241,7 @@ namespace SecretParse_Plugin
                         att["hps%"] = "0%";
                         att["hps"] = "0";
                         att["healcrit%"] = "0%";
+
 
                         miss = 100.0f - data.ToHit;
                         aegis_dmg = GetSpecialHitData(item, SecretLanguage.Aegis);
@@ -2228,6 +2308,52 @@ namespace SecretParse_Plugin
                         embed[entry.Key] = att;
                     }
 
+					foreach (var entry in data.Items[INC_DAMAGE].Items)
+					{
+                        var item = entry.Value;
+                        if (ALL.Equals(entry.Key) || item.Damage < 1)
+                        {
+                            continue;
+                        }
+
+                        Dictionary<string, string> att;
+
+                        if (embed.ContainsKey(entry.Key))
+                        {
+                            att = embed[entry.Key];
+                        }
+                        else
+                        {
+                            att = new Dictionary<string, string>();
+                            att["name"] = entry.Key;
+                            att["death"] = "0";
+                            att["duration"] = "";
+                            att["dmg"] = "0";
+                            att["dps%"] = "0%";
+                            att["dps"] = "0";
+                            att["pen%"] = "0%";
+                            att["crit%"] = "0%";
+                            att["glance%"] = "0%";
+                            att["block%"] = "0%";
+                            att["evade%"] = "0";
+                            att["aegisdmg"] = "0";
+                            att["aegismismatch%"] = "0%";
+                            att["dmgKey"] = GetScriptKey(0);
+							att["healing"] = "0";
+							att["hps%"] = "0%";
+							att["hps"] = "0";
+							att["healcrit%"] = "0%";
+							att["healKey"] = GetScriptKey(0);                        
+							att["damagetaken"] = "0";
+							att["crit%taken"] = "0%";
+							att["pen%taken"] = "0%";
+							att["glance%taken"] = "0%";
+							att["blocked%taken"] = "0%";
+							att["evade%taken"] = "0%";
+						}
+						embed[entry.Key] = att;
+					}
+					
                     var embedOrder = new SortedDictionary<string, string>();
                     foreach (var item in embed.Values)
                     {
