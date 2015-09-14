@@ -948,7 +948,7 @@ namespace SecretParse_Plugin
 			exportFieldMap.Add("damagetaken", 9);
 			exportFieldMap.Add("crit%taken", 10);
 			exportFieldMap.Add("pen%taken", 11);
-			exportFieldMap.Add("glancet%taken", 12);
+			exportFieldMap.Add("glance%taken", 12);
 			exportFieldMap.Add("block%taken", 13);
 			exportFieldMap.Add("evade%taken", 14);
         }
@@ -1944,7 +1944,7 @@ namespace SecretParse_Plugin
                         break;
 					case "damagetaken":
 					BeforeField += "<font color=#0af9ff>";
-					   AfterField += "k";
+					   AfterField += "";
 						break;
 					case "crit%taken":
 						AfterField = "c";
@@ -2177,7 +2177,6 @@ namespace SecretParse_Plugin
                     row["healing"] = data.Healed.ToString("#,##0", usCulture);
                     row["dmg_script"] = ConvertValue(data.Damage, usCulture);
                     row["healing_script"] = ConvertValue(data.Healed, usCulture);
-					row["tanked_script"] = ConvertValue(data.Damage, usCulture);
 
                     row["dps%"] = "--".Equals(data.DamagePercent) ? "n/a" : data.DamagePercent;
                     row["hps%"] = "--".Equals(data.HealedPercent) ? "n/a" : data.HealedPercent;
@@ -2187,7 +2186,7 @@ namespace SecretParse_Plugin
 
                     row["crit%"] = "NaN".Equals(data.CritDamPerc) ? "0%" : data.CritDamPerc.ToString("0'%", usCulture);
                     row["healcrit%"] = "NaN".Equals(data.CritHealPerc) ? "0%" : data.CritHealPerc.ToString("0'%", usCulture);
-
+					
                     row["pen%"] = CombatantFormatSwitch(data, "Penetration%", usCulture);
                     row["glance%"] = CombatantFormatSwitch(data, "Glance%", usCulture);
                     row["block%"] = CombatantFormatSwitch(data, "Blocked%", usCulture);
@@ -2205,6 +2204,7 @@ namespace SecretParse_Plugin
                     row["aegisheal_script"] = (aegis_heal != 0)? ConvertValue(aegis_heal, usCulture) : "";
                     row["aegishps"] = aegis_hps.ToString(GetFloatCommas(), usCulture);
                     row["aegismismatch%"] = CombatantFormatSwitch(data, "AegisMismatch%", usCulture);
+
 					row["damagetaken"] = data.DamageTaken.ToString("#,##0", usCulture);
 					row["crit%taken"] = CombatantFormatIncSwitch(data, "crit%taken", usCulture);
 					row["pen%taken"] = CombatantFormatIncSwitch(data, "pen%taken", usCulture);
