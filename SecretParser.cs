@@ -16,6 +16,8 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Net;
 using System.Diagnostics;
+//Debug
+using System.Runtime.InteropServices;
 
 // There is no copyright on this code
 
@@ -32,8 +34,8 @@ using System.Diagnostics;
 
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
-[assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok; ***")]
-[assembly: AssemblyVersion("1.0.6.6")]
+[assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
+[assembly: AssemblyVersion("1.0.6.6001")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (crit%taken, pen&taken, ...) to chat export (Holok)
@@ -44,6 +46,11 @@ namespace SecretParse_Plugin
 {
     public class SecretParse : UserControl, IActPluginV1
     {
+        //Debug
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern void OutputDebugString(string message);
+        // /Debug
+
         #region Designer Created Code (Avoid editing)
 
         private System.ComponentModel.IContainer components = null;
@@ -66,6 +73,8 @@ namespace SecretParse_Plugin
             this.comboBox_Language = new System.Windows.Forms.ComboBox();
             this.checkBox_AutoCheck = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportScript = new System.Windows.Forms.CheckBox();
+            this.checkBox_ExportRoundDPS = new System.Windows.Forms.CheckBox();
+            this.checkBox_ExportColored = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportShowLegend = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportHtml = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportAllies = new System.Windows.Forms.CheckBox();
@@ -90,9 +99,9 @@ namespace SecretParse_Plugin
             this.labelFilterChars = new System.Windows.Forms.Label();
             this.checkedListBox_Filters = new System.Windows.Forms.CheckedListBox();
             this.SuspendLayout();
-            // 
+            //
             // labelHeader
-            // 
+            //
             this.labelHeader.AutoSize = true;
             this.labelHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelHeader.Location = new System.Drawing.Point(12, 9);
@@ -101,9 +110,9 @@ namespace SecretParse_Plugin
             this.labelHeader.TabIndex = 26;
             this.labelHeader.Text = "Secret Combat parser plugin Options";
             this.labelHeader.MouseHover += new System.EventHandler(this.label1_MouseHover);
-            // 
+            //
             // labelGeneral
-            // 
+            //
             this.labelGeneral.AutoSize = true;
             this.labelGeneral.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelGeneral.Location = new System.Drawing.Point(12, 28);
@@ -111,18 +120,18 @@ namespace SecretParse_Plugin
             this.labelGeneral.Size = new System.Drawing.Size(44, 13);
             this.labelGeneral.TabIndex = 27;
             this.labelGeneral.Text = "General";
-            // 
+            //
             // labelLanguage
-            // 
+            //
             this.labelLanguage.AutoSize = true;
             this.labelLanguage.Location = new System.Drawing.Point(12, 44);
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.Size = new System.Drawing.Size(55, 13);
             this.labelLanguage.TabIndex = 28;
             this.labelLanguage.Text = "Language";
-            // 
+            //
             // comboBox_Language
-            // 
+            //
             this.comboBox_Language.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Language.FormattingEnabled = true;
             this.comboBox_Language.Items.AddRange(new object[] {
@@ -135,9 +144,9 @@ namespace SecretParse_Plugin
             this.comboBox_Language.TabIndex = 1;
             this.comboBox_Language.SelectedIndexChanged += new System.EventHandler(this.comboBox_Language_SelectedIndexChanged);
             this.comboBox_Language.MouseHover += new System.EventHandler(this.comboBox_Language_MouseHover);
-            // 
+            //
             // checkBox_AutoCheck
-            // 
+            //
             this.checkBox_AutoCheck.AutoSize = true;
             this.checkBox_AutoCheck.Checked = true;
             this.checkBox_AutoCheck.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -148,9 +157,9 @@ namespace SecretParse_Plugin
             this.checkBox_AutoCheck.Text = "Auto check the web page for new version of the Secret Plugin";
             this.checkBox_AutoCheck.UseVisualStyleBackColor = true;
             this.checkBox_AutoCheck.MouseHover += new System.EventHandler(this.checkBox_AutoCheck_MouseHover);
-            // 
+            //
             // checkBox_ExportScript
-            // 
+            //
             this.checkBox_ExportScript.AutoSize = true;
             this.checkBox_ExportScript.Checked = true;
             this.checkBox_ExportScript.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -162,239 +171,261 @@ namespace SecretParse_Plugin
             this.checkBox_ExportScript.UseVisualStyleBackColor = true;
             this.checkBox_ExportScript.CheckedChanged += new System.EventHandler(this.checkBox_ExportScript_CheckedChanged);
             this.checkBox_ExportScript.MouseHover += new System.EventHandler(this.checkBox_ExportScript_MouseHover);
-            // 
+            //
+            // checkBox_ExportRoundDPS
+            //
+            this.checkBox_ExportRoundDPS.AutoSize = true;
+            this.checkBox_ExportRoundDPS.Location = new System.Drawing.Point(35, 94);
+            this.checkBox_ExportRoundDPS.Name = "checkBox_ExportRoundDPS";
+            this.checkBox_ExportRoundDPS.Size = new System.Drawing.Size(150, 17);
+            this.checkBox_ExportRoundDPS.TabIndex = 4;
+            this.checkBox_ExportRoundDPS.Text = "Round DPS / HPS values";
+            this.checkBox_ExportRoundDPS.UseVisualStyleBackColor = true;
+            this.checkBox_ExportRoundDPS.MouseHover += new System.EventHandler(this.checkBox_ExportRoundDPS_MouseHover);
+            //
             // checkBox_ExportShowLegend
-            // 
+            //
             this.checkBox_ExportShowLegend.AutoSize = true;
             this.checkBox_ExportShowLegend.Checked = true;
             this.checkBox_ExportShowLegend.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_ExportShowLegend.Location = new System.Drawing.Point(35, 94);
+            this.checkBox_ExportShowLegend.Location = new System.Drawing.Point(35, 110);
             this.checkBox_ExportShowLegend.Name = "checkBox_ExportShowLegend";
             this.checkBox_ExportShowLegend.Size = new System.Drawing.Size(155, 17);
-            this.checkBox_ExportShowLegend.TabIndex = 4;
+            this.checkBox_ExportShowLegend.TabIndex = 5;
             this.checkBox_ExportShowLegend.Text = "Show legend in TSW script";
             this.checkBox_ExportShowLegend.UseVisualStyleBackColor = true;
             this.checkBox_ExportShowLegend.MouseHover += new System.EventHandler(this.checkBox_ExportShowLegend_MouseHover);
-            // 
+            //
+            // checkBox_ExportColored
+            //
+            this.checkBox_ExportColored.AutoSize = true;
+            this.checkBox_ExportColored.Location = new System.Drawing.Point(35, 126);
+            this.checkBox_ExportColored.Name = "checkBox_ExportColored";
+            this.checkBox_ExportColored.Size = new System.Drawing.Size(150, 17);
+            this.checkBox_ExportColored.TabIndex = 6;
+            this.checkBox_ExportColored.Text = "Colored Chat";
+            this.checkBox_ExportColored.UseVisualStyleBackColor = true;
+            this.checkBox_ExportColored.MouseHover += new System.EventHandler(this.checkBox_ExportColored_MouseHover);
+            //
             // checkBox_ExportHtml
-            // 
+            //
             this.checkBox_ExportHtml.AutoSize = true;
             this.checkBox_ExportHtml.Checked = true;
             this.checkBox_ExportHtml.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_ExportHtml.Location = new System.Drawing.Point(15, 110);
+            this.checkBox_ExportHtml.Location = new System.Drawing.Point(15, 142);
             this.checkBox_ExportHtml.Name = "checkBox_ExportHtml";
             this.checkBox_ExportHtml.Size = new System.Drawing.Size(151, 17);
-            this.checkBox_ExportHtml.TabIndex = 5;
+            this.checkBox_ExportHtml.TabIndex = 7;
             this.checkBox_ExportHtml.Text = "Export results to TSW html";
             this.checkBox_ExportHtml.UseVisualStyleBackColor = true;
             this.checkBox_ExportHtml.MouseHover += new System.EventHandler(this.checkBox_ExportHtml_MouseHover);
-            // 
+            //
             // checkBox_ExportAllies
-            // 
+            //
             this.checkBox_ExportAllies.AutoSize = true;
             this.checkBox_ExportAllies.Checked = true;
             this.checkBox_ExportAllies.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_ExportAllies.Location = new System.Drawing.Point(15, 126);
+            this.checkBox_ExportAllies.Location = new System.Drawing.Point(15, 158);
             this.checkBox_ExportAllies.Name = "checkBox_ExportAllies";
             this.checkBox_ExportAllies.Size = new System.Drawing.Size(174, 17);
-            this.checkBox_ExportAllies.TabIndex = 6;
+            this.checkBox_ExportAllies.TabIndex = 8;
             this.checkBox_ExportAllies.Text = "Export results for raid/team only";
             this.checkBox_ExportAllies.UseVisualStyleBackColor = true;
             this.checkBox_ExportAllies.MouseHover += new System.EventHandler(this.checkBox_ExportAllies_MouseHover);
-            // 
+            //
             // checkBox_DontExportShortEnc
-            // 
+            //
             this.checkBox_DontExportShortEnc.AutoSize = true;
             this.checkBox_DontExportShortEnc.Checked = true;
             this.checkBox_DontExportShortEnc.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_DontExportShortEnc.Location = new System.Drawing.Point(15, 142);
+            this.checkBox_DontExportShortEnc.Location = new System.Drawing.Point(15, 174);
             this.checkBox_DontExportShortEnc.Name = "checkBox_DontExportShortEnc";
             this.checkBox_DontExportShortEnc.Size = new System.Drawing.Size(192, 17);
-            this.checkBox_DontExportShortEnc.TabIndex = 7;
+            this.checkBox_DontExportShortEnc.TabIndex = 9;
             this.checkBox_DontExportShortEnc.Text = "Dont export sub 10 sec encounters";
             this.checkBox_DontExportShortEnc.UseVisualStyleBackColor = true;
             this.checkBox_DontExportShortEnc.MouseHover += new System.EventHandler(this.checkBox_DontExportShortEnc_MouseHover);
-            // 
+            //
             // checkBox_EnableTSWAddon
-            // 
+            //
             this.checkBox_EnableTSWAddon.AutoSize = true;
-            this.checkBox_EnableTSWAddon.Location = new System.Drawing.Point(15, 158);
+            this.checkBox_EnableTSWAddon.Location = new System.Drawing.Point(15, 190);
             this.checkBox_EnableTSWAddon.Name = "checkBox_EnableTSWAddon";
             this.checkBox_EnableTSWAddon.Size = new System.Drawing.Size(183, 17);
-            this.checkBox_EnableTSWAddon.TabIndex = 8;
+            this.checkBox_EnableTSWAddon.TabIndex = 10;
             this.checkBox_EnableTSWAddon.Text = "Enable TSWACT Addon features";
             this.checkBox_EnableTSWAddon.UseVisualStyleBackColor = true;
             this.checkBox_EnableTSWAddon.CheckedChanged += new System.EventHandler(this.checkBox_EnableTSWAddon_CheckedChanged);
             this.checkBox_EnableTSWAddon.MouseHover += new System.EventHandler(this.checkBox_EnableTSWAddon_MouseHover);
-            // 
+            //
             // checkBox_AutofixDBConf
-            // 
+            //
             this.checkBox_AutofixDBConf.AutoSize = true;
-            this.checkBox_AutofixDBConf.Location = new System.Drawing.Point(35, 174);
+            this.checkBox_AutofixDBConf.Location = new System.Drawing.Point(35, 206);
             this.checkBox_AutofixDBConf.Name = "checkBox_AutofixDBConf";
             this.checkBox_AutofixDBConf.Size = new System.Drawing.Size(148, 17);
-            this.checkBox_AutofixDBConf.TabIndex = 9;
+            this.checkBox_AutofixDBConf.TabIndex = 11;
             this.checkBox_AutofixDBConf.Text = "Auto fix dbDebug.conf file";
             this.checkBox_AutofixDBConf.UseVisualStyleBackColor = true;
             this.checkBox_AutofixDBConf.MouseHover += new System.EventHandler(this.checkBox_AutofixDBConf_MouseHover);
-            // 
+            //
             // checkBox_HideUnknown
-            // 
+            //
             this.checkBox_HideUnknown.AutoSize = true;
-            this.checkBox_HideUnknown.Location = new System.Drawing.Point(15, 190);
+            this.checkBox_HideUnknown.Location = new System.Drawing.Point(15, 222);
             this.checkBox_HideUnknown.Name = "checkBox_HideUnknown";
             this.checkBox_HideUnknown.Size = new System.Drawing.Size(180, 17);
-            this.checkBox_HideUnknown.TabIndex = 10;
+            this.checkBox_HideUnknown.TabIndex = 12;
             this.checkBox_HideUnknown.Text = "Hide the TSW_Unknown entries";
             this.checkBox_HideUnknown.UseVisualStyleBackColor = true;
             this.checkBox_HideUnknown.MouseHover += new System.EventHandler(this.checkBox_HideUnknown_MouseHover);
-            // 
+            //
             // checkBox_SelfDamage
-            // 
+            //
             this.checkBox_SelfDamage.AutoSize = true;
-            this.checkBox_SelfDamage.Location = new System.Drawing.Point(15, 206);
+            this.checkBox_SelfDamage.Location = new System.Drawing.Point(15, 238);
             this.checkBox_SelfDamage.Name = "checkBox_SelfDamage";
             this.checkBox_SelfDamage.Size = new System.Drawing.Size(113, 17);
-            this.checkBox_SelfDamage.TabIndex = 11;
+            this.checkBox_SelfDamage.TabIndex = 13;
             this.checkBox_SelfDamage.Text = "Show self-damage";
             this.checkBox_SelfDamage.UseVisualStyleBackColor = true;
             this.checkBox_SelfDamage.MouseHover += new System.EventHandler(this.checkBox_SelfDamage_MouseHover);
-            // 
+            //
             // checkBox_SelfPlayerDamage
-            // 
+            //
             this.checkBox_SelfPlayerDamage.AutoSize = true;
-            this.checkBox_SelfPlayerDamage.Location = new System.Drawing.Point(35, 222);
+            this.checkBox_SelfPlayerDamage.Location = new System.Drawing.Point(35, 254);
             this.checkBox_SelfPlayerDamage.Name = "checkBox_SelfPlayerDamage";
             this.checkBox_SelfPlayerDamage.Size = new System.Drawing.Size(99, 17);
-            this.checkBox_SelfPlayerDamage.TabIndex = 12;
+            this.checkBox_SelfPlayerDamage.TabIndex = 14;
             this.checkBox_SelfPlayerDamage.Text = "Show by Player";
             this.checkBox_SelfPlayerDamage.UseVisualStyleBackColor = true;
             this.checkBox_SelfPlayerDamage.MouseHover += new System.EventHandler(this.checkBox_SelfPlayerDamage_MouseHover);
-            // 
+            //
             // checkBox_LimitNames
-            // 
+            //
             this.checkBox_LimitNames.AutoSize = true;
             this.checkBox_LimitNames.Checked = true;
             this.checkBox_LimitNames.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_LimitNames.Location = new System.Drawing.Point(15, 238);
+            this.checkBox_LimitNames.Location = new System.Drawing.Point(15, 270);
             this.checkBox_LimitNames.Name = "checkBox_LimitNames";
             this.checkBox_LimitNames.Size = new System.Drawing.Size(159, 17);
-            this.checkBox_LimitNames.TabIndex = 13;
+            this.checkBox_LimitNames.TabIndex = 15;
             this.checkBox_LimitNames.Text = "Limit playernames to 7 chars";
             this.checkBox_LimitNames.UseVisualStyleBackColor = true;
             this.checkBox_LimitNames.MouseHover += new System.EventHandler(this.checkBox_LimitNames_MouseHover);
-            // 
+            //
             // checkBox_ReduceAegis
-            // 
+            //
             this.checkBox_ReduceAegis.AutoSize = true;
-            this.checkBox_ReduceAegis.Location = new System.Drawing.Point(15, 254);
+            this.checkBox_ReduceAegis.Location = new System.Drawing.Point(15, 286);
             this.checkBox_ReduceAegis.Name = "checkBox_ReduceAegis";
             this.checkBox_ReduceAegis.Size = new System.Drawing.Size(142, 17);
-            this.checkBox_ReduceAegis.TabIndex = 14;
+            this.checkBox_ReduceAegis.TabIndex = 16;
             this.checkBox_ReduceAegis.Text = "Reduce Aegis on names";
             this.checkBox_ReduceAegis.UseVisualStyleBackColor = true;
             this.checkBox_ReduceAegis.MouseHover += new System.EventHandler(this.checkBox_ReduceAegis_MouseHover);
-            // 
+            //
             // labelFilterinig
-            // 
+            //
             this.labelFilterinig.AutoSize = true;
             this.labelFilterinig.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFilterinig.Location = new System.Drawing.Point(12, 299);
+            this.labelFilterinig.Location = new System.Drawing.Point(12, 321);
             this.labelFilterinig.Name = "labelFilterinig";
             this.labelFilterinig.Size = new System.Drawing.Size(43, 13);
-            this.labelFilterinig.TabIndex = 15;
+            this.labelFilterinig.TabIndex = 17;
             this.labelFilterinig.Text = "Filtering";
-            // 
+            //
             // checkBox_Filter
-            // 
+            //
             this.checkBox_Filter.AutoSize = true;
-            this.checkBox_Filter.Location = new System.Drawing.Point(15, 317);
+            this.checkBox_Filter.Location = new System.Drawing.Point(15, 339);
             this.checkBox_Filter.Name = "checkBox_Filter";
             this.checkBox_Filter.Size = new System.Drawing.Size(143, 17);
-            this.checkBox_Filter.TabIndex = 16;
+            this.checkBox_Filter.TabIndex = 18;
             this.checkBox_Filter.Text = "Enable character filtering";
             this.checkBox_Filter.UseVisualStyleBackColor = true;
             this.checkBox_Filter.CheckedChanged += new System.EventHandler(this.checkBox_Filter_CheckedChanged);
             this.checkBox_Filter.MouseHover += new System.EventHandler(this.checkBox_Filter_MouseHover);
-            // 
+            //
             // labelFilteringName
-            // 
+            //
             this.labelFilteringName.AutoSize = true;
-            this.labelFilteringName.Location = new System.Drawing.Point(12, 348);
+            this.labelFilteringName.Location = new System.Drawing.Point(12, 370);
             this.labelFilteringName.Name = "labelFilteringName";
             this.labelFilteringName.Size = new System.Drawing.Size(35, 13);
-            this.labelFilteringName.TabIndex = 17;
+            this.labelFilteringName.TabIndex = 19;
             this.labelFilteringName.Text = "Name";
-            // 
+            //
             // textBox_FilterName
-            // 
+            //
             this.textBox_FilterName.Enabled = false;
-            this.textBox_FilterName.Location = new System.Drawing.Point(53, 345);
+            this.textBox_FilterName.Location = new System.Drawing.Point(53, 367);
             this.textBox_FilterName.MaxLength = 32;
             this.textBox_FilterName.Name = "textBox_FilterName";
             this.textBox_FilterName.Size = new System.Drawing.Size(149, 20);
-            this.textBox_FilterName.TabIndex = 18;
+            this.textBox_FilterName.TabIndex = 20;
             this.textBox_FilterName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_FilterName_KeyDown);
             this.textBox_FilterName.MouseHover += new System.EventHandler(this.textBox_FilterName_MouseHover);
-            // 
+            //
             // button_AddCharacter
-            // 
+            //
             this.button_AddCharacter.Enabled = false;
-            this.button_AddCharacter.Location = new System.Drawing.Point(53, 371);
+            this.button_AddCharacter.Location = new System.Drawing.Point(15, 393);
             this.button_AddCharacter.Name = "button_AddCharacter";
-            this.button_AddCharacter.Size = new System.Drawing.Size(89, 26);
-            this.button_AddCharacter.TabIndex = 19;
+            this.button_AddCharacter.Size = new System.Drawing.Size(83, 26);
+            this.button_AddCharacter.TabIndex = 21;
             this.button_AddCharacter.Text = "Add";
             this.button_AddCharacter.UseVisualStyleBackColor = true;
             this.button_AddCharacter.Click += new System.EventHandler(this.button_AddCharacter_Click);
             this.button_AddCharacter.MouseHover += new System.EventHandler(this.button_AddCharacter_MouseHover);
-            // 
+            //
             // button_DeleteCharacter
-            // 
+            //
             this.button_DeleteCharacter.Enabled = false;
-            this.button_DeleteCharacter.Location = new System.Drawing.Point(53, 403);
+            this.button_DeleteCharacter.Location = new System.Drawing.Point(119, 393);
             this.button_DeleteCharacter.Name = "button_DeleteCharacter";
-            this.button_DeleteCharacter.Size = new System.Drawing.Size(89, 26);
-            this.button_DeleteCharacter.TabIndex = 20;
+            this.button_DeleteCharacter.Size = new System.Drawing.Size(83, 26);
+            this.button_DeleteCharacter.TabIndex = 22;
             this.button_DeleteCharacter.Text = "Delete";
             this.button_DeleteCharacter.UseVisualStyleBackColor = true;
             this.button_DeleteCharacter.Click += new System.EventHandler(this.button_DeleteCharacter_Click);
             this.button_DeleteCharacter.MouseHover += new System.EventHandler(this.button_DeleteCharacter_MouseHover);
-            // 
+            //
             // checkBox_filterExclude
-            // 
+            //
             this.checkBox_filterExclude.AutoSize = true;
             this.checkBox_filterExclude.Location = new System.Drawing.Point(15, 435);
             this.checkBox_filterExclude.Name = "checkBox_filterExclude";
             this.checkBox_filterExclude.Size = new System.Drawing.Size(107, 17);
-            this.checkBox_filterExclude.TabIndex = 21;
+            this.checkBox_filterExclude.TabIndex = 23;
             this.checkBox_filterExclude.Text = "Exclusive filtering";
             this.checkBox_filterExclude.UseVisualStyleBackColor = true;
             this.checkBox_filterExclude.MouseHover += new System.EventHandler(this.checkBox_filterExclude_MouseHover);
-            // 
+            //
             // checkBox_filterScript
-            // 
+            //
             this.checkBox_filterScript.AutoSize = true;
             this.checkBox_filterScript.Location = new System.Drawing.Point(15, 458);
             this.checkBox_filterScript.Name = "checkBox_filterScript";
             this.checkBox_filterScript.Size = new System.Drawing.Size(131, 17);
-            this.checkBox_filterScript.TabIndex = 22;
+            this.checkBox_filterScript.TabIndex = 24;
             this.checkBox_filterScript.Text = "Filter Generated Script";
             this.checkBox_filterScript.UseVisualStyleBackColor = true;
             this.checkBox_filterScript.MouseHover += new System.EventHandler(this.checkBox_filterScript_MouseHover);
-            // 
+            //
             // labelChatExport
-            // 
+            //
             this.labelChatExport.AutoSize = true;
             this.labelChatExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelChatExport.Location = new System.Drawing.Point(275, 92);
             this.labelChatExport.Name = "labelChatExport";
             this.labelChatExport.Size = new System.Drawing.Size(92, 13);
-            this.labelChatExport.TabIndex = 23;
+            this.labelChatExport.TabIndex = 25;
             this.labelChatExport.Text = "Chat Export Fields";
-            // 
+            //
             // checkedListBox_ExportFields
-            // 
+            //
             this.checkedListBox_ExportFields.Enabled = false;
             this.checkedListBox_ExportFields.FormattingEnabled = true;
             this.checkedListBox_ExportFields.Items.AddRange(new object[] {
@@ -407,41 +438,40 @@ namespace SecretParse_Plugin
             "HealCrit%",
             "Evade%",
             "AegisMismatch%",
-			"damagetaken",
-			"crit%taken",
-			"pen%taken",
-			"glance%taken",
-			"block%taken",
-			"evade%taken",
-			});
+            "takenDamage",
+            "takenCrit%",
+            "takenPen%",
+            "takenGlance%",
+            "takenBlock%",
+            "takenEvade%"});
             this.checkedListBox_ExportFields.Location = new System.Drawing.Point(222, 110);
             this.checkedListBox_ExportFields.Name = "checkedListBox_ExportFields";
             this.checkedListBox_ExportFields.Size = new System.Drawing.Size(227, 139);
-            this.checkedListBox_ExportFields.TabIndex = 24;
-            // 
+            this.checkedListBox_ExportFields.TabIndex = 26;
+            //
             // labelFilterChars
-            // 
+            //
             this.labelFilterChars.AutoSize = true;
             this.labelFilterChars.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelFilterChars.Location = new System.Drawing.Point(275, 261);
             this.labelFilterChars.Name = "labelFilterChars";
             this.labelFilterChars.Size = new System.Drawing.Size(83, 13);
-            this.labelFilterChars.TabIndex = 25;
+            this.labelFilterChars.TabIndex = 27;
             this.labelFilterChars.Text = "Filter Characters";
-            // 
+            //
             // checkedListBox_Filters
-            // 
+            //
             this.checkedListBox_Filters.Enabled = false;
             this.checkedListBox_Filters.FormattingEnabled = true;
             this.checkedListBox_Filters.Location = new System.Drawing.Point(222, 279);
             this.checkedListBox_Filters.Name = "checkedListBox_Filters";
             this.checkedListBox_Filters.Size = new System.Drawing.Size(227, 199);
-            this.checkedListBox_Filters.TabIndex = 26;
+            this.checkedListBox_Filters.TabIndex = 28;
             this.checkedListBox_Filters.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox_Filters_ItemCheck);
             this.checkedListBox_Filters.MouseHover += new System.EventHandler(this.checkedListBox_Filters_MouseHover);
-            // 
+            //
             // SecretParse
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.checkBox_SelfPlayerDamage);
@@ -451,7 +481,9 @@ namespace SecretParse_Plugin
             this.Controls.Add(this.comboBox_Language);
             this.Controls.Add(this.checkBox_AutoCheck);
             this.Controls.Add(this.checkBox_ExportScript);
+            this.Controls.Add(this.checkBox_ExportRoundDPS);
             this.Controls.Add(this.checkBox_ExportShowLegend);
+            this.Controls.Add(this.checkBox_ExportColored);
             this.Controls.Add(this.checkBox_ExportHtml);
             this.Controls.Add(this.checkBox_ExportAllies);
             this.Controls.Add(this.checkBox_DontExportShortEnc);
@@ -488,7 +520,9 @@ namespace SecretParse_Plugin
         private ComboBox comboBox_Language;
         private System.Windows.Forms.CheckBox checkBox_AutoCheck;
         private System.Windows.Forms.CheckBox checkBox_ExportScript;
+        private CheckBox checkBox_ExportRoundDPS;
         private System.Windows.Forms.CheckBox checkBox_ExportShowLegend;
+        private System.Windows.Forms.CheckBox checkBox_ExportColored;
         private CheckBox checkBox_ExportHtml;
         private CheckBox checkBox_ExportAllies;
         private CheckBox checkBox_DontExportShortEnc;
@@ -524,6 +558,7 @@ namespace SecretParse_Plugin
         private const string OUT_HEAL = "Healed (Out)";
         private const string ALL_OUTGOING = "All Outgoing (Ref)";
         private const string INC_DAMAGE = "Incoming Damage";
+        private const int CHAT_LIMIT = 2300;
         private Label lblStatus;
         private TreeNode optionsNode = null;
         private string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Secret.config.xml");
@@ -547,7 +582,7 @@ namespace SecretParse_Plugin
         private static Regex timeStamp = new Regex(@"^(\[[0-9]{2}:[0-9]{2}:[0-9]{2}\]\s*)+", RegexOptions.Compiled);
         private static Regex fontHtml = new Regex(@"</?font[^>]*>", RegexOptions.Compiled);
         private static string BUFFS = "BUFFS";
-        private static string HTML_HEADER = @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Strict//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd""> 
+        private static string HTML_HEADER = @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Strict//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"">
 <html xmlns=""http://www.w3.org/1999/xhtml"" lang=""en-US"">
 <head>
 	<meta charset=""utf-8"">
@@ -558,7 +593,7 @@ namespace SecretParse_Plugin
 			$(""#tabs li:first"").attr(""id"",""current"");
 			$(""#content div:first"").fadeIn();
 			$('#tabs a').click(function(e) {
-				e.preventDefault();        
+				e.preventDefault();
 				$(""#content div"").hide();
 				$(""#tabs li"").attr(""id"","""");
 				$(this).parent().attr(""id"",""current"");
@@ -738,7 +773,7 @@ namespace SecretParse_Plugin
 		<li class=""title"">total: {3} dmg, {1} dps in {2}</li>
 	</ul>";
         private static string HTML_TABLE_DAMAGE = @"
-	<div id=""content""> 
+	<div id=""content"">
 		<div id=""tab1"">
 			<table>
 				<thead>
@@ -929,12 +964,12 @@ namespace SecretParse_Plugin
             checkedListBox_ExportFields.SetItemChecked(6, true);  // HealCrit%
             checkedListBox_ExportFields.SetItemChecked(7, true);  // Evade%
             checkedListBox_ExportFields.SetItemChecked(8, false); // AegisMismatch%
-			checkedListBox_ExportFields.SetItemChecked(9, true);  // damagetaken
-			checkedListBox_ExportFields.SetItemChecked(10, true); // crit%taken
-			checkedListBox_ExportFields.SetItemChecked(11, true); // pen%taken
-			checkedListBox_ExportFields.SetItemChecked(12, true); // glance%taken
-			checkedListBox_ExportFields.SetItemChecked(13, true); // block%taken
-			checkedListBox_ExportFields.SetItemChecked(14, true); // evade%taken
+            checkedListBox_ExportFields.SetItemChecked(9, true);  // takenDamage
+            checkedListBox_ExportFields.SetItemChecked(10, true); // takenCrit%
+            checkedListBox_ExportFields.SetItemChecked(11, true); // takenPen%
+            checkedListBox_ExportFields.SetItemChecked(12, true); // takenGlance%
+            checkedListBox_ExportFields.SetItemChecked(13, true); // takenBlock%
+            checkedListBox_ExportFields.SetItemChecked(14, true); // takenEvade%
 
             exportFieldMap.Add("dps", 0);
             exportFieldMap.Add("crit%", 1);
@@ -945,12 +980,12 @@ namespace SecretParse_Plugin
             exportFieldMap.Add("healcrit%", 6);
             exportFieldMap.Add("evade%", 7);
             exportFieldMap.Add("aegismismatch%", 8);
-			exportFieldMap.Add("damagetaken", 9);
-			exportFieldMap.Add("crit%taken", 10);
-			exportFieldMap.Add("pen%taken", 11);
-			exportFieldMap.Add("glance%taken", 12);
-			exportFieldMap.Add("block%taken", 13);
-			exportFieldMap.Add("evade%taken", 14);
+            exportFieldMap.Add("takendamage", 9);
+            exportFieldMap.Add("takencrit%", 10);
+            exportFieldMap.Add("takenpen%", 11);
+            exportFieldMap.Add("takenglance%", 12);
+            exportFieldMap.Add("takenblock%", 13);
+            exportFieldMap.Add("takenevade%", 14);
         }
 
 
@@ -1208,7 +1243,7 @@ namespace SecretParse_Plugin
         }
 
         private int GetSpecialHitMiss(AttackType Data, string specialName)
-        {   
+        {
             int count = 0;
 
             foreach (var swing in Data.Items)
@@ -1218,7 +1253,7 @@ namespace SecretParse_Plugin
                     ++count;
                 }
             }
-            
+
             return count;
         }
 
@@ -1274,19 +1309,20 @@ namespace SecretParse_Plugin
 
             switch (VarName)
             {
-				case "crit%taken":
-					return Data.Items[INC_DAMAGE].Items[ALL].CritPerc.ToString("0'%", usCulture);
-				case "pen%taken":
-					return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Penetrated).ToString("0'%", usCulture);
-				case "glance%taken":
-					return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Glancing).ToString("0'%", usCulture);
-				case "block%taken":
-					return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Blocked).ToString("0'%", usCulture);
-				case "evade%taken":
-				double missperc = 100.0*Data.Items[INC_DAMAGE].Items[ALL].Misses/Data.Items[INC_DAMAGE].Items[ALL].Hits; return missperc.ToString("0'%", usCulture);
+                case "takencrit%":
+                    return Data.Items[INC_DAMAGE].Items[ALL].CritPerc.ToString("0'%", usCulture);
+                case "takenpen%":
+                    return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Penetrated).ToString("0'%", usCulture);
+                case "takenglance%":
+                    return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Glancing).ToString("0'%", usCulture);
+                case "takenblock%":
+                    return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Blocked).ToString("0'%", usCulture);
+                case "takenevade%":
+                    double missperc = 100.0*Data.Items[INC_DAMAGE].Items[ALL].Misses/Data.Items[INC_DAMAGE].Items[ALL].Hits;
+                    return missperc.ToString("0'%", usCulture);
                 default:
                     return VarName;
-            }
+             }
         }
 
         private void SetupSecretEnglishEnvironment()
@@ -1308,12 +1344,12 @@ namespace SecretParse_Plugin
               {"All Incoming (Ref)",new CombatantData.DamageTypeDef("All Incoming (Ref)", 0, Color.Black)}
             };
             CombatantData.SwingTypeToDamageTypeDataLinksOutgoing = new SortedDictionary<int, List<string>>
-            { 
+            {
               {1, new List<string> { OUT_DAMAGE, "Outgoing Damage" } },
               {3, new List<string> { OUT_HEAL, "Outgoing Heal (Out)" } },
             };
             CombatantData.SwingTypeToDamageTypeDataLinksIncoming = new SortedDictionary<int, List<string>>
-            { 
+            {
               {1, new List<string> { INC_DAMAGE } },
               {2, new List<string> { INC_DAMAGE } },
               {3, new List<string> { "Healed (Inc)" } },
@@ -1337,7 +1373,7 @@ namespace SecretParse_Plugin
                 EncounterData.ColumnDefs.Add("AegisDPS", new EncounterData.ColumnDef("AegisDPS", false, "FLOAT", "AegisDPS", (Data) => { return CalcDataPS(GetSpecialHitData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(GetFloatCommas()); }, (Data) => { return CalcDataPS(GetSpecialHitData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(); }));
                 EncounterData.ColumnDefs.Add("AegisHeal", new EncounterData.ColumnDef("AegisHeal", false, "INT", "AegisHeal", (Data) => { return GetSpecialHealData(Data, SecretLanguage.Aegis).ToString(GetIntCommas()); }, (Data) => { return GetSpecialHealData(Data, SecretLanguage.Aegis).ToString(); }));
                 EncounterData.ColumnDefs.Add("AegisHPS", new EncounterData.ColumnDef("AegisHPS", false, "FLOAT", "AegisHPS", (Data) => { return CalcDataPS(GetSpecialHealData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(GetFloatCommas()); }, (Data) => { return CalcDataPS(GetSpecialHealData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(); }));
-                
+
                 // Columns "Encounter View Options"
                 CombatantData.ColumnDefs.Remove("Cures");
                 CombatantData.ColumnDefs.Remove("PowerDrain");
@@ -1606,6 +1642,7 @@ namespace SecretParse_Plugin
                 }
             }
         }
+
         private string AddString(string Complete, string Add)
         {
             string Result = "";
@@ -1613,26 +1650,29 @@ namespace SecretParse_Plugin
             Result += Add;
             return Result;
         }
+
         private void GenerateChatScript(EncounterData encounter, CultureInfo usCulture, Dictionary<string, Dictionary<string, string>> lines, SortedDictionary<string, string> displayOrder, SortedDictionary<string, string> displayOrderHealers)
         {
             string scriptFolder = GetScriptFolder();
             if (Directory.Exists(scriptFolder))
             {
                 const int NameLength = 7;
-                const int maxOutput = 2300;
                 StringBuilder line = new StringBuilder();
+                bool exportColored = checkBox_ExportColored.Checked;
                 string title = encounter.Title;
                 string combat_duration = encounter.Duration.TotalSeconds > 599 ? encounter.DurationS : encounter.DurationS.Substring(1, 4);
                 string hitpoints = encounter.Damage.ToString("#,##0", usCulture);
                 string hdrOutput = "";
-                string hdrDamage = "<font face=LARGE_BOLD color=red> --- Damage</font><br>";
-                string hdrHeal = "<font face=LARGE_BOLD color=#25d425 >--- Heal</font><font face=LARGE_BOLD color=#09e4ea > --- Tank</font><br>";
-                string hdrMax = "<font face=LARGE_BOLD color=#be09cc>--- Max</font><br>";
+                string hdrDamage = exportColored ? "<font face=LARGE_BOLD color=red>--- Damage</font><br>" : "--- Damage<br>";
+                string hdrHeal = exportColored ? "<font face=LARGE_BOLD color=#25d425>--- Heal</font><br>" : "--- Heal<br>";
+                string hdrTank = exportColored ? "<font face=LARGE_BOLD color=#09e4ea>--- Tank</font><br>" : "--- Tank<br>";
+                string hdrMax = exportColored ? "<font face=LARGE_BOLD color=#be09cc>--- Max</font><br>" : "--- Max<br>";
                 string lineReduced = "({0} more)<br>";
                 List<String> lineDamage = new List<String>();
                 List<String> lineHeal = new List<String>();
+                List<String> lineTank = new List<String>();
                 List<String> lineMax = new List<String>();
-                
+
                 // Gather data for damage, heal and max
                 int aegis_hp = GetSpecialHitData(encounter, SecretLanguage.Aegis);
                 if (aegis_hp != 0)
@@ -1669,7 +1709,6 @@ namespace SecretParse_Plugin
                         combatant += AddChatScriptField(entry, "block%");
                         combatant += AddChatScriptField(entry, "evade%");
                         if (aegis_hp != 0) combatant += AddChatScriptField(entry, "aegismismatch%");
-
                         lineDamage.Add(combatant + "<br>");
                     }
                 }
@@ -1696,14 +1735,37 @@ namespace SecretParse_Plugin
                         string combatant = string.Format("{0}", tempName);
                         combatant += AddChatScriptField(entry, "hps");
                         combatant += AddChatScriptField(entry, "healcrit%");
-						combatant += AddChatScriptField(entry, "damagetaken");
-						combatant += AddChatScriptField(entry, "crit%taken");
-						combatant += AddChatScriptField(entry, "pen%taken");
-						combatant += AddChatScriptField(entry, "glance%taken");
-						combatant += AddChatScriptField(entry, "block%taken");
-						combatant += AddChatScriptField(entry, "evade%taken");
-						
                         lineHeal.Add(combatant + "<br>");
+                    }
+                }
+
+                if (IsExportFieldSet("takenDamage") || IsExportFieldSet("takenCrit%") || IsExportFieldSet("takenPen%") || IsExportFieldSet("takenGlance%") || IsExportFieldSet("takenBlock%") || IsExportFieldSet("takenEvade%"))
+                {
+                    foreach (var name in displayOrder.Values)
+                    {
+                        Dictionary<string, string> entry = lines[name];
+                        if ("0".Equals(entry["takendamage"]))
+                        {
+                            continue;
+                        }
+
+                        string tempName = name;
+                        if (checkBox_LimitNames.Checked)
+                        {
+                            if (name.Length > NameLength)
+                            {
+                                tempName = name.Substring(0, NameLength);
+                            }
+                        }
+
+                        string combatant = string.Format("{0}", tempName);
+                        combatant += AddChatScriptField(entry, "takendamage");
+                        combatant += AddChatScriptField(entry, "takenpen%");
+                        combatant += AddChatScriptField(entry, "takencrit%");
+                        combatant += AddChatScriptField(entry, "takenglance%");
+                        combatant += AddChatScriptField(entry, "takenblock%");
+                        combatant += AddChatScriptField(entry, "takenevade%");
+                        lineTank.Add(combatant + "<br>");
                     }
                 }
 
@@ -1712,7 +1774,7 @@ namespace SecretParse_Plugin
                     string maxHit;
                     string maxHeal;
                     string maxDamage;
-                    
+
                     GetMaxText(encounter.GetAllies(), true, usCulture, out maxHit, out maxHeal, out maxDamage);
                     if (maxHit.Length > 0)
                     {
@@ -1729,16 +1791,16 @@ namespace SecretParse_Plugin
                         lineMax.Add(string.Format("Incoming: {0}<br>", maxDamage));
                     }
                 }
-                
+
                 string Expl = "";
                 if (checkBox_ExportShowLegend.Checked)
                 {
                     if (aegis_hp != 0) Expl = AddString(Expl, "[aegis]");
-                    if (IsExportFieldSet("pen%")) Expl = AddString(Expl, "p=pen");
-                    if (IsExportFieldSet("crit%")) Expl = AddString(Expl, "c=crit");
-                    if (IsExportFieldSet("glance%")) Expl = AddString(Expl, "g=glance");
-                    if (IsExportFieldSet("block%")) Expl = AddString(Expl, "b=block");
-                    if (IsExportFieldSet("evade%")) Expl = AddString(Expl, "e=evade");
+                    if (IsExportFieldSet("pen%") || IsExportFieldSet("takenpen%")) Expl = AddString(Expl, "p=pen");
+                    if (IsExportFieldSet("crit%") || IsExportFieldSet("takencrit%") || IsExportFieldSet("healcrit%")) Expl = AddString(Expl, "c=crit");
+                    if (IsExportFieldSet("glance%") || IsExportFieldSet("takenglance%")) Expl = AddString(Expl, "g=glance");
+                    if (IsExportFieldSet("block%") || IsExportFieldSet("takenblock%")) Expl = AddString(Expl, "b=block");
+                    if (IsExportFieldSet("evade%") || IsExportFieldSet("takenevade%")) Expl = AddString(Expl, "e=evade");
                     if (IsExportFieldSet("aegismismatch%") && (aegis_hp != 0)) Expl = AddString(Expl, "a=aegis mismatch");
                     Expl = "<br><font face=HUGE color=#828282>" + Expl + "</font>";
                 }
@@ -1756,6 +1818,11 @@ namespace SecretParse_Plugin
                     line.Append(hdrHeal);
                     line.Append("{1}</div><br><div>");
                 }
+                if (lineTank.Count > 0)
+                {
+                    line.Append(hdrTank);
+                    line.Append("{2}</div><br><div>");
+                }
                 if (lineMax.Count > 0)
                 {
                     line.Append(hdrMax);
@@ -1770,21 +1837,25 @@ namespace SecretParse_Plugin
 
                 int DmgLen = GetTotalLength(lineDamage);
                 int HealLen = GetTotalLength(lineHeal);
+                int TankLen = GetTotalLength(lineTank);
 
                 int limitDamage = DmgLen;
                 int limitHeal = HealLen;
+                int limitTank = TankLen;
 
-                if (line.Length + DmgLen + HealLen > maxOutput)
+                if (line.Length + DmgLen + HealLen + TankLen > CHAT_LIMIT)
                 {
-                    int countData = maxOutput - line.Length;
-                    float Ratio = (float)countData / (float)(DmgLen + HealLen);
+                    int countData = CHAT_LIMIT - line.Length;
+                    float Ratio = (float)countData / (float)(DmgLen + HealLen + TankLen);
 
                     limitDamage = (int)Math.Round(DmgLen * Ratio);
                     limitHeal = (int)Math.Round(HealLen * Ratio);
+                    limitTank = (int)Math.Round(TankLen * Ratio);
                 }
 
                 string outDamage = "";
                 string outHeal = "";
+                string outTank = "";
 
                 for (var i = 0; i < lineDamage.Count; i++)
                 {
@@ -1812,7 +1883,20 @@ namespace SecretParse_Plugin
                     }
                 }
 
-                string output = string.Format(line.ToString(), outDamage, outHeal);
+                for (var i = 0; i < lineTank.Count; i++)
+                {
+                    if (outTank.Length + lineTank[i].Length <= limitTank)
+                    {
+                        outTank += lineTank[i];
+                    }
+                    else
+                    {
+                        outTank += string.Format(lineReduced, lineTank.Count - i);
+                        break;
+                    }
+                }
+
+                string output = string.Format(line.ToString(), outDamage, outHeal, outTank);
 
                 try
                 {
@@ -1822,7 +1906,7 @@ namespace SecretParse_Plugin
                     }
                     using (TextWriter writer = new StreamWriter(Path.Combine(scriptFolder, "acttell"), false, Encoding.GetEncoding(1252)))
                     {
-                        writer.WriteLine("/w %1 " + output);
+                        writer.WriteLine(SecretLanguage.WhisperCmd + " %1 " + output);
                     }
                 }
                 catch (Exception)
@@ -1905,20 +1989,21 @@ namespace SecretParse_Plugin
             {
                 string BeforeField = " - ";
                 string AfterField = "";
+                bool exportColored = checkBox_ExportColored.Checked;
                 switch (fieldName)
                 {
                     case "dps":
                         BeforeField += entry["dmg_script"] + " ";
-                        if (entry["aegisdmg_script"] != "") BeforeField += "<font color=#1cbcea>[" + entry["aegisdmg_script"] + "]</font> ";
+                        if (entry["aegisdmg_script"] != "") BeforeField += (exportColored ? "<font color=#1cbcea>[" : "[") + entry["aegisdmg_script"] + (exportColored ? "]</font> " : "] ");
                         BeforeField += "(";
-                        if (entry["aegisdmg_script"] != "") AfterField += "<font color=#1cbcea> [" + entry["aegisdps"] + "]</font>";
+                        if (entry["aegisdmg_script"] != "") AfterField += (exportColored ? " <font color=#1cbcea>[" : " [") + entry["aegisdps"] + (exportColored ? "]</font>" : "]");
                         AfterField += " dps in " + entry["duration"] + ")";
                         break;
                     case "hps":
                         BeforeField += entry["healing_script"] + " ";
-                        if (entry["aegisheal_script"] != "") BeforeField += "<font color=#1cbcea>[" + entry["aegisheal_script"] + "]</font> ";
+                        if (entry["aegisheal_script"] != "") BeforeField += (exportColored ? "<font color=#1cbcea>[" : "[") + entry["aegisheal_script"] + (exportColored ? "]</font> " : "] ");
                         BeforeField += "(";
-                        if (entry["aegisheal_script"] != "") AfterField += " <font color=#1cbcea>[" + entry["aegishps"] + "]</font>";
+                        if (entry["aegisheal_script"] != "") AfterField += (exportColored ? " <font color=#1cbcea>[" : " [") + entry["aegishps"] + (exportColored ? "]</font>" : "]");
                         AfterField += " hps)";
                         break;
                     case "pen%":
@@ -1934,7 +2019,7 @@ namespace SecretParse_Plugin
                         AfterField = "b";
                         break;
                     case "healcrit%":
-                        AfterField = " crit";
+                        AfterField = "c";
                         break;
                     case "evade%":
                         AfterField = "e";
@@ -1942,25 +2027,24 @@ namespace SecretParse_Plugin
                     case "aegismismatch%":
                         AfterField = "a";
                         break;
-					case "damagetaken":
-					BeforeField += "<font color=#0af9ff>";
-					   AfterField += "";
-						break;
-					case "crit%taken":
-						AfterField = "c";
-						break;
-					case "pen%taken":
-						AfterField = "p";
-						break;
-					case "glance%taken":
-						AfterField = "g";
-						break;
-					case "block%taken":
-						AfterField = "b";
-						break;
-					case "evade%taken":
-						AfterField = "e </font> ";
-						break;
+                    case "takendamage":
+                        AfterField += "";
+                        break;
+                    case "takencrit%":
+                        AfterField = "c";
+                        break;
+                    case "takenpen%":
+                        AfterField = "p";
+                        break;
+                    case "takenglance%":
+                        AfterField = "g";
+                        break;
+                    case "takenblock%":
+                        AfterField = "b";
+                        break;
+                    case "takenevade%":
+                        AfterField = "e";
+                        break;
                 }
                 return string.Format("{0}{1}{2}", BeforeField, entry[fieldName], AfterField);
             }
@@ -2139,7 +2223,7 @@ namespace SecretParse_Plugin
                     allies.Add(ally.Name);
                 }
             }
-
+            bool round_dps = checkBox_ExportRoundDPS.Checked;
             foreach (var data in encounter.Items.Values)
             {
                 try
@@ -2181,12 +2265,12 @@ namespace SecretParse_Plugin
                     row["dps%"] = "--".Equals(data.DamagePercent) ? "n/a" : data.DamagePercent;
                     row["hps%"] = "--".Equals(data.HealedPercent) ? "n/a" : data.HealedPercent;
 
-                    row["dps"] = "NaN".Equals(data.DPS) ? "0" : data.DPS.ToString(GetFloatCommas(), usCulture);
-                    row["hps"] = "NaN".Equals(data.EncHPS) ? "0" : data.EncHPS.ToString(GetFloatCommas(), usCulture);
+                    row["dps"] = "NaN".Equals(data.DPS) ? "0" : data.DPS.ToString(round_dps?GetIntCommas():GetFloatCommas(), usCulture);
+                    row["hps"] = "NaN".Equals(data.EncHPS) ? "0" : data.EncHPS.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
 
                     row["crit%"] = "NaN".Equals(data.CritDamPerc) ? "0%" : data.CritDamPerc.ToString("0'%", usCulture);
                     row["healcrit%"] = "NaN".Equals(data.CritHealPerc) ? "0%" : data.CritHealPerc.ToString("0'%", usCulture);
-					
+
                     row["pen%"] = CombatantFormatSwitch(data, "Penetration%", usCulture);
                     row["glance%"] = CombatantFormatSwitch(data, "Glance%", usCulture);
                     row["block%"] = CombatantFormatSwitch(data, "Blocked%", usCulture);
@@ -2199,19 +2283,19 @@ namespace SecretParse_Plugin
                     row["evade%"] = miss.ToString("0'%", usCulture);
                     row["aegisdmg"] = aegis_dmg.ToString(GetIntCommas(), usCulture);
                     row["aegisdmg_script"] = (aegis_dmg != 0)? ConvertValue(aegis_dmg, usCulture) : "";
-                    row["aegisdps"] = aegis_dps.ToString(GetFloatCommas(), usCulture);
+                    row["aegisdps"] = aegis_dps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                     row["aegisheal"] = aegis_heal.ToString(GetIntCommas(), usCulture);
                     row["aegisheal_script"] = (aegis_heal != 0)? ConvertValue(aegis_heal, usCulture) : "";
-                    row["aegishps"] = aegis_hps.ToString(GetFloatCommas(), usCulture);
+                    row["aegishps"] = aegis_hps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                     row["aegismismatch%"] = CombatantFormatSwitch(data, "AegisMismatch%", usCulture);
 
-					row["damagetaken"] = data.DamageTaken.ToString("#,##0", usCulture);
-					row["crit%taken"] = CombatantFormatIncSwitch(data, "crit%taken", usCulture);
-					row["pen%taken"] = CombatantFormatIncSwitch(data, "pen%taken", usCulture);
-					row["glance%taken"] = CombatantFormatIncSwitch(data, "glance%taken", usCulture);
-					row["block%taken"] = CombatantFormatIncSwitch(data, "block%taken", usCulture);
-					row["evade%taken"] = CombatantFormatIncSwitch(data, "evade%taken", usCulture);
-					
+                    row["takendamage"] = ConvertValue(data.DamageTaken, usCulture);
+                    row["takencrit%"] = CombatantFormatIncSwitch(data, "takencrit%", usCulture);
+                    row["takenpen%"] = CombatantFormatIncSwitch(data, "takenpen%", usCulture);
+                    row["takenglance%"] = CombatantFormatIncSwitch(data, "takenglance%", usCulture);
+                    row["takenblock%"] = CombatantFormatIncSwitch(data, "takenblock%", usCulture);
+                    row["takenevade%"] = CombatantFormatIncSwitch(data, "takenevade%", usCulture);
+
                     string name = row["name"];
                     lines.Add(name, row);
                     displayOrder.Add(GetScriptKey(data.Damage, data.Healed, name), name);
@@ -2242,13 +2326,12 @@ namespace SecretParse_Plugin
                         att["hps"] = "0";
                         att["healcrit%"] = "0%";
 
-
                         miss = 100.0f - data.ToHit;
                         aegis_dmg = GetSpecialHitData(item, SecretLanguage.Aegis);
                         aegis_dps = (item.Duration.TotalSeconds > 0) ? aegis_dmg / item.Duration.TotalSeconds : 0.0;
                         att["evade%"] = miss.ToString("0'%", usCulture);
                         att["aegisdmg"] = aegis_dmg.ToString(GetIntCommas(), usCulture);
-                        att["aegisdps"] = aegis_dps.ToString(GetFloatCommas(), usCulture);
+                        att["aegisdps"] = aegis_dps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                         att["aegisheal"] = "0";
                         att["aegishps"] = "0.0";
                         att["aegismismatch%"] = GetSpecialHitMissPerc(item, SecretLanguage.Aegis).ToString("0'%", usCulture);
@@ -2298,18 +2381,18 @@ namespace SecretParse_Plugin
                         aegis_hps = (item.Duration.TotalSeconds > 0) ? aegis_heal / item.Duration.TotalSeconds : 0.0;
                         att["healing"] = item.Damage.ToString("#,##0", usCulture);
                         att["hps%"] = (item.Damage * 100 / data.Healed).ToString("0'%", usCulture);
-                        att["hps"] = item.EncDPS.ToString(GetFloatCommas(), usCulture);
+                        att["hps"] = item.EncDPS.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                         att["healcrit%"] = item.CritPerc.ToString("0'%", usCulture);
                         att["aegisheal"] = aegis_heal.ToString(GetIntCommas(), usCulture);
-                        att["aegishps"] = aegis_hps.ToString(GetFloatCommas(), usCulture);
+                        att["aegishps"] = aegis_hps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
 
                         att["healKey"] = GetScriptKey(item.Damage);
 
                         embed[entry.Key] = att;
                     }
 
-					foreach (var entry in data.Items[INC_DAMAGE].Items)
-					{
+                    foreach (var entry in data.Items[INC_DAMAGE].Items)
+                    {
                         var item = entry.Value;
                         if (ALL.Equals(entry.Key) || item.Damage < 1)
                         {
@@ -2339,21 +2422,21 @@ namespace SecretParse_Plugin
                             att["aegisdmg"] = "0";
                             att["aegismismatch%"] = "0%";
                             att["dmgKey"] = GetScriptKey(0);
-							att["healing"] = "0";
-							att["hps%"] = "0%";
-							att["hps"] = "0";
-							att["healcrit%"] = "0%";
-							att["healKey"] = GetScriptKey(0);                        
-							att["damagetaken"] = "0";
-							att["crit%taken"] = "0%";
-							att["pen%taken"] = "0%";
-							att["glance%taken"] = "0%";
-							att["blocked%taken"] = "0%";
-							att["evade%taken"] = "0%";
-						}
-						embed[entry.Key] = att;
-					}
-					
+                            att["healing"] = "0";
+                            att["hps%"] = "0%";
+                            att["hps"] = "0";
+                            att["healcrit%"] = "0%";
+                            att["healKey"] = GetScriptKey(0);
+                            att["damagetaken"] = "0";
+                            att["crit%taken"] = "0%";
+                            att["pen%taken"] = "0%";
+                            att["glance%taken"] = "0%";
+                            att["blocked%taken"] = "0%";
+                            att["evade%taken"] = "0%";
+                       }
+                       embed[entry.Key] = att;
+                    }
+
                     var embedOrder = new SortedDictionary<string, string>();
                     foreach (var item in embed.Values)
                     {
@@ -2400,7 +2483,7 @@ namespace SecretParse_Plugin
                 }
             }
         }
-        
+
         private void SetEvadeInformation(string line)
         {
             string[] parts = line.Split('|');
@@ -2962,6 +3045,7 @@ namespace SecretParse_Plugin
                     {
                         foreach (var damageLine in SecretLanguage.damageLines)
                         {
+                            OutputDebugString(damageLine.ToString() + "\r\n");
                             matches = damageLine.Matches(InputStr);
                             if (matches != null && matches.Count > 0)
                             {
@@ -3008,6 +3092,7 @@ namespace SecretParse_Plugin
                     {
                         foreach (var healLine in SecretLanguage.healLines)
                         {
+                            OutputDebugString(healLine.ToString() + "\r\n");
                             matches = healLine.Matches(InputStr);
 
                             if (matches != null && matches.Count > 0)
@@ -3120,6 +3205,7 @@ namespace SecretParse_Plugin
 
                         eventType = -1;
                     }
+                    OutputDebugString("Found\r\n");
                     ProcessLogLineEntry(logInfo, ref victim, ref attacker, ref attackType, ref attackName, ref special, ref SelfAttack, ref Amount, ref critical, colorlog, attackSuffix, eventType, matches);
                 }
             }
@@ -3240,7 +3326,7 @@ namespace SecretParse_Plugin
                 }
 
                 // AEGIS
-                if (victim.IndexOf(SecretLanguage.AegisShieldLine) != -1) 
+                if (victim.IndexOf(SecretLanguage.AegisShieldLine) != -1)
                 {
                     foreach (var aegisShieldLine in SecretLanguage.aegisShieldLines)
                     {
@@ -3250,7 +3336,7 @@ namespace SecretParse_Plugin
                             GroupCollection aegisGroup = matches[0].Groups;
                             string actee = aegisGroup["actee"].Value.Trim(' ', '"', '\'', '.');
                             string aegis = aegisGroup["aegis"].Value.Trim(' ', '"', '\'', '.');
-                            
+
                             if ((actee.Length > 0) && (aegis.Length > 0))
                             {
                                 special = AddSpecial(special, SecretLanguage.Aegis);
@@ -3274,8 +3360,8 @@ namespace SecretParse_Plugin
                     #region Case 3 [Hit]
                     case 3:
                         // Normal attack
-                        // <Attacker> , <Vicitim> , <Amount> , <Spell ID> , <Spell Name> ) 
-                        // <attacker>'s <spell name> hits <Victim> for <Amount> damage. 
+                        // <Attacker> , <Vicitim> , <Amount> , <Spell ID> , <Spell Name> )
+                        // <attacker>'s <spell name> hits <Victim> for <Amount> damage.
                         if (Amount < 0) Amount = 0;
 
                         if ((((SelfAttack && ActGlobals.oFormActMain.InCombat) || !SelfAttack) && "" != attacker && "" != victim && ActGlobals.oFormActMain.SetEncounter(logInfo.detectedTime, attacker, victim)) || (ActGlobals.oFormActMain.InCombat && ("" == attacker || "" == victim))) // Altuslumen 1.3.0.3.2 one line edit
@@ -3312,8 +3398,8 @@ namespace SecretParse_Plugin
                     #region Case 5 [Heals]
                     case 5:
                         // Someone is healed
-                        // <Attacker> , <Vicitim> , <Amount> , <Spell ID> , <Spell Name> ) 
-                        // <Attacker>'s <Spell Name> heals <Vicitim> for <Amount>.  
+                        // <Attacker> , <Vicitim> , <Amount> , <Spell ID> , <Spell Name> )
+                        // <Attacker>'s <Spell Name> heals <Vicitim> for <Amount>.
 
                         // Check if overheal exists
                         Dnum DamN = new Dnum(Amount);
@@ -3330,9 +3416,9 @@ namespace SecretParse_Plugin
                     #region Case 10 [Miss]
                     case 10:
                         // An attack misses
-                        // 10 , T=N#R=O#<ID Number of attacker> , T=P#R=O#<ID Number of Victim> , T=X#R=X#<ID Number of attacker's owner if pet> , T=X#R=X#<ID Number of attacker's owner if pet> , 
-                        // <Attacker> , <Vicitim> , <Amount> , <Spell ID> , <Spell Name> ) 
-                        // <Attacker>'s <Spell Name> misses <Vicitim>. 
+                        // 10 , T=N#R=O#<ID Number of attacker> , T=P#R=O#<ID Number of Victim> , T=X#R=X#<ID Number of attacker's owner if pet> , T=X#R=X#<ID Number of attacker's owner if pet> ,
+                        // <Attacker> , <Vicitim> , <Amount> , <Spell ID> , <Spell Name> )
+                        // <Attacker>'s <Spell Name> misses <Vicitim>.
                         if (ActGlobals.oFormActMain.SetEncounter(logInfo.detectedTime, attacker, victim))
                         {
                             ActGlobals.oFormActMain.AddCombatAction(attackType, critical, special, attacker, attackName, new Dnum(Dnum.Miss, SecretLanguage.Miss), logInfo.detectedTime, ActGlobals.oFormActMain.GlobalTimeSorter, victim, DamageType); // Altuslumen 1.3.0.3.2
@@ -3344,8 +3430,8 @@ namespace SecretParse_Plugin
                     #region Case 12 [Death]
                     case 12:
                         // Someone died
-                        // 12 , T=N#R=O#<ID Number of attacker> , T=P#R=O#<ID Number of Victim> , T=X#R=X#<ID Number of attacker's owner if pet> , T=X#R=X#<ID Number of attacker's owner if pet> , 
-                        // <Attacker> , <Vicitim> , <Amount> , <Spell ID> , <Spell Name> ) 
+                        // 12 , T=N#R=O#<ID Number of attacker> , T=P#R=O#<ID Number of Victim> , T=X#R=X#<ID Number of attacker's owner if pet> , T=X#R=X#<ID Number of attacker's owner if pet> ,
+                        // <Attacker> , <Vicitim> , <Amount> , <Spell ID> , <Spell Name> )
 
                         if (ActGlobals.oFormActMain.InCombat)
                         {
@@ -3381,7 +3467,9 @@ namespace SecretParse_Plugin
             xmlSettings.AddControlSetting(comboBox_Language.Name, comboBox_Language);
             xmlSettings.AddControlSetting(checkBox_AutoCheck.Name, checkBox_AutoCheck);
             xmlSettings.AddControlSetting(checkBox_ExportScript.Name, checkBox_ExportScript);
+            xmlSettings.AddControlSetting(checkBox_ExportRoundDPS.Name, checkBox_ExportRoundDPS);
             xmlSettings.AddControlSetting(checkBox_ExportShowLegend.Name, checkBox_ExportShowLegend);
+            xmlSettings.AddControlSetting(checkBox_ExportColored.Name, checkBox_ExportColored);
             xmlSettings.AddControlSetting(checkBox_ExportHtml.Name, checkBox_ExportHtml);
             xmlSettings.AddControlSetting(checkBox_ExportAllies.Name, checkBox_ExportAllies);
             xmlSettings.AddControlSetting(checkBox_DontExportShortEnc.Name, checkBox_DontExportShortEnc);
@@ -3652,6 +3740,16 @@ namespace SecretParse_Plugin
             }
         }
 
+        private void checkBox_ExportRoundDPS_MouseHover(object sender, EventArgs e)
+        {
+            ActGlobals.oFormActMain.SetOptionsHelpText("Round DPS / HPS values (xxx instead of xxx.xx).");
+        }
+
+        private void checkBox_ExportColored_MouseHover(object sender, EventArgs e)
+        {
+            ActGlobals.oFormActMain.SetOptionsHelpText("Coloring the chat export.");
+        }
+
         private void checkBox_ExportShowLegend_MouseHover(object sender, EventArgs e)
         {
             ActGlobals.oFormActMain.SetOptionsHelpText("Shows the legend in chat exports.");
@@ -3913,6 +4011,9 @@ namespace SecretParse_Plugin
         public static List<Regex> buffStopLines;
         public static List<Regex> aegisShieldLines;
 
+        // Whisper command
+        public static string WhisperCmd = "";
+
         public static void SetEnglish()
         {
             Physical = "physical";
@@ -3934,6 +4035,7 @@ namespace SecretParse_Plugin
             BuffLine2 = " affects ";
             BuffStopLine = "Buff";
             AegisShieldLine = "AEGIS";
+            WhisperCmd = "/w";
             You = "you";
             YouSet = new HashSet<string>();
             YouSet.Add(You);
@@ -4021,6 +4123,7 @@ namespace SecretParse_Plugin
             BuffLine2 = " belegt ";
             BuffStopLine = "Buff ";
             AegisShieldLine = "AEGIS";
+            WhisperCmd = "/w";
             You = "ihnen";
             YouSet = new HashSet<string>();
             YouSet.Add(You);
@@ -4058,7 +4161,7 @@ namespace SecretParse_Plugin
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<actor>.+?)\sabsorbiert\s(?<amount>[0-9]+)\sSchaden\s(?<actee>Ihres)\s(?<attackName>" + apostropheSkills + @"?)\.", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<actor>.+?)\sabsorbiert\s(?<amount>[0-9]+)\sSchaden\s(?<actee>Ihres)\s(?<attackName>.+?)\.$", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<actor>Ihr)\s(?<attackName>.+?)\sabsorbiert\s(?<amount>[0-9]+)\sSchaden\sdes\sAngriffs\svon\s(?<actee>.+?)\.$", RegexOptions.Compiled));
-            
+
             evadedLines = new List<Regex>();
             evadedLines.Add(new Regex(@"^(?<actee>.+?)\sist\s(?<actor>Ihrer)\sKraft\s(?<attackName>.+?)\sausgewichen\.$", RegexOptions.Compiled));
             evadedLines.Add(new Regex(@"^(?<actee>.+?)\sist\s("")?(?<attackName>""?" + apostropheSkills + @"""?)("")?\svon\s(?<actor>.+?)\sausgewichen\.$", RegexOptions.Compiled));
@@ -4079,7 +4182,7 @@ namespace SecretParse_Plugin
             aegisShieldLines = new List<Regex>();
             aegisShieldLines.Add(new Regex(@"(?<aegis>.+)\-AEGIS\svon\s(?<actee>.+)", RegexOptions.Compiled));
             aegisShieldLines.Add(new Regex(@"(?<actee>Ihrem|Ihres)\s(?<aegis>.+)\-AEGIS", RegexOptions.Compiled));
-            
+
             // Special damage types
             none = "none";
             Unknown = "Unknown";
@@ -4116,6 +4219,7 @@ namespace SecretParse_Plugin
             BuffLine2 = " affecte ";
             BuffStopLine = "Buff";
             AegisShieldLine = "AEGIS";
+            WhisperCmd = "/dire";
             You = "vous";
             YouSet = new HashSet<string>();
             YouSet.Add(You);
@@ -4125,6 +4229,8 @@ namespace SecretParse_Plugin
 
             // The regex can't differentiate between attacks with "de" in the name and characters with "de" in their name :(
             SortedSet<string> deAttacks = new SortedSet<string>();
+            SortedSet<string> deAttacks2 = new SortedSet<string>();
+            SortedSet<string> deAttacks3 = new SortedSet<string>();
             // main-actifs
             deAttacks.Add("Avènement de la discorde");
             deAttacks.Add("Ballet de balles");
@@ -4171,6 +4277,7 @@ namespace SecretParse_Plugin
             deAttacks.Add("Tir de précision");
             deAttacks.Add("Union de décharges");
             deAttacks.Add("Vague de froid");
+
             // main-passifs
             deAttacks.Add("Coup de grâce");
             deAttacks.Add("Du fond de l'abîme");
@@ -4310,13 +4417,14 @@ namespace SecretParse_Plugin
 
             damageLines = new List<Regex>();
             damageLines.Add(new Regex(@"^(?<actor>Votre)\s(?<attackName>.+)\sinflige\s(?<amount>[0-9]+)\spoints\sde\sdégâts\sà\sl\'(?<actee>.+)\.$", RegexOptions.Compiled));
-            damageLines.Add(new Regex(@"^(?<attackName>.+" + deString + @")\sde\s(?<actor>.+)\sinflige\s(?<amount>[0-9]+)\spoints\sde\sdégâts\sà\sl\'(?<actee>.+)\.$", RegexOptions.Compiled));
+            //damageLines.Add(new Regex(@"^(?<attackName>.+" + deString + @")\sde\s(?<actor>.+)\sinflige\s(?<amount>[0-9]+)\spoints\sde\sdégâts\sà\sl\'(?<actee>.+)\.$", RegexOptions.Compiled));
+            damageLines.Add(new Regex(@"^(?<attackName>.+" + deString + @")\sde\s(?<actor>.+)\sinflige\s(?<amount>[0-9]+)\spoints\sde\sdégâts\sà\sl\'(?<actee>.+)\.$"));
             damageLines.Add(new Regex(@"^(?<attackName>.+?)\sde\s(?<actor>.+)\sinflige\s(?<amount>[0-9]+)\spoints\sde\sdégâts\sà\sl\'(?<actee>.+)\.$", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)(?<actor>Vous)\stouchez\s(?<damageType>\([^\)]+\)\s)(?<actee>.+)\savec\s(?<attackName>.+?)\s(sur\sun\scritique\s)?et\slui\sinfligez\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\s(de\s)?(?<damageClass>.*?)\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)(?<actor>.+)\stouche\s(?<damageType>\([^\)]+\)\s)(?<actee>.+)\savec\s(?<attackName>.+?)\s(sur\sun\scritique\s)?et\slui\sinflige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\s(de\s)?(?<damageClass>.*?)\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?(?<actor>Votre)\s(?<attackName>.+)\stouche\s(?<damageType>\([^\)]+\)\s)(?<actee>.+)\set\slui\sinflige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\s(de\s)?(?<damageClass>.*?)\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
-            damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\stouche\s(?<actee>.+)\s(?<damageType>\([^\)]+\)\s)et\slui\sinflige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\s(de\s)?(?<damageClass>.*?)\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
-            damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\s(?<actee>vous)\stouche\s(?<damageType>\([^\)]+\)\s)et\svous\sinflige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\s(de\s)?(?<damageClass>.*?)\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
+            damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\stouche\s(?<actee>.+)\s(?<damageType>\([^\)]+\)\s)et\slui\sinflige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\s(de\s)?(?<damageClass>.*?)\.(?<blockType>\s\([^\)]+\))?"));
+            damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\s(?<actee>vous)\stouche\s(?<damageType>\([^\)]+\)\s)et\svous\sinflige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\s(de\s)?(?<damageClass>.*?)\.(?<blockType>\s\([^\)]+\))?"));
             damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>.+?)\sde\s(?<actor>.+)\stouche\s(?<actee>.+)\s(?<damageType>\([^\)]+\)\s)et\slui\sinflige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\s(de\s)?(?<damageClass>.*?)\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>.+?)\sde\s(?<actor>.+)\s(?<actee>vous)\stouche\s(?<damageType>\([^\)]+\)\s)et\svous\sinflige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\s(de\s)?(?<damageClass>.*?)\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?(?<actor>Votre)\spouvoir\s(?<attackName>.+?)\s(?<actee>vous)\stouche\set\svous\sinflige\s(?<amount>[0-9]+)\spoints\sde\sdégâts", RegexOptions.Compiled));
@@ -4329,7 +4437,7 @@ namespace SecretParse_Plugin
 
             redirectLines = new List<Regex>();
             redirectLines.Add(new Regex(@"^(?<actor>Votre)\s(pouvoir\s)?(?<attackName>.+)\sredirige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\svers\s(?<actee>.+)\.$", RegexOptions.Compiled));
-            redirectLines.Add(new Regex(@"^Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\sredirige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\svers\s(?<actee>.+)\.$", RegexOptions.Compiled));
+            redirectLines.Add(new Regex(@"^Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\sredirige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\svers\s(?<actee>.+)\.$"));
             redirectLines.Add(new Regex(@"^Le\spouvoir\s(?<attackName>.+?)\sde\s(?<actor>.+)\sredirige\s(?<amount>[0-9]+)\spoints?\sde\sdégâts\svers\s(?<actee>.+)\.$", RegexOptions.Compiled));
 
             healLines = new List<Regex>();
@@ -4337,17 +4445,17 @@ namespace SecretParse_Plugin
             healLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?(?<actor>Votre)\s(pouvoir\s)?(?<attackName>.+)\s(?<actee>vous)\srend\s(?<amount>[0-9]+)\spoints?\sde\svie\.", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?(?<actor>.+)\srend\s(?<amount>[0-9]+)\spoints?\sde\svie\sà\s(?<actee>.+)\savec\s(?<attackName>.+)\.$", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?(?<actor>.+)\s(?<actee>vous)\srend\s(?<amount>[0-9]+)\spoints?\sde\svie\savec\s(?<attackName>.+)\.$", RegexOptions.Compiled));
-            healLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\srend\s(?<amount>[0-9]+)\spoints?\sde\svie\sà\s(?<actee>.+)\.$", RegexOptions.Compiled));
+            healLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\srend\s(?<amount>[0-9]+)\spoints?\sde\svie\sà\s(?<actee>.+)\.$"));
             healLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>.+?)\sde\s(?<actor>.+)\srend\s(?<amount>[0-9]+)\spoints?\sde\svie\sà\s(?<actee>.+)\.$", RegexOptions.Compiled));
-            healLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\s(?<actee>vous)\srend\s(?<amount>[0-9]+)\spoints?\sde\svie\.", RegexOptions.Compiled));
+            healLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\s(?<actee>vous)\srend\s(?<amount>[0-9]+)\spoints?\sde\svie\."));
             healLines.Add(new Regex(@"^(?<crit>\(Critique\)\s)?Le\spouvoir\s(?<attackName>.+?)\sde\s(?<actor>.+)\s(?<actee>vous)\srend\s(?<amount>[0-9]+)\spoints?\sde\svie\.", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<attackName>" + deString + @")\sde\s(?<actor>.+)\srend\s(?<amount>[0-9]+)\spoints\sde\srésistance\sà\sl\'(?<actee>.+)\.$", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<attackName>.+?)\sde\s(?<actor>.+)\srend\s(?<amount>[0-9]+)\spoints\sde\srésistance\sà\sl\'(?<actee>.+)\.$", RegexOptions.Compiled));
-            
+
             evadedLines = new List<Regex>();
-            evadedLines.Add(new Regex(@"^(?<actee>.+)\sévite\sle\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\.$", RegexOptions.Compiled));
+            evadedLines.Add(new Regex(@"^(?<actee>.+)\sévite\sle\spouvoir\s(?<attackName>" + deString + @")\sde\s(?<actor>.+)\.$"));
             evadedLines.Add(new Regex(@"^(?<actee>.+)\sévite\sle\spouvoir\s(?<attackName>.+)\sde\s(?<actor>.+)\.$", RegexOptions.Compiled));
-            evadedLines.Add(new Regex(@"^(?<actee>Vous)\savez\sévité\s(?<attackName>" + deString + @"),\sde\s(?<actor>.+)\.$", RegexOptions.Compiled));
+            evadedLines.Add(new Regex(@"^(?<actee>Vous)\savez\sévité\s(?<attackName>" + deString + @"),\sde\s(?<actor>.+)\.$"));
             evadedLines.Add(new Regex(@"^(?<actee>Vous)\savez\sévité\s(?<attackName>.+),\sde\s(?<actor>.+)\.$", RegexOptions.Compiled));
             evadedLines.Add(new Regex(@"^(?<actee>.+)\sa\sévité\s(?<actor>votre)\s(?<attackName>.+)\.$", RegexOptions.Compiled));
 
@@ -4364,7 +4472,7 @@ namespace SecretParse_Plugin
             aegisShieldLines = new List<Regex>();
             aegisShieldLines.Add(new Regex(@"AEGIS\s(?<aegis>\S+)\sde\s(?<actee>.+)", RegexOptions.Compiled));
             aegisShieldLines.Add(new Regex(@"^(?<actee>votre)\sAEGIS\s(?<aegis>.+)", RegexOptions.Compiled));
-            
+
             //TSW Language Mixup Hack
             aegisShieldLines.Add(new Regex(@"^(?<actee>your)\s(?<aegis>.+)\sAEGIS", RegexOptions.Compiled));
 
