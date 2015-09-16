@@ -47,7 +47,7 @@ aegis-healing fully only for english (german is broken; currently no data for fr
 
 ## 1.0.6.1 - Moar Aegis
 ##### General:
-*(English/German) fixed some cases with displaying wrong skills/attacker
+* (English/German) fixed some cases with displaying wrong skills/attacker
 * fixed sorting for some columns within act's tables
 
 ##### Plugin Options:
