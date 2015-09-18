@@ -4208,7 +4208,7 @@ namespace SecretParse_Plugin
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?("")?(?<attackName>""?" + apostropheSkills + @"""?)("")?\s(?<damageType>\([^\)]+\)\s)?fügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>-Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>.+?)\s(?<damageType>\([^\)]+\)\s)?von\s(?<actor>.+?)\sfügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(\-)?(?<ignore>Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>.+?)\s(?<damageType>\([^\)]+\)\s)?fügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>-Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
-            damageLines.Add(new Regex(@"^(?<actor>Ihr)\s(?<attackName>.+?)\strifft\s(?<actee>.+)\sfür\s(?<amount>[0-9]+)\sSchaden\.", RegexOptions.Compiled));
+            damageLines.Add(new Regex(@"^(?<actor>Ihr)\s(?<attackName>.+?)\strifft\s(?<actee>.+?)\s(?<crit>kritisch\s)?für\s(?<amount>[0-9]+)\sSchaden\.", RegexOptions.Compiled));
             string hateSkills = "Provozieren|Massenprovokation|Verwirren|Massenverwirrung|Irreführung";
             damageLines.Add(new Regex(@"^(?<actor>.+)\s(haben|hat)\serfolgreich\s'(?<attackName>" + hateSkills + @")'\seingesetzt\.", RegexOptions.Compiled));
 

@@ -16,6 +16,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 ##### German
 * Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
+* fix for critical self hits
 
 ##### French
 * /acttell script now works properly for French clients
