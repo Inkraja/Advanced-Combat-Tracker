@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6001")]
+[assembly: AssemblyVersion("1.0.6.6002")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (crit%taken, pen&taken, ...) to chat export (Holok)
@@ -46,7 +46,7 @@ namespace SecretParse_Plugin
 {
     public class SecretParse : UserControl, IActPluginV1
     {
-        //Debug
+        // Debug
         //  [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         //  public static extern void OutputDebugString(string message);
         // /Debug
@@ -1130,6 +1130,24 @@ namespace SecretParse_Plugin
             return total;
         }
 
+        private int GetSpecialIncData(CombatantData Data, string specialName)
+        {
+            int total = 0;
+
+            if (Data.Items.ContainsKey(INC_DAMAGE) && Data.Items[INC_DAMAGE].Items.ContainsKey(ALL))
+            {
+                foreach (var swing in Data.Items[INC_DAMAGE].Items[ALL].Items)
+                {
+                    if (swing.Special.Contains(specialName))
+                    {
+                        total += swing.Damage;
+                    }
+                }
+            }
+
+            return total;
+        }
+
         private int GetSpecialHitData(DamageTypeData Data, string specialName)
         {
             int total = 0;
@@ -1302,7 +1320,7 @@ namespace SecretParse_Plugin
 
         private string CombatantFormatIncSwitch(CombatantData Data, string VarName, CultureInfo usCulture)
         {
-            if (!Data.AllInc.ContainsKey(ALL))
+            if ((!Data.Items.ContainsKey(INC_DAMAGE)) || (!Data.Items[INC_DAMAGE].Items.ContainsKey(ALL)))
             {
                 return "0%";
             }
@@ -1318,7 +1336,11 @@ namespace SecretParse_Plugin
                 case "takenblock%":
                     return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Blocked).ToString("0'%", usCulture);
                 case "takenevade%":
-                    double missperc = 100.0*Data.Items[INC_DAMAGE].Items[ALL].Misses/Data.Items[INC_DAMAGE].Items[ALL].Hits;
+                    double missperc = 0.0;
+                    if (Data.Items[INC_DAMAGE].Items[ALL].Hits > 0)
+                    {
+                        missperc = 100.0 * Data.Items[INC_DAMAGE].Items[ALL].Misses / Data.Items[INC_DAMAGE].Items[ALL].Hits;
+                    }
                     return missperc.ToString("0'%", usCulture);
                 default:
                     return VarName;
@@ -2030,6 +2052,7 @@ namespace SecretParse_Plugin
                         AfterField = "a";
                         break;
                     case "takendamage":
+                        if (entry["aegisinc_script"] != "") AfterField += (exportColored ? " <font color=#1cbcea>[" : " [") + entry["aegisinc_script"] + (exportColored ? "]</font>" : "]");
                         AfterField += "";
                         break;
                     case "takencrit%":
@@ -2291,7 +2314,9 @@ namespace SecretParse_Plugin
                     row["aegishps"] = aegis_hps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                     row["aegismismatch%"] = CombatantFormatSwitch(data, "AegisMismatch%", usCulture);
 
+                    int aegis_inc = GetSpecialIncData(data, SecretLanguage.Aegis);
                     row["takendamage"] = ConvertValue(data.DamageTaken, usCulture);
+                    row["aegisinc_script"] = (aegis_inc != 0)? ConvertValue(aegis_inc, usCulture) : "";
                     row["takencrit%"] = CombatantFormatIncSwitch(data, "takencrit%", usCulture);
                     row["takenpen%"] = CombatantFormatIncSwitch(data, "takenpen%", usCulture);
                     row["takenglance%"] = CombatantFormatIncSwitch(data, "takenglance%", usCulture);
@@ -2338,6 +2363,13 @@ namespace SecretParse_Plugin
                         att["aegisheal"] = "0";
                         att["aegishps"] = "0.0";
                         att["aegismismatch%"] = GetSpecialHitMissPerc(item, SecretLanguage.Aegis).ToString("0'%", usCulture);
+                        att["takendamage"] = "0";
+                        att["aegisinc_script"] = "";
+                        att["takencrit%"] = "0%";
+                        att["takenpen%"] = "0%";
+                        att["takenglance%"] = "0%";
+                        att["takenblock%"] = "0%";
+                        att["takenevade%"] = "0%";
 
                         att["dmgKey"] = GetScriptKey(item.Damage);
                         att["healKey"] = GetScriptKey(0);
@@ -2377,6 +2409,13 @@ namespace SecretParse_Plugin
                             att["aegisheal"] = "0";
                             att["aegishps"] = "0.0";
                             att["aegismismatch%"] = "0%";
+                            att["takendamage"] = "0";
+                            att["aegisinc_script"] = "";
+                            att["takencrit%"] = "0%";
+                            att["takenpen%"] = "0%";
+                            att["takenglance%"] = "0%";
+                            att["takenblock%"] = "0%";
+                            att["takenevade%"] = "0%";
                             att["dmgKey"] = GetScriptKey(0);
                         }
 
@@ -2393,7 +2432,7 @@ namespace SecretParse_Plugin
 
                         embed[entry.Key] = att;
                     }
-
+                    /*
                     foreach (var entry in data.Items[INC_DAMAGE].Items)
                     {
                         var item = entry.Value;
@@ -2439,7 +2478,7 @@ namespace SecretParse_Plugin
                        }
                        embed[entry.Key] = att;
                     }
-
+                    */
                     var embedOrder = new SortedDictionary<string, string>();
                     foreach (var item in embed.Values)
                     {
@@ -3233,7 +3272,14 @@ namespace SecretParse_Plugin
 
                 try
                 {
-                    Amount = Int32.Parse(amountStr);
+                    if (amountStr == "")
+                    {
+                        Amount = 0;
+                    }
+                    else
+                    {
+                        Amount = Int32.Parse(amountStr);
+                    }
                 }
                 catch (Exception)
                 {
@@ -3255,6 +3301,20 @@ namespace SecretParse_Plugin
                 else
                 {
                     victim = ConvertCharName(victim);
+                }
+
+                // Workaround for german combat-log problems
+                // First, there is only Schmutz, more to follow
+                if (SecretLanguage.Language.Equals(SecretLanguage.German)) 
+                {
+                    if ((attacker.Equals(ActGlobals.charName)))
+                    {
+                        if (attackName.Equals("Schmutz"))
+                        {
+                            attacker = victim;
+                        }
+                    }
+
                 }
 
                 // Ignore unknown attacks

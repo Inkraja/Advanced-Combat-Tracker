@@ -3,11 +3,16 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.6.7
-* incoming damage moved to own category in the chat script
+## 1.0.6.6002 pre 1.0.6.7
++ merged with v1.0.6.6 from RedEyeEagle
++ added checkbox for colored output, rearranged some checkboxes
++ new section "Tank" in chat export, sorting highest to lowest incoming damage
++ incoming aegis-damage
 * incoming damage displayed consistently in the chat script
-* added option to color aegis damage/healing
+* fixed missing players due to bug in tanking stats
 * added option to export rounded dps values to the chat script
+* prevent exception during parsing
+* workaround for german combatlog-problem e.g. "Schmutz" damage
 * /acttell script now works properly for French clients
 
 ## 1.0.6.6 - by Inkraja
