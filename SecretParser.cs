@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6002")]
+[assembly: AssemblyVersion("1.0.6.6003")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (crit%taken, pen&taken, ...) to chat export (Holok)
@@ -3303,18 +3303,12 @@ namespace SecretParse_Plugin
                     victim = ConvertCharName(victim);
                 }
 
-                // Workaround for german combat-log problems
-                // First, there is only Schmutz, more to follow
-                if (SecretLanguage.Language.Equals(SecretLanguage.German)) 
+                // Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
+                if ((SecretLanguage.SkillsWithoutOrigin.Count > 0) && (attacker.Equals(ActGlobals.charName)))
                 {
-                    if ((attacker.Equals(ActGlobals.charName)))
-                    {
-                        if (attackName.Equals("Schmutz"))
-                        {
-                            attacker = victim;
-                        }
+                    if (SecretLanguage.SkillsWithoutOrigin.Contains(attackName)) {
+                        attacker = victim;
                     }
-
                 }
 
                 // Ignore unknown attacks
@@ -4075,6 +4069,9 @@ namespace SecretParse_Plugin
         // Whisper command
         public static string WhisperCmd = "";
 
+        // Correcting the origin of those skills
+        public static HashSet<string> SkillsWithoutOrigin;
+
         public static void SetEnglish()
         {
             Physical = "physical";
@@ -4101,6 +4098,8 @@ namespace SecretParse_Plugin
             YouSet = new HashSet<string>();
             YouSet.Add(You);
             YouSet.Add("your");
+
+            SkillsWithoutOrigin = new HashSet<string>();
 
             damageLines = new List<Regex>();
             string apostropheSkills = "Thor's Hammer|Nightmare's Edge|Miner's Claw|Gaia's Presence|Carter's Burning|Angel's Touch|Adam's Rib|Dream's End|Stone's Throw|Mjolnir's Echo|Shadow's Shadow|The Carver's Art|Dragon's Breath|The Inspector's Gadget";
@@ -4195,6 +4194,13 @@ namespace SecretParse_Plugin
             YouSet.Add("ihrem");
             YouSet.Add("ihres");
 
+            SkillsWithoutOrigin = new HashSet<string>();
+            SkillsWithoutOrigin.Add("Schmutz");
+            SkillsWithoutOrigin.Add("Elektrifiziert");
+            SkillsWithoutOrigin.Add("Brennt");
+            SkillsWithoutOrigin.Add("Kochend heiß");
+            SkillsWithoutOrigin.Add("In Flammen");
+
             damageLines = new List<Regex>();
             string apostropheSkills = "Tod von oben|Androhung von Waffengewalt|Von Anfang bis Ende|Runter von meinem Land|Sturm von Niflheim";
             damageLines.Add(new Regex(@"^(?<actor>Ihre)\s(?<attackName>.+?)-Kraft\sfügt\s(?<actee>.+)\s(?<amount>[0-9]+)\sSchaden\szu\.", RegexOptions.Compiled));
@@ -4287,6 +4293,8 @@ namespace SecretParse_Plugin
             YouSet.Add("votre");
             //TSW Language Mixup Hack
             YouSet.Add("your");
+            
+            SkillsWithoutOrigin = new HashSet<string>();
 
             // The regex can't differentiate between attacks with "de" in the name and characters with "de" in their name :(
             SortedSet<string> deAttacks = new SortedSet<string>();

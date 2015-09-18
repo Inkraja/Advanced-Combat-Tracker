@@ -3,7 +3,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.6.6002 pre 1.0.6.7
+## 1.0.6.6003 pre 1.0.6.7
 + merged with v1.0.6.6 from RedEyeEagle
 + added checkbox for colored output, rearranged some checkboxes
 + new section "Tank" in chat export, sorting highest to lowest incoming damage
@@ -12,7 +12,11 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 * fixed missing players due to bug in tanking stats
 * added option to export rounded dps values to the chat script
 * prevent exception during parsing
-* workaround for german combatlog-problem e.g. "Schmutz" damage
+
+##### German
+* Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
+
+##### French
 * /acttell script now works properly for French clients
 
 ## 1.0.6.6 - by Inkraja
