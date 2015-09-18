@@ -4,6 +4,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 # Changelog
 
 ## 1.0.6.6003 pre 1.0.6.7
+! critical aegis hits needs are not fully supported, need more samples !
 + merged with v1.0.6.6 from RedEyeEagle
 + added checkbox for colored output, rearranged some checkboxes
 + new section "Tank" in chat export, sorting highest to lowest incoming damage
