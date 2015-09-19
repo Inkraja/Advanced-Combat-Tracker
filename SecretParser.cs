@@ -35,10 +35,10 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6005")]
+[assembly: AssemblyVersion("1.0.6.6006")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
-// Added Incoming Damage (crit%taken, pen&taken, ...) to chat export (Holok)
+// Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
 // Add shiny colours to agis, bump version to 1.0.6.6 (Inkraja https://github.com/Inkraja/Advanced-Combat-Tracker)
 
 
@@ -1697,7 +1697,7 @@ namespace SecretParse_Plugin
                 List<String> lineTank = new List<String>();
                 List<String> lineMax = new List<String>();
 
-                // Gather data for damage, heal and max
+                // Gather data for damage, heal, tank and max
                 int aegis_hp = GetSpecialHitData(encounter, SecretLanguage.Aegis);
                 if (aegis_hp != 0)
                 {
@@ -3294,6 +3294,15 @@ namespace SecretParse_Plugin
 
                 attacker = ConvertCharName(attacker);
 
+                // Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
+                if ((SecretLanguage.DamageWithoutOrigin.Count > 0) && ("".Equals(attacker)))
+                {
+                    if (SecretLanguage.DamageWithoutOrigin.Contains(attackName))
+                    {
+                        attacker = victim;
+                    }
+                }
+
                 if ("Ihres".Equals(victim))
                 {
                     victim = attacker;
@@ -3301,14 +3310,6 @@ namespace SecretParse_Plugin
                 else
                 {
                     victim = ConvertCharName(victim);
-                }
-
-                // Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
-                if ((SecretLanguage.DamageWithoutOrigin.Count > 0) && (attacker.Equals(GetCharName())))
-                {
-                    if (SecretLanguage.DamageWithoutOrigin.Contains(attackName)) {
-                        attacker = victim;
-                    }
                 }
 
                 // Ignore unknown attacks
@@ -3699,6 +3700,7 @@ namespace SecretParse_Plugin
             }
         }
 
+        #region UI Events
         private void checkBox_Filter_CheckedChanged(object sender, EventArgs e)
         {
             SetFilterEnabled(checkBox_Filter.Checked);
@@ -3756,10 +3758,24 @@ namespace SecretParse_Plugin
             }
         }
 
+        private void checkBox_EnableTSWAddon_CheckedChanged(object sender, EventArgs e)
+        {
+            lock (addonEnabledLocker)
+            {
+                addonEnabled = checkBox_EnableTSWAddon.Checked;
+            }
+        }
+
+        private void checkBox_ExportScript_CheckedChanged(object sender, EventArgs e)
+        {
+            SetExportFieldStatus();
+        }
+
         private void comboBox_Language_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetLanguage(comboBox_Language.Text);
         }
+        #endregion
 
         #region Help Texts
         private void checkBox_AutoCheck_MouseHover(object sender, EventArgs e)
@@ -3933,19 +3949,6 @@ namespace SecretParse_Plugin
             ActGlobals.oFormActMain.SetOptionsHelpText("Specifies the language of the Secret World client.");
         }
         #endregion
-
-        private void checkBox_EnableTSWAddon_CheckedChanged(object sender, EventArgs e)
-        {
-            lock (addonEnabledLocker)
-            {
-                addonEnabled = checkBox_EnableTSWAddon.Checked;
-            }
-        }
-
-        private void checkBox_ExportScript_CheckedChanged(object sender, EventArgs e)
-        {
-            SetExportFieldStatus();
-        }
 
         private void SetExportFieldStatus()
         {
