@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6004")]
+[assembly: AssemblyVersion("1.0.6.6005")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (crit%taken, pen&taken, ...) to chat export (Holok)
@@ -3304,7 +3304,7 @@ namespace SecretParse_Plugin
                 }
 
                 // Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
-                if ((SecretLanguage.DamageWithoutOrigin.Count > 0) && (attacker.Equals(ActGlobals.charName)))
+                if ((SecretLanguage.DamageWithoutOrigin.Count > 0) && (attacker.Equals(GetCharName())))
                 {
                     if (SecretLanguage.DamageWithoutOrigin.Contains(attackName)) {
                         attacker = victim;
@@ -4200,6 +4200,15 @@ namespace SecretParse_Plugin
             DamageWithoutOrigin.Add("Brennt");
             DamageWithoutOrigin.Add("Kochend heiß");
             DamageWithoutOrigin.Add("In Flammen");
+            DamageWithoutOrigin.Add("Superheißes Metall");
+            DamageWithoutOrigin.Add("Lebensverbrennung");
+            DamageWithoutOrigin.Add("Traumgewand");
+            DamageWithoutOrigin.Add("Moloch");
+            DamageWithoutOrigin.Add("Schmutzsog");
+            DamageWithoutOrigin.Add("Entfernen");
+            //DamageWithoutOrigin.Add("Auflösung"); //damage type: filth // Can't do this here because of the blood skill with the same name
+            DamageWithoutOrigin.Add("Herabstürzende Trümmer");
+            DamageWithoutOrigin.Add("Konditionierung");
 
             damageLines = new List<Regex>();
             string apostropheSkills = "Tod von oben|Androhung von Waffengewalt|Von Anfang bis Ende|Runter von meinem Land|Sturm von Niflheim";
