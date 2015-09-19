@@ -3,7 +3,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.6.6006 pre 1.0.6.7
+## 1.0.6.6007 pre 1.0.6.7
 ! critical aegis hits needs are not fully supported, need more samples !
 + merged with v1.0.6.6 from RedEyeEagle
 + added checkbox for colored output, rearranged some checkboxes
@@ -20,6 +20,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 ##### French
 * /acttell script now works properly for French clients
+* workaround for regex-compiling times
 
 ## 1.0.6.6 - by Inkraja
 * incoming damage with block, evade and glance percentages to chat script added

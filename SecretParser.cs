@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6006")]
+[assembly: AssemblyVersion("1.0.6.6007")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -3264,7 +3264,12 @@ namespace SecretParse_Plugin
                 GroupCollection groups = matches[0].Groups;
                 attacker = groups["actor"].Value.Trim(' ', '"');
                 victim = groups["actee"].Value.Trim(' ', '"');
-                attackName = removeFont(groups["attackName"].Value.Trim(' ', '"', '\'')) + attackSuffix;
+                attackName = removeFont(groups["attackName"].Value);
+                if (("".Equals(attacker)) && !(attackName.Contains("\"")) && (SecretLanguage.Language == SecretLanguage.German))
+                {
+                    attacker = victim;
+                }
+                attackName = attackName.Trim(' ', '"', '\'') + attackSuffix;
                 string damageTypeStr = TrimBrackets(groups["damageType"].Value);
                 string damageClassStr = TrimBrackets(groups["damageClass"].Value);
                 string blockTypeStr = TrimBrackets(groups["blockType"].Value);
@@ -3295,13 +3300,13 @@ namespace SecretParse_Plugin
                 attacker = ConvertCharName(attacker);
 
                 // Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
-                if ((SecretLanguage.DamageWithoutOrigin.Count > 0) && ("".Equals(attacker)))
-                {
-                    if (SecretLanguage.DamageWithoutOrigin.Contains(attackName))
-                    {
-                        attacker = victim;
-                    }
-                }
+//                if ((SecretLanguage.DamageWithoutOrigin.Count > 0) && ("".Equals(attacker)))
+//                {
+//                    if (SecretLanguage.DamageWithoutOrigin.Contains(attackName))
+//                    {
+//                        attacker = victim;
+//                    }
+//                }
 
                 if ("Ihres".Equals(victim))
                 {
