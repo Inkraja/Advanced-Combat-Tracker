@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6007")]
+[assembly: AssemblyVersion("1.0.6.6008")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -4221,8 +4221,8 @@ namespace SecretParse_Plugin
             damageLines = new List<Regex>();
             string apostropheSkills = "Tod von oben|Androhung von Waffengewalt|Von Anfang bis Ende|Runter von meinem Land|Sturm von Niflheim";
             damageLines.Add(new Regex(@"^(?<actor>Ihre)\s(?<attackName>.+?)-Kraft\sfügt\s(?<actee>.+)\s(?<amount>[0-9]+)\sSchaden\szu\.", RegexOptions.Compiled));
-            damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?("")?(?<attackName>""?" + apostropheSkills + @"""?)("")?\s(?<damageType>\([^\)]+\)\s)?von\s(?<actor>.+?)\sfügt\s(?<actee>.+?)\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>-Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
-            damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?("")?(?<attackName>""?" + apostropheSkills + @"""?)("")?\s(?<damageType>\([^\)]+\)\s)?fügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>-Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
+            damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>(""?)(" + apostropheSkills + @")(""?))\s(?<damageType>\([^\)]+\)\s)?fügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>-Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
+            damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>(""?)(" + apostropheSkills + @")(""?))\s(?<damageType>\([^\)]+\)\s)?von\s(?<actor>.+?)\sfügt\s(?<actee>.+?)\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>-Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>.+?)\s(?<damageType>\([^\)]+\)\s)?von\s(?<actor>.+?)\sfügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(\-)?(?<ignore>Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>.+?)\s(?<damageType>\([^\)]+\)\s)?fügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>-Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<actor>Ihr)\s(?<attackName>.+?)\strifft\s(?<actee>.+?)\s(?<crit>kritisch\s)?für\s(?<amount>[0-9]+)\sSchaden\.", RegexOptions.Compiled));
@@ -4236,7 +4236,7 @@ namespace SecretParse_Plugin
             redirectLines.Add(new Regex(@"^(?<actor>Ihr)\s(?<attackName>" + apostropheSkills + @"?)\s(?<damageType>\([^\)]+\)\s)?leitet\s(?<amount>[0-9]+)\sSchaden\sauf\s(?<actee>.+?)\sum\.", RegexOptions.Compiled));
 
             healLines = new List<Regex>();
-            healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?("")?(?<attackName>""?" + apostropheSkills + @"""?)("")?\svon\s(?<actor>.*?)\sgewährt\s(?<actee>.+?)\s(?<amount>[0-9]+)\sPunkte\sHeilung\.", RegexOptions.Compiled));
+            healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?("")?(?<attackName>" + apostropheSkills + @")("")?\svon\s(?<actor>.*?)\sgewährt\s(?<actee>.+?)\s(?<amount>[0-9]+)\sPunkte\sHeilung\.", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<attackName>.+?)\svon\s(?<actor>.+?)?(\s)?gewährt\s(?<actee>.+?)\s(?<amount>[0-9]+)\sPunkte\sHeilung\.", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(Ihr\s)?(?<attackName>.+?)\sgewährt\s(?<actee>.+?)\s(?<amount>[0-9]+)\sPunkte\sHeilung\.", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<attackName>.+?)\sgewährt\s(?<actee>.+?)\s(?<amount>[0-9]+)\sHeilung\.", RegexOptions.Compiled));
@@ -4248,8 +4248,8 @@ namespace SecretParse_Plugin
 
             evadedLines = new List<Regex>();
             evadedLines.Add(new Regex(@"^(?<actee>.+?)\sist\s(?<actor>Ihrer)\sKraft\s(?<attackName>.+?)\sausgewichen\.$", RegexOptions.Compiled));
-            evadedLines.Add(new Regex(@"^(?<actee>.+?)\sist\s("")?(?<attackName>""?" + apostropheSkills + @"""?)("")?\svon\s(?<actor>.+?)\sausgewichen\.$", RegexOptions.Compiled));
-            evadedLines.Add(new Regex(@"^(?<actor>Sie)\ssind\s("")?(?<attackName>""?" + apostropheSkills + @"""?)("")?\svon\s(?<actor>.+?)\sausgewichen\.$", RegexOptions.Compiled));
+            evadedLines.Add(new Regex(@"^(?<actee>.+?)\sist\s("")?(?<attackName>" + apostropheSkills + @")("")?\svon\s(?<actor>.+?)\sausgewichen\.$", RegexOptions.Compiled));
+            evadedLines.Add(new Regex(@"^(?<actor>Sie)\ssind\s("")?(?<attackName>" + apostropheSkills + @")("")?\svon\s(?<actor>.+?)\sausgewichen\.$", RegexOptions.Compiled));
             evadedLines.Add(new Regex(@"^(?<actee>.+?)\sist\s(?<attackName>.+?)\svon\s(?<actor>.+?)\sausgewichen\.$", RegexOptions.Compiled));
             evadedLines.Add(new Regex(@"^(?<actor>Sie)\ssind\s(?<attackName>.+?)\svon\s(?<actor>.+?)\sausgewichen\.$", RegexOptions.Compiled));
 
