@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6008")]
+[assembly: AssemblyVersion("1.0.6.6009")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -558,7 +558,7 @@ namespace SecretParse_Plugin
         private const string OUT_HEAL = "Healed (Out)";
         private const string ALL_OUTGOING = "All Outgoing (Ref)";
         private const string INC_DAMAGE = "Incoming Damage";
-        private const int CHAT_LIMIT = 2400;
+        private const int CHAT_LIMIT = 2500;
         private Label lblStatus;
         private TreeNode optionsNode = null;
         private string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Secret.config.xml");
@@ -1682,6 +1682,7 @@ namespace SecretParse_Plugin
             {
                 const int NameLength = 7;
                 StringBuilder line = new StringBuilder();
+                StringBuilder lineSplit = new StringBuilder();
                 bool exportColored = checkBox_ExportColored.Checked;
                 string title = encounter.Title;
                 string combat_duration = encounter.Duration.TotalSeconds > 599 ? encounter.DurationS : encounter.DurationS.Substring(1, 4);
@@ -1847,14 +1848,7 @@ namespace SecretParse_Plugin
                     line.Append(hdrTank);
                     line.Append("{2}</div><br><div>");
                 }
-                if (lineMax.Count > 0)
-                {
-                    line.Append(hdrMax);
-                    for (var i = 0; i < lineMax.Count; i++)
-                    {
-                        line.Append(lineMax[i]);
-                    }
-                }
+                AppendLineMax(lineMax, hdrMax, line);
                 line.Append("</div>");
                 line.Append("</font>");
                 line.AppendFormat(Expl + "\">{0} - {1}</a>", title, heading);
@@ -1922,6 +1916,33 @@ namespace SecretParse_Plugin
 
                 string output = string.Format(line.ToString(), outDamage, outHeal, outTank);
 
+                // actchatsplit chat script
+                lineSplit.Append("<font color=red>[ ").Append(title).Append(" - ").Append(heading).Append(" ]</font>").AppendLine();
+
+                // Damage Report
+                lineSplit.Append("<a href=\"text://<div align=center><font face=HEADLINE color=red>").Append(title).Append("</font><br><font face=HUGE color=#FF6600>").Append(heading).Append("</font></div><br><font face=LARGE>");
+                lineSplit.Append("<div>").Append(hdrDamage);
+                AppendLines(lineDamage, lineSplit);
+                lineSplit.Append("</div><br>");
+                AppendLineMax(lineMax, hdrMax, lineSplit);
+                lineSplit.Append("</font>").Append(Expl).Append("\">Damage Report</a>").AppendLine();
+
+                // Heal Report
+                lineSplit.Append("<a href=\"text://<div align=center><font face=HEADLINE color=red>").Append(title).Append("</font><br><font face=HUGE color=#FF6600>").Append(heading).Append("</font></div><br><font face=LARGE>");
+                lineSplit.Append("<div>").Append(hdrHeal);
+                AppendLines(lineHeal, lineSplit);
+                lineSplit.Append("</div><br>");
+                AppendLineMax(lineMax, hdrMax, lineSplit);
+                lineSplit.Append("</font>").Append(Expl).Append("\">Heal Report</a>").AppendLine();
+
+                // Tank Report
+                lineSplit.Append("<a href=\"text://<div align=center><font face=HEADLINE color=red>").Append(title).Append("</font><br><font face=HUGE color=#FF6600>").Append(heading).Append("</font></div><br><font face=LARGE>");
+                lineSplit.Append("<div>").Append(hdrTank);
+                AppendLines(lineTank, lineSplit);
+                lineSplit.Append("</div><br>");
+                AppendLineMax(lineMax, hdrMax, lineSplit);
+                lineSplit.Append("</font>").Append(Expl).Append("\">Tank Report</a>").AppendLine();
+
                 try
                 {
                     using (TextWriter writer = new StreamWriter(Path.Combine(scriptFolder, "actchat"), false, Encoding.GetEncoding(1252)))
@@ -1931,6 +1952,10 @@ namespace SecretParse_Plugin
                     using (TextWriter writer = new StreamWriter(Path.Combine(scriptFolder, "acttell"), false, Encoding.GetEncoding(1252)))
                     {
                         writer.WriteLine(SecretLanguage.WhisperCmd + " %1 " + output);
+                    }
+                    using (TextWriter writer = new StreamWriter(Path.Combine(scriptFolder, "actchatsplit"), false, Encoding.GetEncoding(1252)))
+                    {
+                        writer.WriteLine(lineSplit.ToString());
                     }
                 }
                 catch (Exception)
@@ -1948,6 +1973,24 @@ namespace SecretParse_Plugin
                 sum += line.Length;
             }
             return sum;
+        }
+
+        private void AppendLineMax(List<String> lineMax, String hdrMax, StringBuilder line) {
+            if (lineMax.Count > 0)
+            {
+                line.Append(hdrMax);
+                for (var i = 0; i < lineMax.Count; i++)
+                {
+                    line.Append(lineMax[i]);
+                }
+            }
+        }
+
+        private void AppendLines(List<String> lines, StringBuilder line) {
+            for (var i = 0; i < lines.Count; i++)
+            {
+                line.Append(lines[i]);
+            }
         }
 
         private void GetMaxText(List<CombatantData> allys, bool showName, CultureInfo usCulture, out string maxHit, out string maxHeal, out String maxDamage)
@@ -4217,6 +4260,8 @@ namespace SecretParse_Plugin
             //DamageWithoutOrigin.Add("Auflösung"); //damage type: filth // Can't do this here because of the blood skill with the same name
             DamageWithoutOrigin.Add("Herabstürzende Trümmer");
             DamageWithoutOrigin.Add("Konditionierung");
+            DamageWithoutOrigin.Add("Hauruck!");
+            DamageWithoutOrigin.Add("Angriff");
 
             damageLines = new List<Regex>();
             string apostropheSkills = "Tod von oben|Androhung von Waffengewalt|Von Anfang bis Ende|Runter von meinem Land|Sturm von Niflheim";

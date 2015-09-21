@@ -3,7 +3,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.6.6008 pre 1.0.6.7
+## 1.0.6.6009 pre 1.0.6.7
 ! critical aegis hits needs are not fully supported, need more samples !
 + merged with v1.0.6.6 from RedEyeEagle
 + added checkbox for colored output, rearranged some checkboxes
@@ -13,6 +13,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 * fixed missing players due to bug in tanking stats
 * added option to export rounded dps values to the chat script
 * prevent exception during parsing
++ new chat script /actchatsplit that exports damage, heal and tank as separate pop-ups
 
 ##### German
 * Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
