@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6010")]
+[assembly: AssemblyVersion("1.0.6.6011")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -1930,10 +1930,10 @@ namespace SecretParse_Plugin
                 string linkHeal = "\">Heal Report</a>";
                 string linkTank = "\">Tank Report</a>";
 
-                int scriptFixLength = linkStart.Length + linkCenter.Length + linkEnd.Length + tagDivStart.Length + tagDivEnd.Length + tagFontEnd.Length;
-                int scriptDamageLength = scriptFixLength + hdrDamage.Length + linkDamage.Length + Expl.Length;
-                int scriptHealLength = scriptFixLength + hdrHeal.Length + linkHeal.Length + Expl.Length;
-                int scriptTankLength = scriptFixLength + hdrTank.Length + linkTank.Length + Expl.Length;
+                int scriptBaseLength = linkStart.Length + linkCenter.Length + linkEnd.Length + tagDivStart.Length + tagDivEnd.Length + tagFontEnd.Length + title.Length + heading.Length + Expl.Length;
+                int scriptDamageLength = scriptBaseLength + hdrDamage.Length + linkDamage.Length;
+                int scriptHealLength = scriptBaseLength + hdrHeal.Length + linkHeal.Length;
+                int scriptTankLength = scriptBaseLength + hdrTank.Length + linkTank.Length;
 
                 // Damage Report
                 lineSplit.Append(linkStart).Append(title).Append(linkCenter).Append(heading).Append(linkEnd);
