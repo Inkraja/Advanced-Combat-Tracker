@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6009")]
+[assembly: AssemblyVersion("1.0.6.6010")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -1919,29 +1919,66 @@ namespace SecretParse_Plugin
                 // actchatsplit chat script
                 lineSplit.Append("<font color=red>[ ").Append(title).Append(" - ").Append(heading).Append(" ]</font>").AppendLine();
 
+                string linkStart = "<a href=\"text://<div align=center><font face=HEADLINE color=red>";
+                string linkCenter = "</font><br><font face=HUGE color=#FF6600>";
+                string linkEnd = "</font></div><br><font face=LARGE>";
+                string tagDivStart = "<div>";
+                string tagDivEnd = "</div><br>";
+                string tagFontEnd = "</font>";
+
+                string linkDamage = "\">Damage Report</a>";
+                string linkHeal = "\">Heal Report</a>";
+                string linkTank = "\">Tank Report</a>";
+
+                int scriptFixLength = linkStart.Length + linkCenter.Length + linkEnd.Length + tagDivStart.Length + tagDivEnd.Length + tagFontEnd.Length;
+                int scriptDamageLength = scriptFixLength + hdrDamage.Length + linkDamage.Length + Expl.Length;
+                int scriptHealLength = scriptFixLength + hdrHeal.Length + linkHeal.Length + Expl.Length;
+                int scriptTankLength = scriptFixLength + hdrTank.Length + linkTank.Length + Expl.Length;
+
                 // Damage Report
-                lineSplit.Append("<a href=\"text://<div align=center><font face=HEADLINE color=red>").Append(title).Append("</font><br><font face=HUGE color=#FF6600>").Append(heading).Append("</font></div><br><font face=LARGE>");
-                lineSplit.Append("<div>").Append(hdrDamage);
-                AppendLines(lineDamage, lineSplit);
-                lineSplit.Append("</div><br>");
+                lineSplit.Append(linkStart).Append(title).Append(linkCenter).Append(heading).Append(linkEnd);
+                lineSplit.Append(tagDivStart).Append(hdrDamage);
+                if (scriptDamageLength + DmgLen > CHAT_LIMIT)
+                {
+                    AppendLinesReduced(lineDamage, lineSplit, CHAT_LIMIT - scriptDamageLength, lineReduced);
+                }
+                else
+                {
+                    AppendLines(lineDamage, lineSplit);
+                }
+                lineSplit.Append(tagDivEnd);
                 AppendLineMax(lineMax, hdrMax, lineSplit);
-                lineSplit.Append("</font>").Append(Expl).Append("\">Damage Report</a>").AppendLine();
+                lineSplit.Append(tagFontEnd).Append(Expl).Append(linkDamage).AppendLine();
 
                 // Heal Report
-                lineSplit.Append("<a href=\"text://<div align=center><font face=HEADLINE color=red>").Append(title).Append("</font><br><font face=HUGE color=#FF6600>").Append(heading).Append("</font></div><br><font face=LARGE>");
-                lineSplit.Append("<div>").Append(hdrHeal);
-                AppendLines(lineHeal, lineSplit);
-                lineSplit.Append("</div><br>");
+                lineSplit.Append(linkStart).Append(title).Append(linkCenter).Append(heading).Append(linkEnd);
+                lineSplit.Append(tagDivStart).Append(hdrHeal);
+                if (scriptHealLength + HealLen > CHAT_LIMIT)
+                {
+                    AppendLinesReduced(lineHeal, lineSplit, CHAT_LIMIT - scriptHealLength, lineReduced);
+                }
+                else
+                {
+                    AppendLines(lineHeal, lineSplit);
+                }
+                lineSplit.Append(tagDivEnd);
                 AppendLineMax(lineMax, hdrMax, lineSplit);
-                lineSplit.Append("</font>").Append(Expl).Append("\">Heal Report</a>").AppendLine();
+                lineSplit.Append(tagFontEnd).Append(Expl).Append(linkHeal).AppendLine();
 
                 // Tank Report
-                lineSplit.Append("<a href=\"text://<div align=center><font face=HEADLINE color=red>").Append(title).Append("</font><br><font face=HUGE color=#FF6600>").Append(heading).Append("</font></div><br><font face=LARGE>");
-                lineSplit.Append("<div>").Append(hdrTank);
-                AppendLines(lineTank, lineSplit);
-                lineSplit.Append("</div><br>");
+                lineSplit.Append(linkStart).Append(title).Append(linkCenter).Append(heading).Append(linkEnd);
+                lineSplit.Append(tagDivStart).Append(hdrTank);
+                if (scriptTankLength + TankLen > CHAT_LIMIT)
+                {
+                    AppendLinesReduced(lineTank, lineSplit, CHAT_LIMIT - scriptTankLength, lineReduced);
+                }
+                else
+                {
+                    AppendLines(lineTank, lineSplit);
+                }
+                lineSplit.Append(tagDivEnd);
                 AppendLineMax(lineMax, hdrMax, lineSplit);
-                lineSplit.Append("</font>").Append(Expl).Append("\">Tank Report</a>").AppendLine();
+                lineSplit.Append(tagFontEnd).Append(Expl).Append(linkTank).AppendLine();
 
                 try
                 {
@@ -1990,6 +2027,27 @@ namespace SecretParse_Plugin
             for (var i = 0; i < lines.Count; i++)
             {
                 line.Append(lines[i]);
+            }
+        }
+
+        private void AppendLinesReduced(List<String> lines, StringBuilder line, int charLimit, String lineReduced) {
+            int usedChars = 0;
+            int lineReducedLength = lineReduced.Length;
+            int lineLength = 0;
+
+            for (var i = 0; i < lines.Count; i++)
+            {
+                lineLength = lines[i].Length;
+                if (usedChars + lineLength + lineReducedLength <= charLimit)
+                {
+                    line.Append(lines[i]);
+                    usedChars += lineLength;
+                }
+                else
+                {
+                    line.Append(string.Format(lineReduced, lines.Count - i));
+                    break;
+                }
             }
         }
 
@@ -2475,53 +2533,7 @@ namespace SecretParse_Plugin
 
                         embed[entry.Key] = att;
                     }
-                    /*
-                    foreach (var entry in data.Items[INC_DAMAGE].Items)
-                    {
-                        var item = entry.Value;
-                        if (ALL.Equals(entry.Key) || item.Damage < 1)
-                        {
-                            continue;
-                        }
 
-                        Dictionary<string, string> att;
-
-                        if (embed.ContainsKey(entry.Key))
-                        {
-                            att = embed[entry.Key];
-                        }
-                        else
-                        {
-                            att = new Dictionary<string, string>();
-                            att["name"] = entry.Key;
-                            att["death"] = "0";
-                            att["duration"] = "";
-                            att["dmg"] = "0";
-                            att["dps%"] = "0%";
-                            att["dps"] = "0";
-                            att["pen%"] = "0%";
-                            att["crit%"] = "0%";
-                            att["glance%"] = "0%";
-                            att["block%"] = "0%";
-                            att["evade%"] = "0";
-                            att["aegisdmg"] = "0";
-                            att["aegismismatch%"] = "0%";
-                            att["dmgKey"] = GetScriptKey(0);
-                            att["healing"] = "0";
-                            att["hps%"] = "0%";
-                            att["hps"] = "0";
-                            att["healcrit%"] = "0%";
-                            att["healKey"] = GetScriptKey(0);
-                            att["damagetaken"] = "0";
-                            att["takencrit%"] = "0%";
-                            att["takenpen%"] = "0%";
-                            att["takenglance%"] = "0%";
-                            att["takenblocked%"] = "0%";
-                            att["takenevade%"] = "0%";
-                       }
-                       embed[entry.Key] = att;
-                    }
-                    */
                     var embedOrder = new SortedDictionary<string, string>();
                     foreach (var item in embed.Values)
                     {
@@ -3342,15 +3354,6 @@ namespace SecretParse_Plugin
 
                 attacker = ConvertCharName(attacker);
 
-                // Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
-//                if ((SecretLanguage.DamageWithoutOrigin.Count > 0) && ("".Equals(attacker)))
-//                {
-//                    if (SecretLanguage.DamageWithoutOrigin.Contains(attackName))
-//                    {
-//                        attacker = victim;
-//                    }
-//                }
-
                 if ("Ihres".Equals(victim))
                 {
                     victim = attacker;
@@ -3637,7 +3640,7 @@ namespace SecretParse_Plugin
             xWriter.Close();
         }
 
-         void SecretCheckUpdate()
+        void SecretCheckUpdate()
         {
             int pluginId = 63; // The download ID from the ACT website
             try
