@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6012")]
+[assembly: AssemblyVersion("1.0.6.6013")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -558,7 +558,7 @@ namespace SecretParse_Plugin
         private const string OUT_HEAL = "Healed (Out)";
         private const string ALL_OUTGOING = "All Outgoing (Ref)";
         private const string INC_DAMAGE = "Incoming Damage";
-        private const int CHAT_LIMIT = 2500;
+        private const int CHAT_LIMIT = 2400;
         private Label lblStatus;
         private TreeNode optionsNode = null;
         private string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Secret.config.xml");
@@ -1979,7 +1979,7 @@ namespace SecretParse_Plugin
                 }
                 lineSplit.Append(tagDivEnd);
                 AppendLineMax(lineMax, hdrMax, lineSplit);
-                lineSplit.Append(tagFontEnd).Append(Expl).Append(linkTank).AppendLine();
+                lineSplit.Append(tagFontEnd).Append(Expl).Append(linkTank);
 
                 try
                 {
