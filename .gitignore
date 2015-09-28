@@ -1,0 +1,8 @@
+# visual studio ignores
+app.config
+bin/*
+obj/*
+Properties/*
+*.resx
+*.csproj
+*.csproj.user
