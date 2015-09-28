@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.6013")]
+[assembly: AssemblyVersion("1.0.6.6014")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -73,9 +73,11 @@ namespace SecretParse_Plugin
             this.comboBox_Language = new System.Windows.Forms.ComboBox();
             this.checkBox_AutoCheck = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportScript = new System.Windows.Forms.CheckBox();
+            this.checkBox_LimitNames = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportRoundDPS = new System.Windows.Forms.CheckBox();
-            this.checkBox_ExportColored = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportShowLegend = new System.Windows.Forms.CheckBox();
+            this.checkBox_ExportColored = new System.Windows.Forms.CheckBox();
+            this.checkBox_ExportSplit = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportHtml = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportAllies = new System.Windows.Forms.CheckBox();
             this.checkBox_DontExportShortEnc = new System.Windows.Forms.CheckBox();
@@ -84,7 +86,6 @@ namespace SecretParse_Plugin
             this.checkBox_HideUnknown = new System.Windows.Forms.CheckBox();
             this.checkBox_SelfDamage = new System.Windows.Forms.CheckBox();
             this.checkBox_SelfPlayerDamage = new System.Windows.Forms.CheckBox();
-            this.checkBox_LimitNames = new System.Windows.Forms.CheckBox();
             this.checkBox_ReduceAegis = new System.Windows.Forms.CheckBox();
             this.labelFilterinig = new System.Windows.Forms.Label();
             this.checkBox_Filter = new System.Windows.Forms.CheckBox();
@@ -99,9 +100,9 @@ namespace SecretParse_Plugin
             this.labelFilterChars = new System.Windows.Forms.Label();
             this.checkedListBox_Filters = new System.Windows.Forms.CheckedListBox();
             this.SuspendLayout();
-            //
+            // 
             // labelHeader
-            //
+            // 
             this.labelHeader.AutoSize = true;
             this.labelHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelHeader.Location = new System.Drawing.Point(12, 9);
@@ -110,9 +111,9 @@ namespace SecretParse_Plugin
             this.labelHeader.TabIndex = 26;
             this.labelHeader.Text = "Secret Combat parser plugin Options";
             this.labelHeader.MouseHover += new System.EventHandler(this.label1_MouseHover);
-            //
+            // 
             // labelGeneral
-            //
+            // 
             this.labelGeneral.AutoSize = true;
             this.labelGeneral.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelGeneral.Location = new System.Drawing.Point(12, 28);
@@ -120,18 +121,18 @@ namespace SecretParse_Plugin
             this.labelGeneral.Size = new System.Drawing.Size(44, 13);
             this.labelGeneral.TabIndex = 27;
             this.labelGeneral.Text = "General";
-            //
+            // 
             // labelLanguage
-            //
+            // 
             this.labelLanguage.AutoSize = true;
             this.labelLanguage.Location = new System.Drawing.Point(12, 44);
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.Size = new System.Drawing.Size(55, 13);
             this.labelLanguage.TabIndex = 28;
             this.labelLanguage.Text = "Language";
-            //
+            // 
             // comboBox_Language
-            //
+            // 
             this.comboBox_Language.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Language.FormattingEnabled = true;
             this.comboBox_Language.Items.AddRange(new object[] {
@@ -144,9 +145,9 @@ namespace SecretParse_Plugin
             this.comboBox_Language.TabIndex = 1;
             this.comboBox_Language.SelectedIndexChanged += new System.EventHandler(this.comboBox_Language_SelectedIndexChanged);
             this.comboBox_Language.MouseHover += new System.EventHandler(this.comboBox_Language_MouseHover);
-            //
+            // 
             // checkBox_AutoCheck
-            //
+            // 
             this.checkBox_AutoCheck.AutoSize = true;
             this.checkBox_AutoCheck.Checked = true;
             this.checkBox_AutoCheck.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -157,9 +158,9 @@ namespace SecretParse_Plugin
             this.checkBox_AutoCheck.Text = "Auto check the web page for new version of the Secret Plugin";
             this.checkBox_AutoCheck.UseVisualStyleBackColor = true;
             this.checkBox_AutoCheck.MouseHover += new System.EventHandler(this.checkBox_AutoCheck_MouseHover);
-            //
+            // 
             // checkBox_ExportScript
-            //
+            // 
             this.checkBox_ExportScript.AutoSize = true;
             this.checkBox_ExportScript.Checked = true;
             this.checkBox_ExportScript.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -171,139 +172,9 @@ namespace SecretParse_Plugin
             this.checkBox_ExportScript.UseVisualStyleBackColor = true;
             this.checkBox_ExportScript.CheckedChanged += new System.EventHandler(this.checkBox_ExportScript_CheckedChanged);
             this.checkBox_ExportScript.MouseHover += new System.EventHandler(this.checkBox_ExportScript_MouseHover);
-            //
-            // checkBox_ExportRoundDPS
-            //
-            this.checkBox_ExportRoundDPS.AutoSize = true;
-            this.checkBox_ExportRoundDPS.Location = new System.Drawing.Point(35, 110);
-            this.checkBox_ExportRoundDPS.Name = "checkBox_ExportRoundDPS";
-            this.checkBox_ExportRoundDPS.Size = new System.Drawing.Size(150, 17);
-            this.checkBox_ExportRoundDPS.TabIndex = 5;
-            this.checkBox_ExportRoundDPS.Text = "Round DPS / HPS values";
-            this.checkBox_ExportRoundDPS.UseVisualStyleBackColor = true;
-            this.checkBox_ExportRoundDPS.MouseHover += new System.EventHandler(this.checkBox_ExportRoundDPS_MouseHover);
-            //
-            // checkBox_ExportColored
-            //
-            this.checkBox_ExportColored.AutoSize = true;
-            this.checkBox_ExportColored.Location = new System.Drawing.Point(35, 142);
-            this.checkBox_ExportColored.Name = "checkBox_ExportColored";
-            this.checkBox_ExportColored.Size = new System.Drawing.Size(87, 17);
-            this.checkBox_ExportColored.TabIndex = 7;
-            this.checkBox_ExportColored.Text = "Colored Chat";
-            this.checkBox_ExportColored.UseVisualStyleBackColor = true;
-            this.checkBox_ExportColored.MouseHover += new System.EventHandler(this.checkBox_ExportColored_MouseHover);
-            //
-            // checkBox_ExportShowLegend
-            //
-            this.checkBox_ExportShowLegend.AutoSize = true;
-            this.checkBox_ExportShowLegend.Checked = true;
-            this.checkBox_ExportShowLegend.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_ExportShowLegend.Location = new System.Drawing.Point(35, 126);
-            this.checkBox_ExportShowLegend.Name = "checkBox_ExportShowLegend";
-            this.checkBox_ExportShowLegend.Size = new System.Drawing.Size(155, 17);
-            this.checkBox_ExportShowLegend.TabIndex = 6;
-            this.checkBox_ExportShowLegend.Text = "Show legend in TSW script";
-            this.checkBox_ExportShowLegend.UseVisualStyleBackColor = true;
-            this.checkBox_ExportShowLegend.MouseHover += new System.EventHandler(this.checkBox_ExportShowLegend_MouseHover);
-            //
-            // checkBox_ExportHtml
-            //
-            this.checkBox_ExportHtml.AutoSize = true;
-            this.checkBox_ExportHtml.Checked = true;
-            this.checkBox_ExportHtml.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_ExportHtml.Location = new System.Drawing.Point(15, 158);
-            this.checkBox_ExportHtml.Name = "checkBox_ExportHtml";
-            this.checkBox_ExportHtml.Size = new System.Drawing.Size(151, 17);
-            this.checkBox_ExportHtml.TabIndex = 8;
-            this.checkBox_ExportHtml.Text = "Export results to TSW html";
-            this.checkBox_ExportHtml.UseVisualStyleBackColor = true;
-            this.checkBox_ExportHtml.MouseHover += new System.EventHandler(this.checkBox_ExportHtml_MouseHover);
-            //
-            // checkBox_ExportAllies
-            //
-            this.checkBox_ExportAllies.AutoSize = true;
-            this.checkBox_ExportAllies.Checked = true;
-            this.checkBox_ExportAllies.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_ExportAllies.Location = new System.Drawing.Point(15, 174);
-            this.checkBox_ExportAllies.Name = "checkBox_ExportAllies";
-            this.checkBox_ExportAllies.Size = new System.Drawing.Size(174, 17);
-            this.checkBox_ExportAllies.TabIndex = 9;
-            this.checkBox_ExportAllies.Text = "Export results for raid/team only";
-            this.checkBox_ExportAllies.UseVisualStyleBackColor = true;
-            this.checkBox_ExportAllies.MouseHover += new System.EventHandler(this.checkBox_ExportAllies_MouseHover);
-            //
-            // checkBox_DontExportShortEnc
-            //
-            this.checkBox_DontExportShortEnc.AutoSize = true;
-            this.checkBox_DontExportShortEnc.Checked = true;
-            this.checkBox_DontExportShortEnc.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_DontExportShortEnc.Location = new System.Drawing.Point(15, 190);
-            this.checkBox_DontExportShortEnc.Name = "checkBox_DontExportShortEnc";
-            this.checkBox_DontExportShortEnc.Size = new System.Drawing.Size(192, 17);
-            this.checkBox_DontExportShortEnc.TabIndex = 10;
-            this.checkBox_DontExportShortEnc.Text = "Dont export sub 10 sec encounters";
-            this.checkBox_DontExportShortEnc.UseVisualStyleBackColor = true;
-            this.checkBox_DontExportShortEnc.MouseHover += new System.EventHandler(this.checkBox_DontExportShortEnc_MouseHover);
-            //
-            // checkBox_EnableTSWAddon
-            //
-            this.checkBox_EnableTSWAddon.AutoSize = true;
-            this.checkBox_EnableTSWAddon.Location = new System.Drawing.Point(15, 206);
-            this.checkBox_EnableTSWAddon.Name = "checkBox_EnableTSWAddon";
-            this.checkBox_EnableTSWAddon.Size = new System.Drawing.Size(183, 17);
-            this.checkBox_EnableTSWAddon.TabIndex = 11;
-            this.checkBox_EnableTSWAddon.Text = "Enable TSWACT Addon features";
-            this.checkBox_EnableTSWAddon.UseVisualStyleBackColor = true;
-            this.checkBox_EnableTSWAddon.CheckedChanged += new System.EventHandler(this.checkBox_EnableTSWAddon_CheckedChanged);
-            this.checkBox_EnableTSWAddon.MouseHover += new System.EventHandler(this.checkBox_EnableTSWAddon_MouseHover);
-            //
-            // checkBox_AutofixDBConf
-            //
-            this.checkBox_AutofixDBConf.AutoSize = true;
-            this.checkBox_AutofixDBConf.Location = new System.Drawing.Point(35, 222);
-            this.checkBox_AutofixDBConf.Name = "checkBox_AutofixDBConf";
-            this.checkBox_AutofixDBConf.Size = new System.Drawing.Size(148, 17);
-            this.checkBox_AutofixDBConf.TabIndex = 12;
-            this.checkBox_AutofixDBConf.Text = "Auto fix dbDebug.conf file";
-            this.checkBox_AutofixDBConf.UseVisualStyleBackColor = true;
-            this.checkBox_AutofixDBConf.MouseHover += new System.EventHandler(this.checkBox_AutofixDBConf_MouseHover);
-            //
-            // checkBox_HideUnknown
-            //
-            this.checkBox_HideUnknown.AutoSize = true;
-            this.checkBox_HideUnknown.Location = new System.Drawing.Point(15, 238);
-            this.checkBox_HideUnknown.Name = "checkBox_HideUnknown";
-            this.checkBox_HideUnknown.Size = new System.Drawing.Size(180, 17);
-            this.checkBox_HideUnknown.TabIndex = 13;
-            this.checkBox_HideUnknown.Text = "Hide the TSW_Unknown entries";
-            this.checkBox_HideUnknown.UseVisualStyleBackColor = true;
-            this.checkBox_HideUnknown.MouseHover += new System.EventHandler(this.checkBox_HideUnknown_MouseHover);
-            //
-            // checkBox_SelfDamage
-            //
-            this.checkBox_SelfDamage.AutoSize = true;
-            this.checkBox_SelfDamage.Location = new System.Drawing.Point(15, 254);
-            this.checkBox_SelfDamage.Name = "checkBox_SelfDamage";
-            this.checkBox_SelfDamage.Size = new System.Drawing.Size(113, 17);
-            this.checkBox_SelfDamage.TabIndex = 14;
-            this.checkBox_SelfDamage.Text = "Show self-damage";
-            this.checkBox_SelfDamage.UseVisualStyleBackColor = true;
-            this.checkBox_SelfDamage.MouseHover += new System.EventHandler(this.checkBox_SelfDamage_MouseHover);
-            //
-            // checkBox_SelfPlayerDamage
-            //
-            this.checkBox_SelfPlayerDamage.AutoSize = true;
-            this.checkBox_SelfPlayerDamage.Location = new System.Drawing.Point(35, 270);
-            this.checkBox_SelfPlayerDamage.Name = "checkBox_SelfPlayerDamage";
-            this.checkBox_SelfPlayerDamage.Size = new System.Drawing.Size(99, 17);
-            this.checkBox_SelfPlayerDamage.TabIndex = 15;
-            this.checkBox_SelfPlayerDamage.Text = "Show by Player";
-            this.checkBox_SelfPlayerDamage.UseVisualStyleBackColor = true;
-            this.checkBox_SelfPlayerDamage.MouseHover += new System.EventHandler(this.checkBox_SelfPlayerDamage_MouseHover);
-            //
+            // 
             // checkBox_LimitNames
-            //
+            // 
             this.checkBox_LimitNames.AutoSize = true;
             this.checkBox_LimitNames.Checked = true;
             this.checkBox_LimitNames.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -314,118 +185,259 @@ namespace SecretParse_Plugin
             this.checkBox_LimitNames.Text = "Limit playernames to 7 chars";
             this.checkBox_LimitNames.UseVisualStyleBackColor = true;
             this.checkBox_LimitNames.MouseHover += new System.EventHandler(this.checkBox_LimitNames_MouseHover);
-            //
+            // 
+            // checkBox_ExportRoundDPS
+            // 
+            this.checkBox_ExportRoundDPS.AutoSize = true;
+            this.checkBox_ExportRoundDPS.Location = new System.Drawing.Point(35, 110);
+            this.checkBox_ExportRoundDPS.Name = "checkBox_ExportRoundDPS";
+            this.checkBox_ExportRoundDPS.Size = new System.Drawing.Size(150, 17);
+            this.checkBox_ExportRoundDPS.TabIndex = 5;
+            this.checkBox_ExportRoundDPS.Text = "Round DPS / HPS values";
+            this.checkBox_ExportRoundDPS.UseVisualStyleBackColor = true;
+            this.checkBox_ExportRoundDPS.MouseHover += new System.EventHandler(this.checkBox_ExportRoundDPS_MouseHover);
+            // 
+            // checkBox_ExportShowLegend
+            // 
+            this.checkBox_ExportShowLegend.AutoSize = true;
+            this.checkBox_ExportShowLegend.Checked = true;
+            this.checkBox_ExportShowLegend.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_ExportShowLegend.Location = new System.Drawing.Point(35, 126);
+            this.checkBox_ExportShowLegend.Name = "checkBox_ExportShowLegend";
+            this.checkBox_ExportShowLegend.Size = new System.Drawing.Size(155, 17);
+            this.checkBox_ExportShowLegend.TabIndex = 6;
+            this.checkBox_ExportShowLegend.Text = "Show legend in TSW script";
+            this.checkBox_ExportShowLegend.UseVisualStyleBackColor = true;
+            this.checkBox_ExportShowLegend.MouseHover += new System.EventHandler(this.checkBox_ExportShowLegend_MouseHover);
+            // 
+            // checkBox_ExportColored
+            // 
+            this.checkBox_ExportColored.AutoSize = true;
+            this.checkBox_ExportColored.Location = new System.Drawing.Point(35, 142);
+            this.checkBox_ExportColored.Name = "checkBox_ExportColored";
+            this.checkBox_ExportColored.Size = new System.Drawing.Size(87, 17);
+            this.checkBox_ExportColored.TabIndex = 7;
+            this.checkBox_ExportColored.Text = "Colored Chat";
+            this.checkBox_ExportColored.UseVisualStyleBackColor = true;
+            this.checkBox_ExportColored.MouseHover += new System.EventHandler(this.checkBox_ExportColored_MouseHover);
+            // 
+            // checkBox_ExportSplit
+            // 
+            this.checkBox_ExportSplit.AutoSize = true;
+            this.checkBox_ExportSplit.Location = new System.Drawing.Point(35, 158);
+            this.checkBox_ExportSplit.Name = "checkBox_ExportSplit";
+            this.checkBox_ExportSplit.Size = new System.Drawing.Size(71, 17);
+            this.checkBox_ExportSplit.TabIndex = 8;
+            this.checkBox_ExportSplit.Text = "Split Chat";
+            this.checkBox_ExportSplit.UseVisualStyleBackColor = true;
+            this.checkBox_ExportSplit.MouseHover += new System.EventHandler(this.checkBox_ExportSplit_MouseHover);
+            // 
+            // checkBox_ExportHtml
+            // 
+            this.checkBox_ExportHtml.AutoSize = true;
+            this.checkBox_ExportHtml.Checked = true;
+            this.checkBox_ExportHtml.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_ExportHtml.Location = new System.Drawing.Point(15, 174);
+            this.checkBox_ExportHtml.Name = "checkBox_ExportHtml";
+            this.checkBox_ExportHtml.Size = new System.Drawing.Size(151, 17);
+            this.checkBox_ExportHtml.TabIndex = 9;
+            this.checkBox_ExportHtml.Text = "Export results to TSW html";
+            this.checkBox_ExportHtml.UseVisualStyleBackColor = true;
+            this.checkBox_ExportHtml.MouseHover += new System.EventHandler(this.checkBox_ExportHtml_MouseHover);
+            // 
+            // checkBox_ExportAllies
+            // 
+            this.checkBox_ExportAllies.AutoSize = true;
+            this.checkBox_ExportAllies.Checked = true;
+            this.checkBox_ExportAllies.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_ExportAllies.Location = new System.Drawing.Point(15, 190);
+            this.checkBox_ExportAllies.Name = "checkBox_ExportAllies";
+            this.checkBox_ExportAllies.Size = new System.Drawing.Size(174, 17);
+            this.checkBox_ExportAllies.TabIndex = 10;
+            this.checkBox_ExportAllies.Text = "Export results for raid/team only";
+            this.checkBox_ExportAllies.UseVisualStyleBackColor = true;
+            this.checkBox_ExportAllies.MouseHover += new System.EventHandler(this.checkBox_ExportAllies_MouseHover);
+            // 
+            // checkBox_DontExportShortEnc
+            // 
+            this.checkBox_DontExportShortEnc.AutoSize = true;
+            this.checkBox_DontExportShortEnc.Checked = true;
+            this.checkBox_DontExportShortEnc.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_DontExportShortEnc.Location = new System.Drawing.Point(15, 206);
+            this.checkBox_DontExportShortEnc.Name = "checkBox_DontExportShortEnc";
+            this.checkBox_DontExportShortEnc.Size = new System.Drawing.Size(192, 17);
+            this.checkBox_DontExportShortEnc.TabIndex = 11;
+            this.checkBox_DontExportShortEnc.Text = "Dont export sub 10 sec encounters";
+            this.checkBox_DontExportShortEnc.UseVisualStyleBackColor = true;
+            this.checkBox_DontExportShortEnc.MouseHover += new System.EventHandler(this.checkBox_DontExportShortEnc_MouseHover);
+            // 
+            // checkBox_EnableTSWAddon
+            // 
+            this.checkBox_EnableTSWAddon.AutoSize = true;
+            this.checkBox_EnableTSWAddon.Location = new System.Drawing.Point(15, 222);
+            this.checkBox_EnableTSWAddon.Name = "checkBox_EnableTSWAddon";
+            this.checkBox_EnableTSWAddon.Size = new System.Drawing.Size(183, 17);
+            this.checkBox_EnableTSWAddon.TabIndex = 12;
+            this.checkBox_EnableTSWAddon.Text = "Enable TSWACT Addon features";
+            this.checkBox_EnableTSWAddon.UseVisualStyleBackColor = true;
+            this.checkBox_EnableTSWAddon.CheckedChanged += new System.EventHandler(this.checkBox_EnableTSWAddon_CheckedChanged);
+            this.checkBox_EnableTSWAddon.MouseHover += new System.EventHandler(this.checkBox_EnableTSWAddon_MouseHover);
+            // 
+            // checkBox_AutofixDBConf
+            // 
+            this.checkBox_AutofixDBConf.AutoSize = true;
+            this.checkBox_AutofixDBConf.Location = new System.Drawing.Point(35, 238);
+            this.checkBox_AutofixDBConf.Name = "checkBox_AutofixDBConf";
+            this.checkBox_AutofixDBConf.Size = new System.Drawing.Size(148, 17);
+            this.checkBox_AutofixDBConf.TabIndex = 13;
+            this.checkBox_AutofixDBConf.Text = "Auto fix dbDebug.conf file";
+            this.checkBox_AutofixDBConf.UseVisualStyleBackColor = true;
+            this.checkBox_AutofixDBConf.MouseHover += new System.EventHandler(this.checkBox_AutofixDBConf_MouseHover);
+            // 
+            // checkBox_HideUnknown
+            // 
+            this.checkBox_HideUnknown.AutoSize = true;
+            this.checkBox_HideUnknown.Location = new System.Drawing.Point(15, 254);
+            this.checkBox_HideUnknown.Name = "checkBox_HideUnknown";
+            this.checkBox_HideUnknown.Size = new System.Drawing.Size(180, 17);
+            this.checkBox_HideUnknown.TabIndex = 14;
+            this.checkBox_HideUnknown.Text = "Hide the TSW_Unknown entries";
+            this.checkBox_HideUnknown.UseVisualStyleBackColor = true;
+            this.checkBox_HideUnknown.MouseHover += new System.EventHandler(this.checkBox_HideUnknown_MouseHover);
+            // 
+            // checkBox_SelfDamage
+            // 
+            this.checkBox_SelfDamage.AutoSize = true;
+            this.checkBox_SelfDamage.Location = new System.Drawing.Point(15, 270);
+            this.checkBox_SelfDamage.Name = "checkBox_SelfDamage";
+            this.checkBox_SelfDamage.Size = new System.Drawing.Size(113, 17);
+            this.checkBox_SelfDamage.TabIndex = 15;
+            this.checkBox_SelfDamage.Text = "Show self-damage";
+            this.checkBox_SelfDamage.UseVisualStyleBackColor = true;
+            this.checkBox_SelfDamage.MouseHover += new System.EventHandler(this.checkBox_SelfDamage_MouseHover);
+            // 
+            // checkBox_SelfPlayerDamage
+            // 
+            this.checkBox_SelfPlayerDamage.AutoSize = true;
+            this.checkBox_SelfPlayerDamage.Location = new System.Drawing.Point(35, 286);
+            this.checkBox_SelfPlayerDamage.Name = "checkBox_SelfPlayerDamage";
+            this.checkBox_SelfPlayerDamage.Size = new System.Drawing.Size(99, 17);
+            this.checkBox_SelfPlayerDamage.TabIndex = 16;
+            this.checkBox_SelfPlayerDamage.Text = "Show by Player";
+            this.checkBox_SelfPlayerDamage.UseVisualStyleBackColor = true;
+            this.checkBox_SelfPlayerDamage.MouseHover += new System.EventHandler(this.checkBox_SelfPlayerDamage_MouseHover);
+            // 
             // checkBox_ReduceAegis
-            //
+            // 
             this.checkBox_ReduceAegis.AutoSize = true;
-            this.checkBox_ReduceAegis.Location = new System.Drawing.Point(15, 286);
+            this.checkBox_ReduceAegis.Location = new System.Drawing.Point(15, 302);
             this.checkBox_ReduceAegis.Name = "checkBox_ReduceAegis";
             this.checkBox_ReduceAegis.Size = new System.Drawing.Size(142, 17);
-            this.checkBox_ReduceAegis.TabIndex = 16;
+            this.checkBox_ReduceAegis.TabIndex = 17;
             this.checkBox_ReduceAegis.Text = "Reduce Aegis on names";
             this.checkBox_ReduceAegis.UseVisualStyleBackColor = true;
             this.checkBox_ReduceAegis.MouseHover += new System.EventHandler(this.checkBox_ReduceAegis_MouseHover);
-            //
+            // 
             // labelFilterinig
-            //
+            // 
             this.labelFilterinig.AutoSize = true;
             this.labelFilterinig.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFilterinig.Location = new System.Drawing.Point(12, 321);
+            this.labelFilterinig.Location = new System.Drawing.Point(12, 355);
             this.labelFilterinig.Name = "labelFilterinig";
             this.labelFilterinig.Size = new System.Drawing.Size(43, 13);
-            this.labelFilterinig.TabIndex = 17;
+            this.labelFilterinig.TabIndex = 18;
             this.labelFilterinig.Text = "Filtering";
-            //
+            // 
             // checkBox_Filter
-            //
+            // 
             this.checkBox_Filter.AutoSize = true;
-            this.checkBox_Filter.Location = new System.Drawing.Point(15, 339);
+            this.checkBox_Filter.Location = new System.Drawing.Point(15, 373);
             this.checkBox_Filter.Name = "checkBox_Filter";
             this.checkBox_Filter.Size = new System.Drawing.Size(143, 17);
-            this.checkBox_Filter.TabIndex = 18;
+            this.checkBox_Filter.TabIndex = 19;
             this.checkBox_Filter.Text = "Enable character filtering";
             this.checkBox_Filter.UseVisualStyleBackColor = true;
             this.checkBox_Filter.CheckedChanged += new System.EventHandler(this.checkBox_Filter_CheckedChanged);
             this.checkBox_Filter.MouseHover += new System.EventHandler(this.checkBox_Filter_MouseHover);
-            //
+            // 
             // labelFilteringName
-            //
+            // 
             this.labelFilteringName.AutoSize = true;
-            this.labelFilteringName.Location = new System.Drawing.Point(12, 370);
+            this.labelFilteringName.Location = new System.Drawing.Point(12, 404);
             this.labelFilteringName.Name = "labelFilteringName";
             this.labelFilteringName.Size = new System.Drawing.Size(35, 13);
-            this.labelFilteringName.TabIndex = 19;
+            this.labelFilteringName.TabIndex = 20;
             this.labelFilteringName.Text = "Name";
-            //
+            // 
             // textBox_FilterName
-            //
+            // 
             this.textBox_FilterName.Enabled = false;
-            this.textBox_FilterName.Location = new System.Drawing.Point(53, 367);
+            this.textBox_FilterName.Location = new System.Drawing.Point(53, 401);
             this.textBox_FilterName.MaxLength = 32;
             this.textBox_FilterName.Name = "textBox_FilterName";
             this.textBox_FilterName.Size = new System.Drawing.Size(149, 20);
-            this.textBox_FilterName.TabIndex = 20;
+            this.textBox_FilterName.TabIndex = 21;
             this.textBox_FilterName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_FilterName_KeyDown);
             this.textBox_FilterName.MouseHover += new System.EventHandler(this.textBox_FilterName_MouseHover);
-            //
+            // 
             // button_AddCharacter
-            //
+            // 
             this.button_AddCharacter.Enabled = false;
-            this.button_AddCharacter.Location = new System.Drawing.Point(15, 393);
+            this.button_AddCharacter.Location = new System.Drawing.Point(15, 427);
             this.button_AddCharacter.Name = "button_AddCharacter";
             this.button_AddCharacter.Size = new System.Drawing.Size(83, 26);
-            this.button_AddCharacter.TabIndex = 21;
+            this.button_AddCharacter.TabIndex = 22;
             this.button_AddCharacter.Text = "Add";
             this.button_AddCharacter.UseVisualStyleBackColor = true;
             this.button_AddCharacter.Click += new System.EventHandler(this.button_AddCharacter_Click);
             this.button_AddCharacter.MouseHover += new System.EventHandler(this.button_AddCharacter_MouseHover);
-            //
+            // 
             // button_DeleteCharacter
-            //
+            // 
             this.button_DeleteCharacter.Enabled = false;
-            this.button_DeleteCharacter.Location = new System.Drawing.Point(119, 393);
+            this.button_DeleteCharacter.Location = new System.Drawing.Point(119, 427);
             this.button_DeleteCharacter.Name = "button_DeleteCharacter";
             this.button_DeleteCharacter.Size = new System.Drawing.Size(83, 26);
-            this.button_DeleteCharacter.TabIndex = 22;
+            this.button_DeleteCharacter.TabIndex = 23;
             this.button_DeleteCharacter.Text = "Delete";
             this.button_DeleteCharacter.UseVisualStyleBackColor = true;
             this.button_DeleteCharacter.Click += new System.EventHandler(this.button_DeleteCharacter_Click);
             this.button_DeleteCharacter.MouseHover += new System.EventHandler(this.button_DeleteCharacter_MouseHover);
-            //
+            // 
             // checkBox_filterExclude
-            //
+            // 
             this.checkBox_filterExclude.AutoSize = true;
-            this.checkBox_filterExclude.Location = new System.Drawing.Point(15, 435);
+            this.checkBox_filterExclude.Location = new System.Drawing.Point(15, 469);
             this.checkBox_filterExclude.Name = "checkBox_filterExclude";
             this.checkBox_filterExclude.Size = new System.Drawing.Size(107, 17);
-            this.checkBox_filterExclude.TabIndex = 23;
+            this.checkBox_filterExclude.TabIndex = 24;
             this.checkBox_filterExclude.Text = "Exclusive filtering";
             this.checkBox_filterExclude.UseVisualStyleBackColor = true;
             this.checkBox_filterExclude.MouseHover += new System.EventHandler(this.checkBox_filterExclude_MouseHover);
-            //
+            // 
             // checkBox_filterScript
-            //
+            // 
             this.checkBox_filterScript.AutoSize = true;
-            this.checkBox_filterScript.Location = new System.Drawing.Point(15, 458);
+            this.checkBox_filterScript.Location = new System.Drawing.Point(15, 492);
             this.checkBox_filterScript.Name = "checkBox_filterScript";
             this.checkBox_filterScript.Size = new System.Drawing.Size(131, 17);
-            this.checkBox_filterScript.TabIndex = 24;
+            this.checkBox_filterScript.TabIndex = 25;
             this.checkBox_filterScript.Text = "Filter Generated Script";
             this.checkBox_filterScript.UseVisualStyleBackColor = true;
             this.checkBox_filterScript.MouseHover += new System.EventHandler(this.checkBox_filterScript_MouseHover);
-            //
+            // 
             // labelChatExport
-            //
+            // 
             this.labelChatExport.AutoSize = true;
             this.labelChatExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelChatExport.Location = new System.Drawing.Point(275, 92);
             this.labelChatExport.Name = "labelChatExport";
             this.labelChatExport.Size = new System.Drawing.Size(92, 13);
-            this.labelChatExport.TabIndex = 25;
+            this.labelChatExport.TabIndex = 26;
             this.labelChatExport.Text = "Chat Export Fields";
-            //
+            // 
             // checkedListBox_ExportFields
-            //
+            // 
             this.checkedListBox_ExportFields.Enabled = false;
             this.checkedListBox_ExportFields.FormattingEnabled = true;
             this.checkedListBox_ExportFields.Items.AddRange(new object[] {
@@ -447,31 +459,31 @@ namespace SecretParse_Plugin
             this.checkedListBox_ExportFields.Location = new System.Drawing.Point(222, 110);
             this.checkedListBox_ExportFields.Name = "checkedListBox_ExportFields";
             this.checkedListBox_ExportFields.Size = new System.Drawing.Size(227, 139);
-            this.checkedListBox_ExportFields.TabIndex = 26;
-            //
+            this.checkedListBox_ExportFields.TabIndex = 27;
+            // 
             // labelFilterChars
-            //
+            // 
             this.labelFilterChars.AutoSize = true;
             this.labelFilterChars.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelFilterChars.Location = new System.Drawing.Point(275, 261);
             this.labelFilterChars.Name = "labelFilterChars";
             this.labelFilterChars.Size = new System.Drawing.Size(83, 13);
-            this.labelFilterChars.TabIndex = 27;
+            this.labelFilterChars.TabIndex = 28;
             this.labelFilterChars.Text = "Filter Characters";
-            //
+            // 
             // checkedListBox_Filters
-            //
+            // 
             this.checkedListBox_Filters.Enabled = false;
             this.checkedListBox_Filters.FormattingEnabled = true;
             this.checkedListBox_Filters.Location = new System.Drawing.Point(222, 279);
             this.checkedListBox_Filters.Name = "checkedListBox_Filters";
             this.checkedListBox_Filters.Size = new System.Drawing.Size(227, 199);
-            this.checkedListBox_Filters.TabIndex = 28;
+            this.checkedListBox_Filters.TabIndex = 29;
             this.checkedListBox_Filters.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox_Filters_ItemCheck);
             this.checkedListBox_Filters.MouseHover += new System.EventHandler(this.checkedListBox_Filters_MouseHover);
-            //
+            // 
             // SecretParse
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.checkBox_SelfPlayerDamage);
@@ -481,9 +493,11 @@ namespace SecretParse_Plugin
             this.Controls.Add(this.comboBox_Language);
             this.Controls.Add(this.checkBox_AutoCheck);
             this.Controls.Add(this.checkBox_ExportScript);
+            this.Controls.Add(this.checkBox_LimitNames);
             this.Controls.Add(this.checkBox_ExportRoundDPS);
             this.Controls.Add(this.checkBox_ExportShowLegend);
             this.Controls.Add(this.checkBox_ExportColored);
+            this.Controls.Add(this.checkBox_ExportSplit);
             this.Controls.Add(this.checkBox_ExportHtml);
             this.Controls.Add(this.checkBox_ExportAllies);
             this.Controls.Add(this.checkBox_DontExportShortEnc);
@@ -491,7 +505,6 @@ namespace SecretParse_Plugin
             this.Controls.Add(this.checkBox_AutofixDBConf);
             this.Controls.Add(this.checkBox_HideUnknown);
             this.Controls.Add(this.checkBox_SelfDamage);
-            this.Controls.Add(this.checkBox_LimitNames);
             this.Controls.Add(this.checkBox_ReduceAegis);
             this.Controls.Add(this.labelFilterinig);
             this.Controls.Add(this.checkBox_Filter);
@@ -506,7 +519,7 @@ namespace SecretParse_Plugin
             this.Controls.Add(this.labelFilterChars);
             this.Controls.Add(this.checkedListBox_Filters);
             this.Name = "SecretParse";
-            this.Size = new System.Drawing.Size(494, 489);
+            this.Size = new System.Drawing.Size(494, 534);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -516,35 +529,36 @@ namespace SecretParse_Plugin
 
         private System.Windows.Forms.Label labelHeader;
         private System.Windows.Forms.Label labelGeneral;
-        private Label labelLanguage;
-        private ComboBox comboBox_Language;
+        private System.Windows.Forms.Label labelLanguage;
+        private System.Windows.Forms.ComboBox comboBox_Language;
         private System.Windows.Forms.CheckBox checkBox_AutoCheck;
         private System.Windows.Forms.CheckBox checkBox_ExportScript;
-        private CheckBox checkBox_ExportRoundDPS;
+        private System.Windows.Forms.CheckBox checkBox_LimitNames;
+        private System.Windows.Forms.CheckBox checkBox_ExportRoundDPS;
         private System.Windows.Forms.CheckBox checkBox_ExportShowLegend;
         private System.Windows.Forms.CheckBox checkBox_ExportColored;
-        private CheckBox checkBox_ExportHtml;
-        private CheckBox checkBox_ExportAllies;
-        private CheckBox checkBox_DontExportShortEnc;
-        private CheckBox checkBox_EnableTSWAddon;
-        private CheckBox checkBox_AutofixDBConf;
-        private CheckBox checkBox_HideUnknown;
-        private CheckBox checkBox_SelfDamage;
-        private CheckBox checkBox_SelfPlayerDamage;
-        private CheckBox checkBox_LimitNames;
-        private CheckBox checkBox_ReduceAegis;
-        private Label labelFilterinig;
-        private CheckBox checkBox_Filter;
-        private Label labelFilteringName;
-        private TextBox textBox_FilterName;
-        private Button button_AddCharacter;
-        private Button button_DeleteCharacter;
-        private CheckBox checkBox_filterExclude;
-        private CheckBox checkBox_filterScript;
-        private Label labelChatExport;
-        private CheckedListBox checkedListBox_ExportFields;
-        private Label labelFilterChars;
-        private CheckedListBox checkedListBox_Filters;
+        private System.Windows.Forms.CheckBox checkBox_ExportSplit;
+        private System.Windows.Forms.CheckBox checkBox_ExportHtml;
+        private System.Windows.Forms.CheckBox checkBox_ExportAllies;
+        private System.Windows.Forms.CheckBox checkBox_DontExportShortEnc;
+        private System.Windows.Forms.CheckBox checkBox_EnableTSWAddon;
+        private System.Windows.Forms.CheckBox checkBox_AutofixDBConf;
+        private System.Windows.Forms.CheckBox checkBox_HideUnknown;
+        private System.Windows.Forms.CheckBox checkBox_SelfDamage;
+        private System.Windows.Forms.CheckBox checkBox_SelfPlayerDamage;
+        private System.Windows.Forms.CheckBox checkBox_ReduceAegis;
+        private System.Windows.Forms.Label labelFilterinig;
+        private System.Windows.Forms.CheckBox checkBox_Filter;
+        private System.Windows.Forms.Label labelFilteringName;
+        private System.Windows.Forms.TextBox textBox_FilterName;
+        private System.Windows.Forms.Button button_AddCharacter;
+        private System.Windows.Forms.Button button_DeleteCharacter;
+        private System.Windows.Forms.CheckBox checkBox_filterExclude;
+        private System.Windows.Forms.CheckBox checkBox_filterScript;
+        private System.Windows.Forms.Label labelChatExport;
+        private System.Windows.Forms.CheckedListBox checkedListBox_ExportFields;
+        private System.Windows.Forms.Label labelFilterChars;
+        private System.Windows.Forms.CheckedListBox checkedListBox_Filters;
         #endregion
 
 
@@ -1684,7 +1698,7 @@ namespace SecretParse_Plugin
                 StringBuilder line = new StringBuilder();
                 StringBuilder lineSplit = new StringBuilder();
                 bool exportColored = checkBox_ExportColored.Checked;
-                string title = encounter.Title;
+                string title = encounter.Title.Replace("\"", "&quot;");
                 string combat_duration = encounter.Duration.TotalSeconds > 599 ? encounter.DurationS : encounter.DurationS.Substring(1, 4);
                 string hitpoints = encounter.Damage.ToString("#,##0", usCulture);
                 string hdrOutput = "";
@@ -3571,12 +3585,15 @@ namespace SecretParse_Plugin
         void LoadSettings()
         {
             #region Control Settings
+
             xmlSettings.AddControlSetting(comboBox_Language.Name, comboBox_Language);
             xmlSettings.AddControlSetting(checkBox_AutoCheck.Name, checkBox_AutoCheck);
             xmlSettings.AddControlSetting(checkBox_ExportScript.Name, checkBox_ExportScript);
+            xmlSettings.AddControlSetting(checkBox_LimitNames.Name, checkBox_LimitNames);
             xmlSettings.AddControlSetting(checkBox_ExportRoundDPS.Name, checkBox_ExportRoundDPS);
             xmlSettings.AddControlSetting(checkBox_ExportShowLegend.Name, checkBox_ExportShowLegend);
             xmlSettings.AddControlSetting(checkBox_ExportColored.Name, checkBox_ExportColored);
+            xmlSettings.AddControlSetting(checkBox_ExportSplit.Name, checkBox_ExportSplit);
             xmlSettings.AddControlSetting(checkBox_ExportHtml.Name, checkBox_ExportHtml);
             xmlSettings.AddControlSetting(checkBox_ExportAllies.Name, checkBox_ExportAllies);
             xmlSettings.AddControlSetting(checkBox_DontExportShortEnc.Name, checkBox_DontExportShortEnc);
@@ -3585,7 +3602,6 @@ namespace SecretParse_Plugin
             xmlSettings.AddControlSetting(checkBox_HideUnknown.Name, checkBox_HideUnknown);
             xmlSettings.AddControlSetting(checkBox_SelfDamage.Name, checkBox_SelfDamage);
             xmlSettings.AddControlSetting(checkBox_SelfPlayerDamage.Name, checkBox_SelfPlayerDamage);
-            xmlSettings.AddControlSetting(checkBox_LimitNames.Name, checkBox_LimitNames);
             xmlSettings.AddControlSetting(checkBox_ReduceAegis.Name, checkBox_ReduceAegis);
             xmlSettings.AddControlSetting(checkBox_Filter.Name, checkBox_Filter);
             xmlSettings.AddControlSetting(checkBox_filterExclude.Name, checkBox_filterExclude);
@@ -3862,9 +3878,19 @@ namespace SecretParse_Plugin
             }
         }
 
+        private void checkBox_LimitNames_MouseHover(object sender, EventArgs e) {
+            ActGlobals.oFormActMain.SetOptionsHelpText("Limit Player-Names\n\n" +
+                                   "Limits the playernames to 7 characters using /actchat.");
+        }
+
         private void checkBox_ExportRoundDPS_MouseHover(object sender, EventArgs e)
         {
             ActGlobals.oFormActMain.SetOptionsHelpText("Round DPS / HPS values (xxx instead of xxx.xx).");
+        }
+
+        private void checkBox_ExportShowLegend_MouseHover(object sender, EventArgs e)
+        {
+            ActGlobals.oFormActMain.SetOptionsHelpText("Shows the legend in chat exports.");
         }
 
         private void checkBox_ExportColored_MouseHover(object sender, EventArgs e)
@@ -3872,9 +3898,9 @@ namespace SecretParse_Plugin
             ActGlobals.oFormActMain.SetOptionsHelpText("Coloring the chat export.");
         }
 
-        private void checkBox_ExportShowLegend_MouseHover(object sender, EventArgs e)
+        private void checkBox_ExportSplit_MouseHover(object sender, EventArgs e)
         {
-            ActGlobals.oFormActMain.SetOptionsHelpText("Shows the legend in chat exports.");
+            ActGlobals.oFormActMain.SetOptionsHelpText("Splits the chat export (not the acttell!) into seperate scripts if necesarry.");
         }
 
         private void checkBox_ExportHtml_MouseHover(object sender, EventArgs e)
@@ -3941,11 +3967,6 @@ namespace SecretParse_Plugin
         {
             ActGlobals.oFormActMain.SetOptionsHelpText("Show by player\n\n" +
                                    "If checked, the generated character is '<playername>_self'.");
-        }
-
-        private void checkBox_LimitNames_MouseHover(object sender, EventArgs e) {
-            ActGlobals.oFormActMain.SetOptionsHelpText("Limit Player-Names\n\n" +
-                                   "Limits the playernames to 7 characters using /actchat.");
         }
 
         private void checkBox_ReduceAegis_MouseHover(object sender, EventArgs e)
