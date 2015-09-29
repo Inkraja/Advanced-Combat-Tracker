@@ -6,6 +6,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 ## 1.0.6.7001 pre 1.0.6.8
 * incoming dps & aegis dps
 * enhanced Autoupdater, searching on github
+* Autoupdater now in a seperate thread and respects checkbox-setting
 
 ## 1.0.6.7
 + merged with v1.0.6.6 from RedEyeEagle

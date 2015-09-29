@@ -939,7 +939,8 @@ namespace SecretParse_Plugin
             ActGlobals.oFormActMain.UpdateCheckClicked += new FormActMain.NullDelegate(SecretCheckUpdate);
             if (ActGlobals.oFormActMain.GetAutomaticUpdatesAllowed() == true)
             {
-                SecretCheckUpdate();
+                new Thread(new ThreadStart(SecretCheckUpdate)).Start();
+                //SecretCheckUpdate();
             }
 
             FixDBConfFile();
@@ -1009,6 +1010,7 @@ namespace SecretParse_Plugin
 
             ActGlobals.oFormActMain.BeforeLogLineRead -= oFormActMain_BeforeLogLineRead;
             ActGlobals.oFormActMain.OnCombatEnd -= oFormActMain_OnCombatEnd;
+            ActGlobals.oFormActMain.UpdateCheckClicked -= SecretCheckUpdate;
 
             if (optionsNode != null)
             {
@@ -1478,9 +1480,10 @@ namespace SecretParse_Plugin
                 SortedDictionary<string, string> displayOrderHealers = new SortedDictionary<string, string>();
                 SortedDictionary<string, string> displayOrderTanks = new SortedDictionary<string, string>();
                 SortedDictionary<string, SortedDictionary<string, string>> embedDisplayOrder = new SortedDictionary<string, SortedDictionary<string, string>>();
+                bool isImport = "Import Zone".Equals(encounter.ZoneName);
                 BuildScriptOutput(encounter, usCulture, lines, embedLines, displayOrder, embedDisplayOrder, displayOrderHealers, displayOrderTanks);
                 GenerateHtmlScript(encounter, usCulture, lines, embedLines, displayOrder, embedDisplayOrder);
-                GenerateChatScript(encounter, usCulture, lines, displayOrder, displayOrderHealers, displayOrderTanks);
+                GenerateChatScript(encounter, usCulture, lines, displayOrder, displayOrderHealers, displayOrderTanks, isImport);
             }
         }
 
@@ -1676,7 +1679,7 @@ namespace SecretParse_Plugin
 
                 if (checkBox_ExportScript.Checked)
                 {
-                    GenerateChatScript(encounterInfo.encounter, usCulture, lines, displayOrder, displayOrderHealers, displayOrderTanks);
+                    GenerateChatScript(encounterInfo.encounter, usCulture, lines, displayOrder, displayOrderHealers, displayOrderTanks, isImport);
                 }
             }
         }
@@ -1689,7 +1692,7 @@ namespace SecretParse_Plugin
             return Result;
         }
 
-        private void GenerateChatScript(EncounterData encounter, CultureInfo usCulture, Dictionary<string, Dictionary<string, string>> lines, SortedDictionary<string, string> displayOrder, SortedDictionary<string, string> displayOrderHealers, SortedDictionary<string, string> displayOrderTanks)
+        private void GenerateChatScript(EncounterData encounter, CultureInfo usCulture, Dictionary<string, Dictionary<string, string>> lines, SortedDictionary<string, string> displayOrder, SortedDictionary<string, string> displayOrderHealers, SortedDictionary<string, string> displayOrderTanks, bool isImport = false)
         {
             string scriptFolder = GetScriptFolder();
             if (Directory.Exists(scriptFolder))
@@ -1795,6 +1798,11 @@ namespace SecretParse_Plugin
                             {
                                 tempName = name.Substring(0, NameLength);
                             }
+                        }
+
+                        if (!isImport && entry.ContainsKey("death") && !"0".Equals(entry["death"]))
+                        {
+                            tempName += " †";
                         }
 
                         string combatant = string.Format("{0}", tempName);
@@ -3698,6 +3706,7 @@ namespace SecretParse_Plugin
 
         void SecretCheckUpdate()
         {
+            if (!checkBox_AutoCheck.Checked) return;
             int pluginId = 63; // The download ID from the ACT website
             try
             {
@@ -3718,9 +3727,13 @@ namespace SecretParse_Plugin
                         pluginData.pluginFile.Delete();
                         updatedFile.MoveTo(pluginData.pluginFile.FullName);
 
-                        pluginData.cbEnabled.Checked = false;
+                        ThreadInvokes.CheckboxSetChecked(ActGlobals.oFormActMain, pluginData.cbEnabled, false);
                         Application.DoEvents();
-                        pluginData.cbEnabled.Checked = true; // Restart the plugin (this is safe for .dll and .cs/vb equally as long as your DeInit is clean)
+                        ThreadInvokes.CheckboxSetChecked(ActGlobals.oFormActMain, pluginData.cbEnabled, true);
+
+                        //pluginData.cbEnabled.Checked = false;
+                        //Application.DoEvents();
+                        //pluginData.cbEnabled.Checked = true; // Restart the plugin (this is safe for .dll and .cs/vb equally as long as your DeInit is clean)
                     }
                 }
 
@@ -3791,9 +3804,9 @@ namespace SecretParse_Plugin
                                     pluginData.pluginFile.Delete();
                                     updatedFile.MoveTo(pluginData.pluginFile.FullName);
 
-                                    pluginData.cbEnabled.Checked = false;
+                                    ThreadInvokes.CheckboxSetChecked(ActGlobals.oFormActMain, pluginData.cbEnabled, false);
                                     Application.DoEvents();
-                                    pluginData.cbEnabled.Checked = true; 
+                                    ThreadInvokes.CheckboxSetChecked(ActGlobals.oFormActMain, pluginData.cbEnabled, true);
                                 }
 
                             }
