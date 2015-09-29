@@ -2450,17 +2450,6 @@ namespace SecretParse_Plugin
                     row["aegishps"] = aegis_hps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                     row["aegismismatch%"] = CombatantFormatSwitch(data, "AegisMismatch%", usCulture);
 
-                    row["takenduration"] = "0";
-                    row["takendamage"] = "0";
-                    row["takenaegisdps"] = "0";
-                    row["takendps"] = "0";
-                    row["aegisinc_script"] = "";
-                    row["takencrit%"] = "0%";
-                    row["takenpen%"] = "0%";
-                    row["takenglance%"] = "0%";
-                    row["takenblock%"] = "0%";
-                    row["takenevade%"] = "0%";
-
                     row["takendamage"] = ConvertValue(data.DamageTaken, usCulture);
                     int aegis_inc = GetSpecialIncData(data, SecretLanguage.Aegis);
                     row["aegisinc_script"] = (aegis_inc != 0) ? ConvertValue(aegis_inc, usCulture) : "";
@@ -2472,9 +2461,15 @@ namespace SecretParse_Plugin
                     if (data.Items.ContainsKey(INC_DAMAGE))
                     {
                         double aegis_takendps = (data.Items[INC_DAMAGE].Duration.TotalSeconds > 0) ? aegis_inc / data.Items[INC_DAMAGE].Duration.TotalSeconds : 0.0;
-                        row["takendps"] = "NaN".Equals(data.Items[INC_DAMAGE].DPS) ? "0" : data.Items[INC_DAMAGE].DPS.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                         row["takenduration"] = data.Items[INC_DAMAGE].Duration.TotalSeconds > 599 ? data.Items[INC_DAMAGE].DurationS : data.Items[INC_DAMAGE].DurationS.Substring(1, 4);
+                        row["takendps"] = "NaN".Equals(data.Items[INC_DAMAGE].DPS) ? "0" : data.Items[INC_DAMAGE].DPS.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                         row["takenaegisdps"] = aegis_takendps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
+                    }
+                    else
+                    {
+                        row["takenduration"] = "0";
+                        row["takendps"] = "0";
+                        row["takenaegisdps"] = "0";
                     }
 
                     string name = row["name"];
@@ -2521,7 +2516,7 @@ namespace SecretParse_Plugin
                         att["takenduration"] = "0";
                         att["takendamage"] = "0";
                         att["takendps"] = "0";
-                        att["takendps"] = "0";
+                        att["takenaegisdps"] = "0";
                         att["aegisinc_script"] = "";
                         att["takencrit%"] = "0%";
                         att["takenpen%"] = "0%";
