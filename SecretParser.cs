@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.7")]
+[assembly: AssemblyVersion("1.0.6.7001")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -2186,7 +2186,10 @@ namespace SecretParse_Plugin
                         break;
                     case "takendamage":
                         if (entry["aegisinc_script"] != "") AfterField += (exportColored ? " <font face=LARGE color=#1cbcea>[" : " [") + entry["aegisinc_script"] + (exportColored ? "]</font>" : "]");
-                        AfterField += "";
+                        AfterField += " (";
+                        AfterField += entry["takendps"];
+                        if (entry["aegisinc_script"] != "") AfterField += (exportColored ? " <font face=LARGE color=#1cbcea>[" : " [") + entry["takenaegisdps"] + (exportColored ? "]</font>" : "]");
+                        AfterField += " dps in " + entry["takenduration"] + ")";
                         break;
                     case "takencrit%":
                         AfterField = "c";
@@ -2447,14 +2450,32 @@ namespace SecretParse_Plugin
                     row["aegishps"] = aegis_hps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                     row["aegismismatch%"] = CombatantFormatSwitch(data, "AegisMismatch%", usCulture);
 
-                    int aegis_inc = GetSpecialIncData(data, SecretLanguage.Aegis);
+                    row["takenduration"] = "0";
+                    row["takendamage"] = "0";
+                    row["takenaegisdps"] = "0";
+                    row["takendps"] = "0";
+                    row["aegisinc_script"] = "";
+                    row["takencrit%"] = "0%";
+                    row["takenpen%"] = "0%";
+                    row["takenglance%"] = "0%";
+                    row["takenblock%"] = "0%";
+                    row["takenevade%"] = "0%";
+
                     row["takendamage"] = ConvertValue(data.DamageTaken, usCulture);
-                    row["aegisinc_script"] = (aegis_inc != 0)? ConvertValue(aegis_inc, usCulture) : "";
+                    int aegis_inc = GetSpecialIncData(data, SecretLanguage.Aegis);
+                    row["aegisinc_script"] = (aegis_inc != 0) ? ConvertValue(aegis_inc, usCulture) : "";
                     row["takencrit%"] = CombatantFormatIncSwitch(data, "takencrit%", usCulture);
                     row["takenpen%"] = CombatantFormatIncSwitch(data, "takenpen%", usCulture);
                     row["takenglance%"] = CombatantFormatIncSwitch(data, "takenglance%", usCulture);
                     row["takenblock%"] = CombatantFormatIncSwitch(data, "takenblock%", usCulture);
                     row["takenevade%"] = CombatantFormatIncSwitch(data, "takenevade%", usCulture);
+                    if (data.Items.ContainsKey(INC_DAMAGE))
+                    {
+                        double aegis_takendps = (data.Items[INC_DAMAGE].Duration.TotalSeconds > 0) ? aegis_inc / data.Items[INC_DAMAGE].Duration.TotalSeconds : 0.0;
+                        row["takendps"] = "NaN".Equals(data.Items[INC_DAMAGE].DPS) ? "0" : data.Items[INC_DAMAGE].DPS.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
+                        row["takenduration"] = data.Items[INC_DAMAGE].Duration.TotalSeconds > 599 ? data.Items[INC_DAMAGE].DurationS : data.Items[INC_DAMAGE].DurationS.Substring(1, 4);
+                        row["takenaegisdps"] = aegis_takendps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
+                    }
 
                     string name = row["name"];
                     lines.Add(name, row);
@@ -2496,7 +2517,11 @@ namespace SecretParse_Plugin
                         att["aegisheal"] = "0";
                         att["aegishps"] = "0.0";
                         att["aegismismatch%"] = GetSpecialHitMissPerc(item, SecretLanguage.Aegis).ToString("0'%", usCulture);
+
+                        att["takenduration"] = "0";
                         att["takendamage"] = "0";
+                        att["takendps"] = "0";
+                        att["takendps"] = "0";
                         att["aegisinc_script"] = "";
                         att["takencrit%"] = "0%";
                         att["takenpen%"] = "0%";
@@ -2542,7 +2567,11 @@ namespace SecretParse_Plugin
                             att["aegisheal"] = "0";
                             att["aegishps"] = "0.0";
                             att["aegismismatch%"] = "0%";
+
+                            att["takenduration"] = "0";
                             att["takendamage"] = "0";
+                            att["takendps"] = "0";
+                            att["takenaegisdps"] = "0";
                             att["aegisinc_script"] = "";
                             att["takencrit%"] = "0%";
                             att["takenpen%"] = "0%";
@@ -2552,14 +2581,12 @@ namespace SecretParse_Plugin
                             att["dmgKey"] = GetScriptKey(0);
                         }
 
-                        aegis_heal = GetSpecialHitData(item, SecretLanguage.Aegis);
-                        aegis_hps = (item.Duration.TotalSeconds > 0) ? aegis_heal / item.Duration.TotalSeconds : 0.0;
-                        att["healing"] = item.Damage.ToString("#,##0", usCulture);
-                        att["hps%"] = (item.Damage * 100 / data.Healed).ToString("0'%", usCulture);
-                        att["hps"] = item.EncDPS.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
-                        att["healcrit%"] = item.CritPerc.ToString("0'%", usCulture);
-                        att["aegisheal"] = aegis_heal.ToString(GetIntCommas(), usCulture);
-                        att["aegishps"] = aegis_hps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
+                        att["healing"] = "0";
+                        att["hps%"] = "0";
+                        att["hps"] = "0";
+                        att["healcrit%"] = "0";
+                        att["aegisheal"] = "0";
+                        att["aegishps"] = "0";
 
                         att["healKey"] = GetScriptKey(item.Damage);
 
@@ -3123,7 +3150,7 @@ namespace SecretParse_Plugin
             string[] ext = { "", "k", "m", "g" };
             int idx = 0;
             float calc = value;
-            while (calc > 500)
+            while (calc > 500 && idx < ext.Length-1)
             {
                 calc /= 1000;
                 idx++;
@@ -3701,9 +3728,89 @@ namespace SecretParse_Plugin
                         pluginData.cbEnabled.Checked = true; // Restart the plugin (this is safe for .dll and .cs/vb equally as long as your DeInit is clean)
                     }
                 }
+
+                SecretCheckGitUpdate();
             }
             catch
             {
+            }
+        }
+
+        void SecretCheckGitUpdate()
+        {
+            string gitUrl = "https://github.com/Inkraja/Advanced-Combat-Tracker/releases/latest";
+            string gitFile = "https://raw.githubusercontent.com/Inkraja/Advanced-Combat-Tracker/{0}/SecretParser.cs";
+            
+            System.Net.WebRequest request = System.Net.WebRequest.Create(gitUrl);
+            System.Net.WebResponse response = request.GetResponse();
+
+            try
+            {
+                if (response.ResponseUri.Segments.Length > 0)
+                {
+                    string newVersion = response.ResponseUri.Segments[response.ResponseUri.Segments.Length - 1];
+                    System.Version ver = Assembly.GetExecutingAssembly().GetName().Version;
+                    string curVersion = ver.ToString();
+
+                    if (newVersion != curVersion){
+                        DialogResult ResultBox = MessageBox.Show("There is a new version " + newVersion + " of the Secret Parsing Plugin available. \n" +
+                                                                 "You may download this from https://github.com/Inkraja/Advanced-Combat-Tracker/releases/latest.\n\n" +
+                                                                 "Do you want to try auto download and install the plugin?",
+                                                                 "Secret Plugin Version Check", MessageBoxButtons.YesNo);
+                        if (ResultBox == DialogResult.Yes)
+                        {
+                            System.Net.WebRequest reqFile = System.Net.WebRequest.Create(String.Format(gitFile, newVersion));
+                            System.Net.WebResponse resFile = reqFile.GetResponse();
+
+                            if (resFile != null)
+                            {
+                                ActPluginData pluginData = ActGlobals.oFormActMain.PluginGetSelfData(this);
+                                string localFile = Path.GetTempPath() + pluginData.pluginFile.Name;
+
+                                Stream remoteStream = resFile.GetResponseStream();
+                                Stream localStream = File.Create(localFile);
+                                int bytesTotal = 0;
+
+                                try
+                                {
+                                    byte[] buffer = new byte[1024];
+                                    int bytesRead;
+
+                                    do
+                                    {
+                                        bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+                                        localStream.Write(buffer, 0, bytesRead);
+                                        bytesTotal += bytesRead;
+                                    } while (bytesRead > 0);
+                                }
+                                finally
+                                {
+                                    resFile.Close();
+                                    remoteStream.Close();
+                                    localStream.Close();
+                                }
+
+                                if (bytesTotal > 0)
+                                {
+                                    FileInfo updatedFile = new FileInfo(localFile);
+                                    pluginData.pluginFile.Delete();
+                                    updatedFile.MoveTo(pluginData.pluginFile.FullName);
+
+                                    pluginData.cbEnabled.Checked = false;
+                                    Application.DoEvents();
+                                    pluginData.cbEnabled.Checked = true; 
+                                }
+
+                            }
+
+                        }
+                    }
+
+                }
+            }
+            finally
+            {
+                response.Close();
             }
         }
 
