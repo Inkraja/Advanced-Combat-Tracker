@@ -1,0 +1,1 @@
+copy SecretParser.cs "%APPDATA%\Advanced Combat Tracker\Plugins\" /y
