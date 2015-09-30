@@ -940,7 +940,6 @@ namespace SecretParse_Plugin
             if (ActGlobals.oFormActMain.GetAutomaticUpdatesAllowed() == true)
             {
                 new Thread(new ThreadStart(SecretCheckUpdate)).Start();
-                //SecretCheckUpdate();
             }
 
             FixDBConfFile();
@@ -1427,6 +1426,7 @@ namespace SecretParse_Plugin
                 CombatantData.ColumnDefs.Add("AegisDPS", new CombatantData.ColumnDef("AegisDPS", false, "FLOAT", "AegisDPS", (Data) => { return CalcDataPS(GetSpecialHitData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(GetFloatCommas()); }, (Data) => { return CalcDataPS(GetSpecialHitData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(); }, (Left, Right) => { return CalcDataPS(GetSpecialHitData(Left, SecretLanguage.Aegis), Left.Duration.TotalSeconds).CompareTo(CalcDataPS(GetSpecialHitData(Right, SecretLanguage.Aegis), Right.Duration.TotalSeconds)); }));
                 CombatantData.ColumnDefs.Add("AegisHeal", new CombatantData.ColumnDef("AegisHeal", false, "INT", "AegisHeal", (Data) => { return GetSpecialHealData(Data, SecretLanguage.Aegis).ToString(GetIntCommas()); }, (Data) => { return GetSpecialHealData(Data, SecretLanguage.Aegis).ToString(); }, (Left, Right) => { return GetSpecialHealData(Left, SecretLanguage.Aegis).CompareTo(GetSpecialHealData(Right, SecretLanguage.Aegis)); }));
                 CombatantData.ColumnDefs.Add("AegisHPS", new CombatantData.ColumnDef("AegisHPS", false, "FLOAT", "AegisHPS", (Data) => { return CalcDataPS(GetSpecialHealData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(GetFloatCommas()); }, (Data) => { return CalcDataPS(GetSpecialHealData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(); }, (Left, Right) => { return CalcDataPS(GetSpecialHealData(Left, SecretLanguage.Aegis), Left.Duration.TotalSeconds).CompareTo(CalcDataPS(GetSpecialHealData(Right, SecretLanguage.Aegis), Right.Duration.TotalSeconds)); }));
+                
                 // Columns "Combatant View Options"
                 DamageTypeData.ColumnDefs.Add("GlanceHits", new DamageTypeData.ColumnDef("GlanceHits", false, "INT3", "GlanceHits", (Data) => { return GetSpecialHitCount(Data, SecretLanguage.Glancing).ToString(GetIntCommas()); }, (Data) => { return GetSpecialHitCount(Data, SecretLanguage.Glancing).ToString(); }));
                 DamageTypeData.ColumnDefs.Add("Glance%", new DamageTypeData.ColumnDef("Glance%", false, "VARCHAR(8)", "GlancePerc", (Data) => { return GetSpecialHitPerc(Data, SecretLanguage.Glancing).ToString("0'%"); }, (Data) => { return GetSpecialHitPerc(Data, SecretLanguage.Glancing).ToString(); }));
@@ -3760,8 +3760,9 @@ namespace SecretParse_Plugin
                     System.Version ver = Assembly.GetExecutingAssembly().GetName().Version;
                     string curVersion = ver.ToString();
 
-                    if (newVersion != curVersion){
-                        DialogResult ResultBox = MessageBox.Show("There is a new version " + newVersion + " of the Secret Parsing Plugin available. \n" +
+                    if (newVersion.CompareTo(curVersion) > 0)
+                    {
+                        DialogResult ResultBox = MessageBox.Show("There is a new version " + newVersion + " of the Secret Parsing Plugin (currently " + curVersion + ") available. \n" +
                                                                  "You may download this from https://github.com/Inkraja/Advanced-Combat-Tracker/releases/latest.\n\n" +
                                                                  "Do you want to try auto download and install the plugin?",
                                                                  "Secret Plugin Version Check", MessageBoxButtons.YesNo);
