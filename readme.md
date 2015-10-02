@@ -3,10 +3,13 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.6.7001 pre 1.0.6.8
+## 1.0.6.7002 pre 1.0.6.8
 * incoming dps & aegis dps
-* enhanced Autoupdater, searching on github
+* enhanced Autoupdater, searching on github after ACT internal update check
 * Autoupdater now in a seperate thread and respects checkbox-setting
+
+##### English
+* fix for critically self hits
 
 ## 1.0.6.7
 + merged with v1.0.6.6 from RedEyeEagle
@@ -22,7 +25,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 ##### German
 * Workaround for combat-log problems where the attacker is missing, counting the damage to the player with act running
-* fix for critical self hits
+* fix for critically self hits
 
 ##### French
 * /acttell script now works properly for French clients

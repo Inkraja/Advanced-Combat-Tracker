@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.7001")]
+[assembly: AssemblyVersion("1.0.6.7002")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -4318,7 +4318,7 @@ namespace SecretParse_Plugin
             damageLines.Add(new Regex(@"^(?<crit>\(Critical\)\s)?(?<actor>Your|.*'s)\s(?<attackName>.+)\shits\s(?<damageType>\([^\)]+\)\s)?(?<actee>.+)\sfor\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>\sdamage)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Critical\)\s)?(?<attackName>" + apostropheSkills + @")\shits\s(?<damageType>\([^\)]+\)\s)?(?<actee>.+)\sfor\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>\sdamage)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Critical\)\s)?(?<attackName>.+)\shits\s(?<damageType>\([^\)]+\)\s)?(?<actee>.+)\sfor\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>\sdamage)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
-            damageLines.Add(new Regex(@"^(?<actor>Your)\s(?<attackName>.+?)\shits\s(?<actee>.+)\sfor\s(?<amount>[0-9]+)\.", RegexOptions.Compiled));
+            damageLines.Add(new Regex(@"^(?<actor>Your)\s(?<attackName>.+?)\s(?<crit>critically\s)hits\s(?<actee>.+)\sfor\s(?<amount>[0-9]+)\.", RegexOptions.Compiled));
             string hateSkills = "Provoke|Mass Provocation|Confuse|Mass Confusion|Misdirection";
             damageLines.Add(new Regex(@"^(?<actor>.+)\ssuccessfully\sused\sthe\s(?<attackName>" + hateSkills + @")\.", RegexOptions.Compiled));
 
