@@ -2169,7 +2169,7 @@ namespace SecretParse_Plugin
                         if (entry["aegisheal_script"] != "") BeforeField += (exportColored ? "<font face=LARGE color=#1cbcea>[" : "[") + entry["aegisheal_script"] + (exportColored ? "]</font> " : "] ");
                         BeforeField += "(";
                         if (entry["aegisheal_script"] != "") AfterField += (exportColored ? " <font face=LARGE color=#1cbcea>[" : " [") + entry["aegishps"] + (exportColored ? "]</font>" : "]");
-                        AfterField += " hps)";
+                        AfterField += " hps in " + entry["healduration"] + ")";
                         break;
                     case "pen%":
                         AfterField = "p";
@@ -2435,7 +2435,6 @@ namespace SecretParse_Plugin
                     row["hps%"] = "--".Equals(data.HealedPercent) ? "n/a" : data.HealedPercent;
 
                     row["dps"] = "NaN".Equals(data.DPS) ? "0" : data.DPS.ToString(round_dps?GetIntCommas():GetFloatCommas(), usCulture);
-                    row["hps"] = "NaN".Equals(data.EncHPS) ? "0" : data.EncHPS.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
 
                     row["crit%"] = "NaN".Equals(data.CritDamPerc) ? "0%" : data.CritDamPerc.ToString("0'%", usCulture);
                     row["healcrit%"] = "NaN".Equals(data.CritHealPerc) ? "0%" : data.CritHealPerc.ToString("0'%", usCulture);
@@ -2448,15 +2447,29 @@ namespace SecretParse_Plugin
                     int aegis_dmg = GetSpecialHitData(data, SecretLanguage.Aegis);
                     int aegis_heal = GetSpecialHealData(data, SecretLanguage.Aegis);
                     double aegis_dps = (data.Duration.TotalSeconds > 0) ? aegis_dmg / data.Duration.TotalSeconds : 0.0;
-                    double aegis_hps = (data.Duration.TotalSeconds > 0) ? aegis_heal / data.Duration.TotalSeconds : 0.0;
+                    double aegis_hps = 0.0;
                     row["evade%"] = miss.ToString("0'%", usCulture);
                     row["aegisdmg"] = aegis_dmg.ToString(GetIntCommas(), usCulture);
                     row["aegisdmg_script"] = (aegis_dmg != 0)? ConvertValue(aegis_dmg, usCulture) : "";
                     row["aegisdps"] = aegis_dps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                     row["aegisheal"] = aegis_heal.ToString(GetIntCommas(), usCulture);
                     row["aegisheal_script"] = (aegis_heal != 0)? ConvertValue(aegis_heal, usCulture) : "";
-                    row["aegishps"] = aegis_hps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
+                    
                     row["aegismismatch%"] = CombatantFormatSwitch(data, "AegisMismatch%", usCulture);
+
+                    if (data.Items.ContainsKey(OUT_HEAL))
+                    {
+                        row["healduration"] = data.Items[OUT_HEAL].Duration.TotalSeconds > 599 ? data.Items[OUT_HEAL].DurationS : data.Items[OUT_HEAL].DurationS.Substring(1, 4);
+                        row["hps"] = "NaN".Equals(data.Items[OUT_HEAL].DPS) ? "0" : data.Items[OUT_HEAL].DPS.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
+                        aegis_hps = (data.Items[OUT_HEAL].Duration.TotalSeconds > 0) ? aegis_heal / data.Duration.TotalSeconds : 0.0;
+                        row["aegishps"] = aegis_hps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
+                    }
+                    else
+                    {
+                        row["healduration"] = "0";
+                        row["hps"] = "0";
+                        row["aegishps"] = "0";
+                    }
 
                     row["takendamage"] = ConvertValue(data.DamageTaken, usCulture);
                     int aegis_inc = GetSpecialIncData(data, SecretLanguage.Aegis);
