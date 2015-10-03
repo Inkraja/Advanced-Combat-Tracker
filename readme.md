@@ -3,13 +3,16 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.6.7002 pre 1.0.6.8
+## 1.0.6.7003 pre 1.0.6.8
 * incoming dps & aegis dps
 * enhanced Autoupdater, searching on github after ACT internal update check
 * Autoupdater now in a seperate thread and respects checkbox-setting
 
 ##### English
 * fix for critically self hits
+
+##### German
+* correct DamageType when "von"-Skills hitting Aegis
 
 ## 1.0.6.7
 + merged with v1.0.6.6 from RedEyeEagle
