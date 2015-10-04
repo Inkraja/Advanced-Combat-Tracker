@@ -14,6 +14,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 ##### German
 * correct DamageType when "von"-Skills hitting Aegis
+* removed "-Kraft" from DamageType on some Aegis-healing to self
 
 ## 1.0.6.7
 + merged with v1.0.6.6 from RedEyeEagle

@@ -4452,7 +4452,7 @@ namespace SecretParse_Plugin
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<attackName>.+?)\svon\s(?<actor>.+?)?(\s)?gewährt\s(?<actee>.+?)\s(?<amount>[0-9]+)\sPunkte\sHeilung\.", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(Ihr\s)?(?<attackName>.+?)\sgewährt\s(?<actee>.+?)\s(?<amount>[0-9]+)\sPunkte\sHeilung\.", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<attackName>.+?)\sgewährt\s(?<actee>.+?)\s(?<amount>[0-9]+)\sHeilung\.", RegexOptions.Compiled));
-            healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<attackName>.+?)\svon\s(?<actor>.*?)\sregeneriert\s(?<amount>[0-9]+)\s(der\s)?(?<actee>.+?)\.$", RegexOptions.Compiled));
+            healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<attackName>.+?)(-Kraft)?\svon\s(?<actor>.*?)\sregeneriert\s(?<amount>[0-9]+)\s(der\s)?(?<actee>.+?)\.$", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<actor>Ihre)\s(?<attackName>.+?)\sregeneriert\s(?<amount>[0-9]+)\s(der\s)?(?<actee>.+?)\.$", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<actor>.+?)\sabsorbiert\s(?<amount>[0-9]+)\sSchaden\s(?<actee>Ihres)\s(?<attackName>" + apostropheSkills + @"?)\.", RegexOptions.Compiled));
             healLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s)?(?<actor>.+?)\sabsorbiert\s(?<amount>[0-9]+)\sSchaden\s(?<actee>Ihres)\s(?<attackName>.+?)\.$", RegexOptions.Compiled));
