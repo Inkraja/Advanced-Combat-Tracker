@@ -2197,7 +2197,7 @@ namespace SecretParse_Plugin
                         AfterField += " (";
                         AfterField += entry["takendps"];
                         if (entry["aegisinc_script"] != "") AfterField += (exportColored ? " <font face=LARGE color=#1cbcea>[" : " [") + entry["takenaegisdps"] + (exportColored ? "]</font>" : "]");
-                        AfterField += " dps in " + entry["takenduration"] + ")";
+                        AfterField += " tps in " + entry["takenduration"] + ")";
                         break;
                     case "takencrit%":
                         AfterField = "c";
