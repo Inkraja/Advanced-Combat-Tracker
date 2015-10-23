@@ -3413,7 +3413,15 @@ namespace SecretParse_Plugin
                     }
                     else
                     {
-                        Amount = Int32.Parse(amountStr);
+                        Int64 AmountX = Int64.Parse(amountStr);
+                        if (AmountX > Int32.MaxValue)
+                        {
+                            Amount = Int32.MaxValue;
+                        }
+                        else
+                        {
+                            Amount = Convert.ToInt32(AmountX);
+                        }
                     }
                 }
                 catch (Exception)
