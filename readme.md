@@ -8,6 +8,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 * enhanced Autoupdater, searching on github after ACT internal update check
 * Autoupdater now in a seperate thread and respects checkbox-setting
 * hps using heal-duration instead of damage-duration now
+* fix for incoming hits larger then the maximum value of a 32bit integer
 
 ##### English
 * fix for critically self hits
