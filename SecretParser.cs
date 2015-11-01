@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.7003")]
+[assembly: AssemblyVersion("1.0.6.8")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -1426,7 +1426,7 @@ namespace SecretParse_Plugin
                 CombatantData.ColumnDefs.Add("AegisDPS", new CombatantData.ColumnDef("AegisDPS", false, "FLOAT", "AegisDPS", (Data) => { return CalcDataPS(GetSpecialHitData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(GetFloatCommas()); }, (Data) => { return CalcDataPS(GetSpecialHitData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(); }, (Left, Right) => { return CalcDataPS(GetSpecialHitData(Left, SecretLanguage.Aegis), Left.Duration.TotalSeconds).CompareTo(CalcDataPS(GetSpecialHitData(Right, SecretLanguage.Aegis), Right.Duration.TotalSeconds)); }));
                 CombatantData.ColumnDefs.Add("AegisHeal", new CombatantData.ColumnDef("AegisHeal", false, "INT", "AegisHeal", (Data) => { return GetSpecialHealData(Data, SecretLanguage.Aegis).ToString(GetIntCommas()); }, (Data) => { return GetSpecialHealData(Data, SecretLanguage.Aegis).ToString(); }, (Left, Right) => { return GetSpecialHealData(Left, SecretLanguage.Aegis).CompareTo(GetSpecialHealData(Right, SecretLanguage.Aegis)); }));
                 CombatantData.ColumnDefs.Add("AegisHPS", new CombatantData.ColumnDef("AegisHPS", false, "FLOAT", "AegisHPS", (Data) => { return CalcDataPS(GetSpecialHealData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(GetFloatCommas()); }, (Data) => { return CalcDataPS(GetSpecialHealData(Data, SecretLanguage.Aegis), Data.Duration.TotalSeconds).ToString(); }, (Left, Right) => { return CalcDataPS(GetSpecialHealData(Left, SecretLanguage.Aegis), Left.Duration.TotalSeconds).CompareTo(CalcDataPS(GetSpecialHealData(Right, SecretLanguage.Aegis), Right.Duration.TotalSeconds)); }));
-                
+
                 // Columns "Combatant View Options"
                 DamageTypeData.ColumnDefs.Add("GlanceHits", new DamageTypeData.ColumnDef("GlanceHits", false, "INT3", "GlanceHits", (Data) => { return GetSpecialHitCount(Data, SecretLanguage.Glancing).ToString(GetIntCommas()); }, (Data) => { return GetSpecialHitCount(Data, SecretLanguage.Glancing).ToString(); }));
                 DamageTypeData.ColumnDefs.Add("Glance%", new DamageTypeData.ColumnDef("Glance%", false, "VARCHAR(8)", "GlancePerc", (Data) => { return GetSpecialHitPerc(Data, SecretLanguage.Glancing).ToString("0'%"); }, (Data) => { return GetSpecialHitPerc(Data, SecretLanguage.Glancing).ToString(); }));
@@ -2454,7 +2454,7 @@ namespace SecretParse_Plugin
                     row["aegisdps"] = aegis_dps.ToString(round_dps ? GetIntCommas() : GetFloatCommas(), usCulture);
                     row["aegisheal"] = aegis_heal.ToString(GetIntCommas(), usCulture);
                     row["aegisheal_script"] = (aegis_heal != 0)? ConvertValue(aegis_heal, usCulture) : "";
-                    
+
                     row["aegismismatch%"] = CombatantFormatSwitch(data, "AegisMismatch%", usCulture);
 
                     if (data.Items.ContainsKey(OUT_HEAL))
@@ -3765,7 +3765,7 @@ namespace SecretParse_Plugin
         {
             string gitUrl = "https://github.com/Inkraja/Advanced-Combat-Tracker/releases/latest";
             string gitFile = "https://raw.githubusercontent.com/Inkraja/Advanced-Combat-Tracker/{0}/SecretParser.cs";
-            
+
             System.Net.WebRequest request = System.Net.WebRequest.Create(gitUrl);
             System.Net.WebResponse response = request.GetResponse();
 
