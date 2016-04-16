@@ -3,6 +3,9 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
+## pre 1.0.7.0 rev 01
+* add bugfix with 3.3.0 Rel254 ACT-Version from TSWForum/MidasMorley
+
 ## 1.0.6.801 pre 1.0.6.9 rev 01
 ##### English
 * fix for Protector's Wrat

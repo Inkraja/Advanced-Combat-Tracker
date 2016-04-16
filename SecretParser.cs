@@ -35,11 +35,12 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.801")]
+[assembly: AssemblyVersion("1.0.7.0")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
 // Add shiny colours to agis, bump version to 1.0.6.6 (Inkraja https://github.com/Inkraja/Advanced-Combat-Tracker)
+// Add fix for ACT Version 3.3.0
 
 
 namespace SecretParse_Plugin
@@ -1054,7 +1055,7 @@ namespace SecretParse_Plugin
                 {
                     foreach (var swing in ally.Items[OUT_HEAL].Items[ALL].Items)
                     {
-                        total += swing.Damage;
+                        total += (int)swing.Damage;
                     }
 
                 }
@@ -1076,7 +1077,7 @@ namespace SecretParse_Plugin
                     {
                         if (swing.Special.Contains(specialName))
                         {
-                            total += swing.Damage;
+                            total += (int)swing.Damage;
                         }
                     }
 
@@ -1099,7 +1100,7 @@ namespace SecretParse_Plugin
                     {
                         if (swing.Special.Contains(specialName))
                         {
-                            total += swing.Damage;
+                            total += (int)swing.Damage;
                         }
                     }
 
@@ -1119,7 +1120,7 @@ namespace SecretParse_Plugin
                 {
                     if (swing.Special.Contains(specialName))
                     {
-                        total += swing.Damage;
+                        total += (int)swing.Damage;
                     }
                 }
             }
@@ -1137,7 +1138,7 @@ namespace SecretParse_Plugin
                 {
                     if (swing.Special.Contains(specialName))
                     {
-                        total += swing.Damage;
+                        total += (int)swing.Damage;
                     }
                 }
             }
@@ -1155,7 +1156,7 @@ namespace SecretParse_Plugin
                 {
                     if (swing.Special.Contains(specialName))
                     {
-                        total += swing.Damage;
+                        total += (int)swing.Damage;
                     }
                 }
             }
@@ -1173,7 +1174,7 @@ namespace SecretParse_Plugin
                 {
                     if (swing.Special.Contains(specialName))
                     {
-                        total += swing.Damage;
+                        total += (int)swing.Damage;
                     }
                 }
             }
@@ -1189,7 +1190,7 @@ namespace SecretParse_Plugin
             {
                 if (swing.Special.Contains(specialName))
                 {
-                    total += swing.Damage;
+                    total += (int)swing.Damage;
                 }
             }
 
@@ -2109,7 +2110,7 @@ namespace SecretParse_Plugin
                     {
                         if ((swingList[indx].SwingType == (int)SwingTypeEnum.Melee || swingList[indx].SwingType == (int)SwingTypeEnum.NonMelee) && swingList[indx].Damage.Number > iMaxHit)
                         {
-                            iMaxHit = swingList[indx].Damage.Number;
+                            iMaxHit = (int)swingList[indx].Damage.Number;
                             maxHit = string.Format("{0} ({1})", iMaxHit.ToString("#,##0", usCulture), swingList[indx].AttackType);
                             if (showName)
                             {
@@ -2119,7 +2120,7 @@ namespace SecretParse_Plugin
 
                         if (swingList[indx].SwingType == (int)SwingTypeEnum.Healing && swingList[indx].Damage.Number > iMaxHeal)
                         {
-                            iMaxHeal = swingList[indx].Damage.Number;
+                            iMaxHeal = (int)swingList[indx].Damage.Number;
                             maxHeal = string.Format("{0} ({1})", iMaxHeal.ToString("#,##0", usCulture), swingList[indx].AttackType);
                             if (showName)
                             {
@@ -2136,7 +2137,7 @@ namespace SecretParse_Plugin
                     {
                         if (swingList[indx].Damage.Number > iMaxDamage)
                         {
-                            iMaxDamage = swingList[indx].Damage.Number;
+                            iMaxDamage = (int)swingList[indx].Damage.Number;
                             maxDamage = string.Format("{0} ({1})", iMaxDamage.ToString("#,##0", usCulture), swingList[indx].AttackType);
                             if (showName)
                             {
@@ -4328,7 +4329,7 @@ namespace SecretParse_Plugin
 //            DamageWithoutOrigin = new HashSet<string>();
 
             damageLines = new List<Regex>();
-            string apostropheSkills = "Thor's Hammer|Nightmare's Edge|Miner's Claw|Gaia's Presence|Carter's Burning|Angel's Touch|Adam's Rib|Dream's End|Stone's Throw|Mjolnir's Echo|Shadow's Shadow|The Carver's Art|Dragon's Breath|The Inspector's Gadget|Protector's Wrath";
+            string apostropheSkills = "Thor's Hammer|Nightmare's Edge|Miner's Claw|Gaia's Presence|Carter's Burning|Angel's Touch|Adam's Rib|Dream's End|Stone's Throw|Mjolnir's Echo|Shadow's Shadow|The Carver's Art|Dragon's Breath|The Inspector's Gadget";
             damageLines.Add(new Regex(@"^(?<actor>Your|.*'s)\s(?<attackName>" + apostropheSkills + @")\sdealt\s(?<amount>[0-9]+)\sdamage\sto\s(?<actee>.+)\.$", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<actor>Your|.*'s)\s(?<attackName>.+?)\sdealt\s(?<amount>[0-9]+)\sdamage\sto\s(?<actee>.+)\.$", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Critical\)\s)?(?<actor>Your|.*'s)\s(?<attackName>" + apostropheSkills + @")\shits\s(?<damageType>\([^\)]+\)\s)?(?<actee>.+)\sfor\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>\sdamage)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
