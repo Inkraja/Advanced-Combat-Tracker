@@ -3,9 +3,11 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.6.801 pre 1.0.6.9 rev 01
+## 1.0.6.802 pre 1.0.6.9 rev 02
+* adapted to the updated ACT API
+
 ##### English
-* fix for Protector's Wrat
+* fix for Protector's Wrath
 
 ## 1.0.6.8
 * incoming dps & aegis dps

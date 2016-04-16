@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.801")]
+[assembly: AssemblyVersion("1.0.6.802")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -1043,9 +1043,9 @@ namespace SecretParse_Plugin
             lblStatus.Text = "Secret plugin unloaded";
         }
 
-        private int GetHealData(EncounterData Data, string specialName)
+        private long GetHealData(EncounterData Data, string specialName)
         {
-            int total = 0;
+            long total = 0;
             List<CombatantData> allys = Data.GetAllies();
 
             foreach (var ally in allys)
@@ -1063,9 +1063,9 @@ namespace SecretParse_Plugin
             return total;
         }
 
-        private int GetSpecialHitData(EncounterData Data, string specialName)
+        private long GetSpecialHitData(EncounterData Data, string specialName)
         {
-            int total = 0;
+            long total = 0;
             List<CombatantData> allys = Data.GetAllies();
 
             foreach (var ally in allys)
@@ -1086,9 +1086,9 @@ namespace SecretParse_Plugin
             return total;
         }
 
-        private int GetSpecialHealData(EncounterData Data, string specialName)
+        private long GetSpecialHealData(EncounterData Data, string specialName)
         {
-            int total = 0;
+            long total = 0;
             List<CombatantData> allys = Data.GetAllies();
 
             foreach (var ally in allys)
@@ -1109,9 +1109,9 @@ namespace SecretParse_Plugin
             return total;
         }
 
-        private int GetSpecialHitData(CombatantData Data, string specialName)
+        private long GetSpecialHitData(CombatantData Data, string specialName)
         {
-            int total = 0;
+            long total = 0;
 
             if (Data.Items.ContainsKey(OUT_DAMAGE) && Data.Items[OUT_DAMAGE].Items.ContainsKey(ALL))
             {
@@ -1127,9 +1127,9 @@ namespace SecretParse_Plugin
             return total;
         }
 
-        private int GetSpecialHealData(CombatantData Data, string specialName)
+        private long GetSpecialHealData(CombatantData Data, string specialName)
         {
-            int total = 0;
+            long total = 0;
 
             if (Data.Items.ContainsKey(OUT_HEAL) && Data.Items[OUT_HEAL].Items.ContainsKey(ALL))
             {
@@ -1145,9 +1145,9 @@ namespace SecretParse_Plugin
             return total;
         }
 
-        private int GetSpecialIncData(CombatantData Data, string specialName)
+        private long GetSpecialIncData(CombatantData Data, string specialName)
         {
-            int total = 0;
+            long total = 0;
 
             if (Data.Items.ContainsKey(INC_DAMAGE) && Data.Items[INC_DAMAGE].Items.ContainsKey(ALL))
             {
@@ -1163,9 +1163,9 @@ namespace SecretParse_Plugin
             return total;
         }
 
-        private int GetSpecialHitData(DamageTypeData Data, string specialName)
+        private long GetSpecialHitData(DamageTypeData Data, string specialName)
         {
-            int total = 0;
+            long total = 0;
 
             if (Data.Items.ContainsKey(ALL))
             {
@@ -1181,9 +1181,9 @@ namespace SecretParse_Plugin
             return total;
         }
 
-        private int GetSpecialHitData(AttackType Data, string specialName)
+        private long GetSpecialHitData(AttackType Data, string specialName)
         {
-            int total = 0;
+            long total = 0;
 
             foreach (var swing in Data.Items)
             {
@@ -1301,7 +1301,7 @@ namespace SecretParse_Plugin
             return specials * 100.0;
         }
 
-        private double CalcDataPS(int Dmg, double Seconds)
+        private double CalcDataPS(long Dmg, double Seconds)
         {
             double result = 0.0;
             if (Seconds != 0)
@@ -1716,7 +1716,7 @@ namespace SecretParse_Plugin
                 List<String> lineMax = new List<String>();
 
                 // Gather data for damage, heal, tank and max
-                int aegis_hp = GetSpecialHitData(encounter, SecretLanguage.Aegis);
+                long aegis_hp = GetSpecialHitData(encounter, SecretLanguage.Aegis);
                 if (aegis_hp != 0)
                 {
                     hitpoints += " [" + aegis_hp.ToString("#,##0", usCulture) + "]";
@@ -2097,9 +2097,9 @@ namespace SecretParse_Plugin
             maxHeal = "";
             maxDamage = "";
 
-            int iMaxHit = 0;
-            int iMaxHeal = 0;
-            int iMaxDamage = 0;
+            long iMaxHit = 0;
+            long iMaxHeal = 0;
+            long iMaxDamage = 0;
             foreach (var ally in allys)
             {
                 if (ally.Items.ContainsKey(ALL_OUTGOING) && ally.Items[ALL_OUTGOING].Items.ContainsKey(ALL))
@@ -2234,7 +2234,7 @@ namespace SecretParse_Plugin
 
                 string combat_duration = encounter.Duration.TotalSeconds > 599 ? encounter.DurationS : encounter.DurationS.Substring(1, 4);
                 string hitpoints = encounter.Damage.ToString("#,##0", usCulture);
-                int aegis_hp = GetSpecialHitData(encounter, SecretLanguage.Aegis);
+                long aegis_hp = GetSpecialHitData(encounter, SecretLanguage.Aegis);
                 if (aegis_hp != 0)
                 {
                     hitpoints += " [" + aegis_hp.ToString("#,##0", usCulture) + "]";
@@ -2444,8 +2444,8 @@ namespace SecretParse_Plugin
                     row["block%"] = CombatantFormatSwitch(data, "Blocked%", usCulture);
 
                     float miss = 100.0f - data.ToHit;
-                    int aegis_dmg = GetSpecialHitData(data, SecretLanguage.Aegis);
-                    int aegis_heal = GetSpecialHealData(data, SecretLanguage.Aegis);
+                    long aegis_dmg = GetSpecialHitData(data, SecretLanguage.Aegis);
+                    long aegis_heal = GetSpecialHealData(data, SecretLanguage.Aegis);
                     double aegis_dps = (data.Duration.TotalSeconds > 0) ? aegis_dmg / data.Duration.TotalSeconds : 0.0;
                     double aegis_hps = 0.0;
                     row["evade%"] = miss.ToString("0'%", usCulture);
@@ -2472,7 +2472,7 @@ namespace SecretParse_Plugin
                     }
 
                     row["takendamage"] = ConvertValue(data.DamageTaken, usCulture);
-                    int aegis_inc = GetSpecialIncData(data, SecretLanguage.Aegis);
+                    long aegis_inc = GetSpecialIncData(data, SecretLanguage.Aegis);
                     row["aegisinc_script"] = (aegis_inc != 0) ? ConvertValue(aegis_inc, usCulture) : "";
                     row["takencrit%"] = CombatantFormatIncSwitch(data, "takencrit%", usCulture);
                     row["takenpen%"] = CombatantFormatIncSwitch(data, "takenpen%", usCulture);
@@ -3203,7 +3203,7 @@ namespace SecretParse_Plugin
                     string Aowner = string.Empty;
                     string Vowner = string.Empty;
                     Boolean SelfAttack = false;
-                    Int32 Amount = 0;
+                    Int64 Amount = 0;
 
                     Boolean critical = false;
                     Boolean colorlog = true;
@@ -3384,7 +3384,7 @@ namespace SecretParse_Plugin
             }
         }
 
-        private void ProcessLogLineEntry(LogLineEventArgs logInfo, ref string victim, ref string attacker, ref int attackType, ref string attackName, ref string special, ref Boolean SelfAttack, ref Int32 Amount, ref Boolean critical, Boolean colorlog, string attackSuffix, int eventType, MatchCollection matches)
+        private void ProcessLogLineEntry(LogLineEventArgs logInfo, ref string victim, ref string attacker, ref int attackType, ref string attackName, ref string special, ref Boolean SelfAttack, ref Int64 Amount, ref Boolean critical, Boolean colorlog, string attackSuffix, int eventType, MatchCollection matches)
         {
             if (eventType != -1) // Filtering
             {
@@ -3413,15 +3413,7 @@ namespace SecretParse_Plugin
                     }
                     else
                     {
-                        Int64 AmountX = Int64.Parse(amountStr);
-                        if (AmountX > Int32.MaxValue)
-                        {
-                            Amount = Int32.MaxValue;
-                        }
-                        else
-                        {
-                            Amount = Convert.ToInt32(AmountX);
-                        }
+                        Amount = Int64.Parse(amountStr);
                     }
                 }
                 catch (Exception)
