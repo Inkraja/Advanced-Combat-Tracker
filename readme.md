@@ -3,8 +3,8 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.6.802 pre 1.0.6.9 rev 02
-* adapted to the updated ACT API
+## 1.0.6.9
+* adapted to the updated ACT API (this allows bigger damage numbers to be parsed correctly)
 
 ##### English
 * fix for Protector's Wrath
