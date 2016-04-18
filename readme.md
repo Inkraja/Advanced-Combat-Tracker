@@ -3,6 +3,10 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
+## 1.0.6.9001 pre 1.0.7.0
+##### English
+* fix for Keziah Mason's Ring
+
 ## 1.0.6.9
 * adapted to the updated ACT API (this allows bigger damage numbers to be parsed correctly)
 
