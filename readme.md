@@ -3,7 +3,9 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.6.9001 pre 1.0.7.0
+## 1.0.6.9002 pre 1.0.7.0
+* restored healing-skill breakdown in html-oputput
+
 ##### English
 * fix for Keziah Mason's Ring
 

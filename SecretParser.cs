@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.6.9001")]
+[assembly: AssemblyVersion("1.0.6.9002")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -2597,12 +2597,14 @@ namespace SecretParse_Plugin
                             att["dmgKey"] = GetScriptKey(0);
                         }
 
-                        att["healing"] = "0";
-                        att["hps%"] = "0";
-                        att["hps"] = "0";
-                        att["healcrit%"] = "0";
-                        att["aegisheal"] = "0";
-                        att["aegishps"] = "0";
+                        aegis_heal = GetSpecialHitData(item, SecretLanguage.Aegis);
+                        aegis_hps = (item.Duration.TotalSeconds > 0) ? aegis_heal / item.Duration.TotalSeconds : 0.0;
+                        att["healing"] = item.Damage.ToString("#,##0", usCulture);
+                        att["hps%"] = (item.Damage * 100 / data.Healed).ToString("0'%", usCulture);
+                        att["hps"] = item.EncDPS.ToString(GetFloatCommas(), usCulture);
+                        att["healcrit%"] = item.CritPerc.ToString("0'%", usCulture);
+                        att["aegisheal"] = aegis_heal.ToString(GetIntCommas(), usCulture);
+                        att["aegishps"] = aegis_hps.ToString(GetFloatCommas(), usCulture);
 
                         att["healKey"] = GetScriptKey(item.Damage);
 
