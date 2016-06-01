@@ -600,7 +600,7 @@ namespace SecretParse_Plugin
 <html xmlns=""http://www.w3.org/1999/xhtml"" lang=""en-US"">
 <head>
 	<meta charset=""utf-8"">
-	<script type=""text/javascript"" src=""http://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js""></script>
+	<script type=""text/javascript"" src=""//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js""></script>
 	<script>
 		$(document).ready(function() {
 			$(""#content div"").hide();
