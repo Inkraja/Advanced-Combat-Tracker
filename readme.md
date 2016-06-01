@@ -3,6 +3,9 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
+## 1.0.7.0001 pre 1.0.7.1
+* changed HTML export to allow serving over https as well as http
+
 ## 1.0.7.0
 * restored healing-skill breakdown in html-output
 * fixed self-hits with aegis
