@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.7.0002")]
+[assembly: AssemblyVersion("1.0.7.0003")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -4432,7 +4432,7 @@ namespace SecretParse_Plugin
 //            DamageWithoutOrigin.Add("Angriff");
 
             damageLines = new List<Regex>();
-            string apostropheSkills = "Tod von oben|Androhung von Waffengewalt|Von Anfang bis Ende|Runter von meinem Land|Sturm von Niflheim";
+            string apostropheSkills = "Tod von oben|Androhung von Waffengewalt|Von Anfang bis Ende|Runter von meinem Land|Sturm von Niflheim|Unterstützung von außen";
             damageLines.Add(new Regex(@"^(?<actor>Ihre)\s(?<attackName>.+?)-Kraft\sfügt\s(?<actee>.+)\s(?<amount>[0-9]+)\sSchaden\szu\.", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>(""?)(" + apostropheSkills + @")(""?))\s(?<damageType>\([^\)]+\)\s)?fügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(\-)?(?<ignore>Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>(""?)(" + apostropheSkills + @")(""?))\s(?<damageType>\([^\)]+\)\s)?von\s(?<actor>.+?)\sfügt\s(?<actee>.+?)\s(?<amount>[0-9]+)(?<damageClass>.*?)(\-)?(?<ignore>Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
