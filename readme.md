@@ -3,8 +3,9 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
 
-## 1.0.7.0003 pre 1.0.7.1
+## 1.0.7.0004 pre 1.0.7.1
 * changed jQuerry to load over https allowing to serve the HTML export over https without errors
+* fix miscalculated percentages
 
 ##### German
 * added "von" skill 'Unterstützung von außen'

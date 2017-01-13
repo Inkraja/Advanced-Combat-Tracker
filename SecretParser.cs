@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.7.0003")]
+[assembly: AssemblyVersion("1.0.7.0004")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -1231,11 +1231,11 @@ namespace SecretParse_Plugin
 
         private double GetSpecialHitPerc(DamageTypeData Data, string specialName)
         {
-            if (Data.Hits < 1)
+            if ((Data.Hits + Data.Misses) < 1)
                 return 0;
 
             double specials = GetSpecialHitCount(Data, specialName);
-            specials /= Data.Hits;
+            specials /= (Data.Hits + Data.Misses);
             return specials * 100.0;
         }
 
@@ -1267,11 +1267,11 @@ namespace SecretParse_Plugin
 
         private double GetSpecialHitPerc(AttackType Data, string specialName)
         {
-            if (Data.Hits < 1)
+            if ((Data.Hits + Data.Misses) < 1)
                 return 0;
 
             double specials = GetSpecialHitCount(Data, specialName);
-            specials /= Data.Hits;
+            specials /= (Data.Hits + Data.Misses);
             return specials * 100.0;
         }
 
@@ -1352,9 +1352,9 @@ namespace SecretParse_Plugin
                     return GetSpecialHitPerc(Data.Items[INC_DAMAGE].Items[ALL],SecretLanguage.Blocked).ToString("0'%", usCulture);
                 case "takenevade%":
                     double missperc = 0.0;
-                    if (Data.Items[INC_DAMAGE].Items[ALL].Hits > 0)
+                    if ((Data.Items[INC_DAMAGE].Items[ALL].Hits + Data.Items[INC_DAMAGE].Items[ALL].Misses) > 0)
                     {
-                        missperc = 100.0 * Data.Items[INC_DAMAGE].Items[ALL].Misses / Data.Items[INC_DAMAGE].Items[ALL].Hits;
+                        missperc = 100.0 * Data.Items[INC_DAMAGE].Items[ALL].Misses / (Data.Items[INC_DAMAGE].Items[ALL].Hits + Data.Items[INC_DAMAGE].Items[ALL].Misses);
                     }
                     return missperc.ToString("0'%", usCulture);
                 default:
