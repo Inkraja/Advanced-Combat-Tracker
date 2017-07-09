@@ -1,0 +1,8 @@
+title: Advanced-combat-tracker
+description: SecretParser Plugin for the game http://www.thesecretworld.com for
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-modernist
+
+gems:
+  - jekyll-mentions
