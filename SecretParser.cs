@@ -4430,19 +4430,38 @@ namespace SecretParse_Plugin
 //            DamageWithoutOrigin.Add("Konditionierung");
 //            DamageWithoutOrigin.Add("Hauruck!");
 //            DamageWithoutOrigin.Add("Angriff");
-
             damageLines = new List<Regex>();
             string apostropheSkills = "Tod von oben|Androhung von Waffengewalt|Von Anfang bis Ende|Runter von meinem Land|Sturm von Niflheim|Unterstützung von außen";
+	//SWL
+			//(Kritischer Treffer)\"Anfängerglück\" (Normal) trifft KrustenBraten und verursacht 1023 Körperlich-Schaden.
+			//(Kritischer Treffer) \"Streuschuss\" (Normal) trifft Martling und verursacht 1834 Körperlich-Schaden.
+            damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)?)?(?<attackName>.+)\s(?<damageType>\([^\)]+\))\strifft\s(?<actee>.+)\sund\sverursacht\s(?<amount>[0-9]+)\s(?<damageClass>.*?)-Schaden\."));
+            //"Vollautomatik" (Normal) trifft Untoter Inselbewohner und verursacht 55 Körperlich-Schaden
+            damageLines.Add(new Regex(@"^(?<attackName>.+)\s(?<damageType>\([^\)]+\))\strifft\s(?<actee>.+)\sund\sverursacht\s(?<amount>[0-9]+)\s(?<damageClass>.*?)-Schaden", RegexOptions.Compiled));
+            //TheOtherPlayer trifft mit "Kontrolliertes Feuern" (Normal) und verursacht Untoter Inselbewohner 250 Körperlich-Schaden.
+            damageLines.Add(new Regex(@"^(?<actor>.+)\strifft\smit\s(?<attackName>.+)\s(?<damageType>\([^\)]+\))\sund\sverursacht\s(?<actee>.+)\s(?<amount>[0-9]+)\s(?<damageClass>.*?)-Schaden\.", RegexOptions.Compiled));
+            //(Kritischer Treffer) TheOtherPlayer trifft mit \"Kontrolliertes Feuern\" (Normal) Untoter Inselbewohner und verursacht 336 Körperlich-Schaden.
+            damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<actor>.+)\strifft\smit\s(?<attackName>.+)\s(?<damageType>\([^\)]+\))\s(?<actee>.+)\sund\sverursacht\s(?<amount>[0-9]+)\s(?<damageClass>.*?)-Schaden\.", RegexOptions.Compiled));
+			 //(Kritischer Treffer) TheOtherPlayer trifft Sie mit \"Flackern\" (Normal) und verursacht 929 Magie-Schaden.
+            damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<actor>.+)\strifft\s(?<actee>.+?)mit\s(?<attackName>.+)\s(?<damageType>\([^\)]+\))\sund\sverursacht\s(?<amount>[0-9]+)\s(?<damageClass>.*?)-Schaden\.", RegexOptions.Compiled));
+            //Haugbui-Jarl trifft Sie mit "Aufgeladener Hack" (Normal) und verursacht 84 Magie-Schaden.
+            damageLines.Add(new Regex(@"^(?<actor>.+) trifft (?<actee>.+?) mit (?<attackName>.+?) (?<damageType>\([^\)]+\)) und verursacht (?<amount>[0-9]+) (?<damageClass>.*?)-Schaden\.", RegexOptions.Compiled));
+            //Elektrifiziert trifft Sie (Normal) und verursacht 212 Magie-Schaden.
+            damageLines.Add(new Regex(@"(?<actor>.+) trifft (?<actee>.+?) (?<damageType>\([^\)]+\)) und verursacht (?<amount>[0-9]+) (?<damageClass>.*?)-Schaden\.", RegexOptions.Compiled));
+			
+	//TSW
             damageLines.Add(new Regex(@"^(?<actor>Ihre)\s(?<attackName>.+?)-Kraft\sfügt\s(?<actee>.+)\s(?<amount>[0-9]+)\sSchaden\szu\.", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>(""?)(" + apostropheSkills + @")(""?))\s(?<damageType>\([^\)]+\)\s)?fügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(\-)?(?<ignore>Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>(""?)(" + apostropheSkills + @")(""?))\s(?<damageType>\([^\)]+\)\s)?von\s(?<actor>.+?)\sfügt\s(?<actee>.+?)\s(?<amount>[0-9]+)(?<damageClass>.*?)(\-)?(?<ignore>Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>.+?)\s(?<damageType>\([^\)]+\)\s)?von\s(?<actor>.+?)\sfügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(\-)?(?<ignore>Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Kritisch\)\s|\(Kritischer Treffer\)\s)?(?<attackName>.+?)\s(?<damageType>\([^\)]+\)\s)?fügt\s(?<actee>.+)\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>-Schaden\szu)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<actor>Ihr)\s(?<attackName>.+?)\strifft\s(?<actee>.+?)\s(?<crit>kritisch\s)?für\s(?<amount>[0-9]+)\sSchaden\.", RegexOptions.Compiled));
-            string hateSkills = "Provozieren|Massenprovokation|Verwirren|Massenverwirrung|Irreführung";
+	//TSW + SWL
+			string hateSkills = "Provozieren|Massenprovokation|Verwirren|Massenverwirrung|Irreführung";
             damageLines.Add(new Regex(@"^(?<actor>.+)\s(haben|hat)\serfolgreich\s'(?<attackName>" + hateSkills + @")'\seingesetzt\.", RegexOptions.Compiled));
 
             redirectLines = new List<Regex>();
+			//Blast Shield von Feuer von Sheol leitet 20 Schaden auf Tipsu um.
             redirectLines.Add(new Regex(@"^(?<attackName>" + apostropheSkills + @"?)\s(?<damageType>\([^\)]+\)\s)?von\s(?<actor>.+?)\sleitet\s(?<amount>[0-9]+)\sSchaden\sauf\s(?<actee>.+?)\sum\.", RegexOptions.Compiled));
             redirectLines.Add(new Regex(@"^(?<attackName>.+?)\s(?<damageType>\([^\)]+\)\s)?von\s(?<actor>.+?)\sleitet\s(?<amount>[0-9]+)\sSchaden\sauf\s(?<actee>.+?)\sum\.", RegexOptions.Compiled));
             redirectLines.Add(new Regex(@"^(?<actor>Ihr)\s(?<attackName>.+?)\s(?<damageType>\([^\)]+\)\s)?leitet\s(?<amount>[0-9]+)\sSchaden\sauf\s(?<actee>.+?)\sum\.", RegexOptions.Compiled));
