@@ -4543,7 +4543,7 @@ namespace SecretParse_Plugin
             //TSW Language Mixup Hack
             YouSet.Add("your");
 
-//            DamageWithoutOrigin = new HashSet<string>();
+            //            DamageWithoutOrigin = new HashSet<string>();
 
             // The regex can't differentiate between attacks with "de" in the name and characters with "de" in their name :(
             SortedSet<string> deAttacks = new SortedSet<string>();
@@ -4566,6 +4566,7 @@ namespace SecretParse_Plugin
             deAttacks.Add("Coup de sang");
             deAttacks.Add("Cran de sûreté ôté");
             deAttacks.Add("Croc du croissant de lune");
+            deAttacks.Add("Détonation de grenade");
             deAttacks.Add("Déferlement de lames");
             deAttacks.Add("Drone de garde");
             deAttacks.Add("Drone de renfort");
