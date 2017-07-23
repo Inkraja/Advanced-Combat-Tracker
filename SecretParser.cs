@@ -4549,14 +4549,13 @@ namespace SecretParse_Plugin
             SortedSet<string> deAttacks = new SortedSet<string>();
             SortedSet<string> deAttacks2 = new SortedSet<string>();
             SortedSet<string> deAttacks3 = new SortedSet<string>();
-            // main-actifs
-            deAttacks.Add("Âme de joueur");
+         //TSW
+			// main-actifs
             deAttacks.Add("Avènement de la discorde");
             deAttacks.Add("Ballet de balles");
             deAttacks.Add("Bouclier de sang");
             deAttacks.Add("Boule de feu");
             deAttacks.Add("Brûlure de poudre");
-            deAttacks.Add("Cacophonie de doppelgänger extradimensionnel");
             deAttacks.Add("Chance de débutant");
             deAttacks.Add("Charge de la brousse");
             deAttacks.Add("Cinq pétales de lotus");
@@ -4566,20 +4565,16 @@ namespace SecretParse_Plugin
             deAttacks.Add("Coup de sang");
             deAttacks.Add("Cran de sûreté ôté");
             deAttacks.Add("Croc du croissant de lune");
-            deAttacks.Add("Détonation de grenade");
             deAttacks.Add("Déferlement de lames");
             deAttacks.Add("Drone de garde");
             deAttacks.Add("Drone de renfort");
-            deAttacks.Add("Drone de purification de modèle UW-0");
             deAttacks.Add("Drone de secteur");
-            deAttacks.Add("Drone médical de modèle 3P-K");
             deAttacks.Add("Écho de l'acier");
             deAttacks.Add("Éclats de rasoir");
             deAttacks.Add("État de choc");
             deAttacks.Add("Enfer de feu");
             deAttacks.Add("Envie de tuer");
             deAttacks.Add("Excité de la gâchette");
-            deAttacks.Add("Force de Gaia");
             deAttacks.Add("Fracture de la réalité");
             deAttacks.Add("Grand coup de marteau");
             deAttacks.Add("Inversion de tendance");
@@ -4593,19 +4588,16 @@ namespace SecretParse_Plugin
             deAttacks.Add("Onde de choc");
             deAttacks.Add("Œil de la tempête");
             deAttacks.Add("Poussée de sang");
-            deAttacks.Add("Potion de soins");
             deAttacks.Add("Rafale de trois balles");
             deAttacks.Add("Ralentissement de l'ennemi");
             deAttacks.Add("Rayon de glace");
             deAttacks.Add("Rayon de ponction");
-            deAttacks.Add("Regain de vigueur");
             deAttacks.Add("Règlement de comptes");
             deAttacks.Add("Récupération de cartouches");
             deAttacks.Add("Rideau de rubis");
             deAttacks.Add("Roue de poignards");
             deAttacks.Add("Salve de cartouches");
             deAttacks.Add("Sang de guerre");
-            deAttacks.Add("Suppression de la douleur");
             deAttacks.Add("Symbole de terreur");
             deAttacks.Add("Taille de bambou");
             deAttacks.Add("Taille de brindille");
@@ -4617,8 +4609,6 @@ namespace SecretParse_Plugin
             deAttacks.Add("Union de décharges");
             deAttacks.Add("Vague de froid");
             deAttacks.Add("Vague de gel");
-            deAttacks.Add("Vague de chaleur");
-
             // main-passifs
             deAttacks.Add("Coup de grâce");
             deAttacks.Add("Du fond de l'abîme");
@@ -4742,7 +4732,27 @@ namespace SecretParse_Plugin
             deAttacks.Add("Module de dérivation directe");
             deAttacks.Add("Module de dérivation transposée");
             deAttacks.Add("Stimulant de vitalité");
-            // end of list
+		//SWL	
+			//SWL - Attacks and Items
+            deAttacks.Add("Âme de joueur");
+			deAttacks.Add("Cacophonie de doppelgänger extradimensionnel");
+			deAttacks.Add("Détonation de grenade");
+			deAttacks.Add("Dissipation de doppelgänger extradimensionnel");
+			deAttacks.Add("Enchaînement de coups");
+			deAttacks.Add("Énigme de bien-être");
+	        deAttacks.Add("Force de Gaia");		
+			deAttacks.Add("Linceul de châtiment");
+			deAttacks.Add("Potion de soins");
+			deAttacks.Add("Regain de vigueur");
+			deAttacks.Add("Surcroît de chi");
+			deAttacks.Add("Suppression de la douleur");
+            deAttacks.Add("Vague de chaleur");
+			//SWL-Gadgets
+            deAttacks.Add("Drone médical de modèle 3P-K");
+			deAttacks.Add("Drone de purification de modèle UW-0");
+			deAttacks.Add("Système d'inoculation de sédatif");
+
+        // end of list
             StringBuilder deStringBuilder = new StringBuilder();
             foreach (var deAttack in deAttacks)
             {
