@@ -4744,7 +4744,8 @@ namespace SecretParse_Plugin
 			deAttacks.Add("Linceul de châtiment");
 			deAttacks.Add("Potion de soins");
 			deAttacks.Add("Regain de vigueur");
-			deAttacks.Add("Surcroît de chi");
+            deAttacks.Add("Soif de sang");
+            deAttacks.Add("Surcroît de chi");
 			deAttacks.Add("Suppression de la douleur");
             deAttacks.Add("Vague de chaleur");
 			//SWL-Gadgets
