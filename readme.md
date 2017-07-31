@@ -3,7 +3,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 
 
 # Changelog
-## 1.0.7.3 planned
+## 1.0.7.3
 ##### SWL
 * added German Combat Logging
 * added French Combat Logging
