@@ -1,7 +1,13 @@
 # Secret Parser ACT Plugin
 Advanced Combat Tracker Parser plugin for The Secret World.
 
+
 # Changelog
+## 1.0.7.3 planned
+##### SWL
+* added German Combat Logging
+* added French Combat Logging
+
 ## 1.0.7.2
 ##### Add SWL Support
 * added English Casts: Extradimensional Doppelganger's Dissonance, Extradimensional Doppelganger's Dissipation, Extradimensional Doppelganger's Cacophony, Beginner's Luck, Snake's Bite, Gambler's Soul, Warrior's Spirit, Skadi's Ring
