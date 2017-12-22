@@ -7,6 +7,7 @@ Advanced Combat Tracker Parser plugin for The Secret World.
 ##### SWL
 * added German Combat Logging
 * added French Combat Logging
+* added English Cast: Generalist's Belt
 
 ## 1.0.7.2
 ##### Add SWL Support
