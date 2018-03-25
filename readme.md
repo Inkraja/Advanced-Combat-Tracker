@@ -1,6 +1,11 @@
 # Secret Parser ACT Plugin
 Advanced Combat Tracker Parser plugin for The Secret World.
 
+# Changelog
+## 1.0.7.4
+##### SWL
+* added English Casts + Items: Effigy O35 Turret's Barrage, Ningishzida's Rod, Master's Chain, High Roller's Chain, Generalist's Belt #15 by @MerlinAesalon :taco:
+* added English Casts + Items: Pharaoh's Blood and Spectre's Unravel Soul
 
 # Changelog
 ## 1.0.7.3
