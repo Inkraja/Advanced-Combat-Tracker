@@ -3759,6 +3759,8 @@ namespace SecretParse_Plugin
             string gitUrl = "https://github.com/Inkraja/Advanced-Combat-Tracker/releases/latest";
             string gitFile = "https://raw.githubusercontent.com/Inkraja/Advanced-Combat-Tracker/{0}/SecretParser.cs";
 
+            System.Net.ServicePointManager.Expect100Continue = true;
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             System.Net.WebRequest request = System.Net.WebRequest.Create(gitUrl);
             System.Net.WebResponse response = request.GetResponse();
 
