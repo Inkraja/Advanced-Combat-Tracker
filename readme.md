@@ -2,7 +2,7 @@
 Advanced Combat Tracker Parser plugin for The Secret World.
 
 # Changelog
-## 1.0.7.6
+## 1.0.7.6 and 7
 * adding new items from SWL
 
 # Changelog
