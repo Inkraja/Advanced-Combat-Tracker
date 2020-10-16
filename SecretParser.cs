@@ -35,7 +35,7 @@ using System.Diagnostics;
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
 [assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
-[assembly: AssemblyVersion("1.0.7.7")]
+[assembly: AssemblyVersion("1.0.7.8")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
 // Added Incoming Damage (takencrit%, takenpen&, ...) to chat export (Holok)
@@ -4323,7 +4323,7 @@ namespace SecretParse_Plugin
 //            DamageWithoutOrigin = new HashSet<string>();
 
             damageLines = new List<Regex>();
-            string apostropheSkills = "Thor's Hammer|Nightmare's Edge|Miner's Claw|Gaia's Presence|Carter's Burning|Angel's Touch|Adam's Rib|Dream's End|Stone's Throw|Mjolnir's Echo|Shadow's Shadow|The Carver's Art|Dragon's Breath|The Inspector's Gadget|Protector's Wrath|Keziah Mason's Ring|Extradimensional Doppelganger's Dissonance|Extradimensional Doppelganger's Dissipation|Extradimensional Doppelganger's Cacophony|Beginner's Luck|Snake's Bite|Gambler's Soul|Warrior's Spirit|Skadi's Ring|Effigy O35 Turret's Barrage|Ningishzida's Rod|Master's Chain|High Roller's Chain|Generalist's Belt|Pharaoh's Blood|Spectre's Unravel Soul|Ashes of Fate's Chosen's Judgment|Ring of the Hollow Tree's Custodial Wrath|Anima-Infused Keepsake's Gatekeeper's Ire";
+            string apostropheSkills = "Thor's Hammer|Nightmare's Edge|Miner's Claw|Gaia's Presence|Carter's Burning|Angel's Touch|Adam's Rib|Dream's End|Stone's Throw|Mjolnir's Echo|Shadow's Shadow|The Carver's Art|Dragon's Breath|The Inspector's Gadget|Protector's Wrath|Keziah Mason's Ring|Extradimensional Doppelganger's Dissonance|Extradimensional Doppelganger's Dissipation|Extradimensional Doppelganger's Cacophony|Beginner's Luck|Snake's Bite|Gambler's Soul|Warrior's Spirit|Skadi's Ring|Effigy O35 Turret's Barrage|Ningishzida's Rod|Master's Chain|High Roller's Chain|Generalist's Belt|Pharaoh's Blood|Spectre's Unravel Soul|Ashes of Fate's Chosen's Judgment|Ring of the Hollow Tree's Custodial Wrath|Anima-Infused Keepsake's Gatekeeper's Ire|Living Flame's Flame Flare|Living Flame's attack|Living Flame's Bamboozle";
             damageLines.Add(new Regex(@"^(?<actor>Your|.*'s)\s(?<attackName>" + apostropheSkills + @")\sdealt\s(?<amount>[0-9]+)\sdamage\sto\s(?<actee>.+)\.$", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<actor>Your|.*'s)\s(?<attackName>.+?)\sdealt\s(?<amount>[0-9]+)\sdamage\sto\s(?<actee>.+)\.$", RegexOptions.Compiled));
             damageLines.Add(new Regex(@"^(?<crit>\(Critical\)\s)?(?<actor>Your|.*'s)\s(?<attackName>" + apostropheSkills + @")\shits\s(?<damageType>\([^\)]+\)\s)?(?<actee>.+)\sfor\s(?<amount>[0-9]+)(?<damageClass>.*?)(?<ignore>\sdamage)?\.(?<blockType>\s\([^\)]+\))?", RegexOptions.Compiled));
