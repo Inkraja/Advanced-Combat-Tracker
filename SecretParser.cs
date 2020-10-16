@@ -34,7 +34,7 @@ using System.Diagnostics;
 
 [assembly: AssemblyTitle("Secret World damage and heal parse")]
 [assembly: AssemblyDescription("Read through the CombatLog.txt files and parse the combat and healing done (ACT3)")]
-[assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko; ***")]
+[assembly: AssemblyCopyright("Author: Boorish, since 1.0.5.4 Lausi; Contributions from: Eafalas, Holok, Inkraja, Akamiko, SecretFox; ***")]
 [assembly: AssemblyVersion("1.0.7.8")]
 // This plugin is based on the Rift3 plugin by Creub and Altuslumen.  Thanks guys :)
 // Fix for glance and penetrate hits fom Holok
@@ -3401,6 +3401,11 @@ namespace SecretParse_Plugin
                 {
                     attacker = victim;
                 }
+                // Convert "them" to casters name, french and german localizations appear broken, possibly due to regex issues
+                if(eventType == 5 && victim == SecretLanguage.Them)
+                {
+                    victim = attacker;
+                }
                 attackName = attackName.Trim(' ', '"', '\'') + attackSuffix;
                 string damageTypeStr = TrimBrackets(groups["damageType"].Value);
                 string damageClassStr = TrimBrackets(groups["damageClass"].Value);
@@ -4260,6 +4265,7 @@ namespace SecretParse_Plugin
         public static string Penetrated = "";
         public static string Blocked = "";
         public static string Aegis = "";
+        public static string Them = "";
 
         // Filter string
         public static string HitLine1 = "";
@@ -4315,6 +4321,7 @@ namespace SecretParse_Plugin
             BuffStopLine = "Buff";
             AegisShieldLine = "AEGIS";
             WhisperCmd = "/w";
+            Them = "them";
             You = "you";
             YouSet = new HashSet<string>();
             YouSet.Add(You);
@@ -4406,6 +4413,7 @@ namespace SecretParse_Plugin
             AegisShieldLine = "AEGIS";
             WhisperCmd = "/w";
             You = "ihnen";
+            Them = "sie";
             YouSet = new HashSet<string>();
             YouSet.Add(You);
             YouSet.Add("ihr");
@@ -4539,6 +4547,7 @@ namespace SecretParse_Plugin
             AegisShieldLine = "AEGIS";
             WhisperCmd = "/dire";
             You = "vous";
+            Them = "lui";
             YouSet = new HashSet<string>();
             YouSet.Add(You);
             YouSet.Add("votre");
