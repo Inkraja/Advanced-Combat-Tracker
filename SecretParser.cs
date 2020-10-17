@@ -79,6 +79,7 @@ namespace SecretParse_Plugin
             this.checkBox_ExportColored = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportSplit = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportHtml = new System.Windows.Forms.CheckBox();
+            this.checkBox_SWLHtml = new System.Windows.Forms.CheckBox();
             this.checkBox_ExportAllies = new System.Windows.Forms.CheckBox();
             this.checkBox_DontExportShortEnc = new System.Windows.Forms.CheckBox();
             this.checkBox_EnableTSWAddon = new System.Windows.Forms.CheckBox();
@@ -245,12 +246,25 @@ namespace SecretParse_Plugin
             this.checkBox_ExportHtml.UseVisualStyleBackColor = true;
             this.checkBox_ExportHtml.MouseHover += new System.EventHandler(this.checkBox_ExportHtml_MouseHover);
             //
+            // checkBox_SWLHtml
+            //
+            this.checkBox_SWLHtml.AutoSize = true;
+            this.checkBox_SWLHtml.Checked = true;
+            this.checkBox_SWLHtml.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_SWLHtml.Location = new System.Drawing.Point(15, 190);
+            this.checkBox_SWLHtml.Name = "checkBox_SWLHtml";
+            this.checkBox_SWLHtml.Size = new System.Drawing.Size(151, 17);
+            this.checkBox_SWLHtml.TabIndex = 9;
+            this.checkBox_SWLHtml.Text = "Use SWL version of HTML";
+            this.checkBox_SWLHtml.UseVisualStyleBackColor = true;
+            this.checkBox_SWLHtml.MouseHover += new System.EventHandler(this.checkBox_SWLHtml_MouseHover);
+            //
             // checkBox_ExportAllies
             //
             this.checkBox_ExportAllies.AutoSize = true;
             this.checkBox_ExportAllies.Checked = true;
             this.checkBox_ExportAllies.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_ExportAllies.Location = new System.Drawing.Point(15, 190);
+            this.checkBox_ExportAllies.Location = new System.Drawing.Point(15, 206);
             this.checkBox_ExportAllies.Name = "checkBox_ExportAllies";
             this.checkBox_ExportAllies.Size = new System.Drawing.Size(174, 17);
             this.checkBox_ExportAllies.TabIndex = 10;
@@ -263,7 +277,7 @@ namespace SecretParse_Plugin
             this.checkBox_DontExportShortEnc.AutoSize = true;
             this.checkBox_DontExportShortEnc.Checked = true;
             this.checkBox_DontExportShortEnc.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_DontExportShortEnc.Location = new System.Drawing.Point(15, 206);
+            this.checkBox_DontExportShortEnc.Location = new System.Drawing.Point(15, 222);
             this.checkBox_DontExportShortEnc.Name = "checkBox_DontExportShortEnc";
             this.checkBox_DontExportShortEnc.Size = new System.Drawing.Size(192, 17);
             this.checkBox_DontExportShortEnc.TabIndex = 11;
@@ -274,7 +288,7 @@ namespace SecretParse_Plugin
             // checkBox_EnableTSWAddon
             //
             this.checkBox_EnableTSWAddon.AutoSize = true;
-            this.checkBox_EnableTSWAddon.Location = new System.Drawing.Point(15, 222);
+            this.checkBox_EnableTSWAddon.Location = new System.Drawing.Point(15, 238);
             this.checkBox_EnableTSWAddon.Name = "checkBox_EnableTSWAddon";
             this.checkBox_EnableTSWAddon.Size = new System.Drawing.Size(183, 17);
             this.checkBox_EnableTSWAddon.TabIndex = 12;
@@ -286,7 +300,7 @@ namespace SecretParse_Plugin
             // checkBox_AutofixDBConf
             //
             this.checkBox_AutofixDBConf.AutoSize = true;
-            this.checkBox_AutofixDBConf.Location = new System.Drawing.Point(35, 238);
+            this.checkBox_AutofixDBConf.Location = new System.Drawing.Point(35, 254);
             this.checkBox_AutofixDBConf.Name = "checkBox_AutofixDBConf";
             this.checkBox_AutofixDBConf.Size = new System.Drawing.Size(148, 17);
             this.checkBox_AutofixDBConf.TabIndex = 13;
@@ -297,7 +311,7 @@ namespace SecretParse_Plugin
             // checkBox_HideUnknown
             //
             this.checkBox_HideUnknown.AutoSize = true;
-            this.checkBox_HideUnknown.Location = new System.Drawing.Point(15, 254);
+            this.checkBox_HideUnknown.Location = new System.Drawing.Point(15, 270);
             this.checkBox_HideUnknown.Name = "checkBox_HideUnknown";
             this.checkBox_HideUnknown.Size = new System.Drawing.Size(180, 17);
             this.checkBox_HideUnknown.TabIndex = 14;
@@ -308,7 +322,7 @@ namespace SecretParse_Plugin
             // checkBox_SelfDamage
             //
             this.checkBox_SelfDamage.AutoSize = true;
-            this.checkBox_SelfDamage.Location = new System.Drawing.Point(15, 270);
+            this.checkBox_SelfDamage.Location = new System.Drawing.Point(15, 286);
             this.checkBox_SelfDamage.Name = "checkBox_SelfDamage";
             this.checkBox_SelfDamage.Size = new System.Drawing.Size(113, 17);
             this.checkBox_SelfDamage.TabIndex = 15;
@@ -319,7 +333,7 @@ namespace SecretParse_Plugin
             // checkBox_SelfPlayerDamage
             //
             this.checkBox_SelfPlayerDamage.AutoSize = true;
-            this.checkBox_SelfPlayerDamage.Location = new System.Drawing.Point(35, 286);
+            this.checkBox_SelfPlayerDamage.Location = new System.Drawing.Point(35, 302);
             this.checkBox_SelfPlayerDamage.Name = "checkBox_SelfPlayerDamage";
             this.checkBox_SelfPlayerDamage.Size = new System.Drawing.Size(99, 17);
             this.checkBox_SelfPlayerDamage.TabIndex = 16;
@@ -330,7 +344,7 @@ namespace SecretParse_Plugin
             // checkBox_ReduceAegis
             //
             this.checkBox_ReduceAegis.AutoSize = true;
-            this.checkBox_ReduceAegis.Location = new System.Drawing.Point(15, 302);
+            this.checkBox_ReduceAegis.Location = new System.Drawing.Point(15, 318);
             this.checkBox_ReduceAegis.Name = "checkBox_ReduceAegis";
             this.checkBox_ReduceAegis.Size = new System.Drawing.Size(142, 17);
             this.checkBox_ReduceAegis.TabIndex = 17;
@@ -499,6 +513,7 @@ namespace SecretParse_Plugin
             this.Controls.Add(this.checkBox_ExportColored);
             this.Controls.Add(this.checkBox_ExportSplit);
             this.Controls.Add(this.checkBox_ExportHtml);
+            this.Controls.Add(this.checkBox_SWLHtml);
             this.Controls.Add(this.checkBox_ExportAllies);
             this.Controls.Add(this.checkBox_DontExportShortEnc);
             this.Controls.Add(this.checkBox_EnableTSWAddon);
@@ -539,6 +554,7 @@ namespace SecretParse_Plugin
         private System.Windows.Forms.CheckBox checkBox_ExportColored;
         private System.Windows.Forms.CheckBox checkBox_ExportSplit;
         private System.Windows.Forms.CheckBox checkBox_ExportHtml;
+        private System.Windows.Forms.CheckBox checkBox_SWLHtml;
         private System.Windows.Forms.CheckBox checkBox_ExportAllies;
         private System.Windows.Forms.CheckBox checkBox_DontExportShortEnc;
         private System.Windows.Forms.CheckBox checkBox_EnableTSWAddon;
@@ -813,6 +829,30 @@ namespace SecretParse_Plugin
 				<tfoot>
 					<tr>
 						<td colspan=""16"">Click on a row to show the detailed skill breakdown</td>
+					</tr>
+				</tfoot>
+				<tbody>
+					";
+        private static string HTML_TABLE_DAMAGE_SWL = @"
+	<div id=""content"">
+		<div id=""tab1"">
+			<table>
+				<thead>
+					<tr>
+						<th>Name - (combat time)</th>
+						<th width=""8%"">Damage</th>
+						<th width=""10%"">DPS</th>
+						<th width=""10%"">Crit</th>
+						<th width=""10%"">Glnc</th>
+						<th width=""10%"">Evade</th>
+						<th width=""12%"" class=""heal"">Heal</th>
+						<th width=""10%"">HPS</th>
+						<th width=""10%"">HCrit</th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<td colspan=""9"">Click on a row to show the detailed skill breakdown</td>
 					</tr>
 				</tfoot>
 				<tbody>
@@ -1532,36 +1572,55 @@ namespace SecretParse_Plugin
             string hiddenStr = hidden ? " style=\"display: none;\"" : "";
             string death = ("0".Equals(entry["death"]) || IsMultipleDeath == 1) ? "" : " - " + (SecretLanguage.Killing).ToLower();
             string duration = "".Equals(entry["duration"]) ? "" : " - ( " + entry["duration"] + death + " )";
-
-            string HTMLine = "<tr class=\"" + TrOnClick + "\"" + hiddenStr + "><td class=\"col1\">"
-                           + ("".Equals(entry["duration"]) ? "<b>" + nameStr + "</b>" : "<strong>" + nameStr + "</strong>")
-                           + duration + "</td>";
-            HTMLine += "0".Equals(entry["dmg"]) ? "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>"
-                                              : "<td>" + entry["dmg"] + " - " + entry["dps%"] + "</td><td>"
-                                                + ("".Equals(duration) ? "" + "</td><td>" + ("0%".Equals(entry["pen%"]) ? "" : entry["pen%"])
-                                                                          + "</td><td>" + ("0%".Equals(entry["crit%"]) ? "" : entry["crit%"])
-                                                                          + "</td><td>" + ("0%".Equals(entry["glance%"]) ? "" : entry["glance%"])
-                                                                          + "</td><td>" + ("0%".Equals(entry["block%"]) ? "" : entry["block%"])
-                                                                          + "</td><td>" + ("0%".Equals(entry["evade%"]) ? "" : entry["evade%"])
-                                                                          + "</td><td>" + ("0".Equals(entry["aegisdmg"]) ? "" : entry["aegisdmg"])
-                                                                          + "</td><td>" + ("0.00".Equals(entry["aegisdps"]) ? "" : entry["aegisdps"])
-                                                                          + "</td><td>" + ("0%".Equals(entry["aegismismatch%"]) ? "" : entry["aegismismatch%"])
-                                                                          + "</td>"
-                                                                        : entry["dps"] + "</td><td>" + entry["pen%"]
-                                                                          + "</td><td>" + entry["crit%"]
-                                                                          + "</td><td>" + entry["glance%"]
-                                                                          + "</td><td>" + entry["block%"]
-                                                                          + "</td><td>" + entry["evade%"]
-                                                                          + "</td><td>" + ("0".Equals(entry["aegisdmg"]) ? "" : entry["aegisdmg"])
-                                                                          + "</td><td>" + ("0.00".Equals(entry["aegisdps"]) ? "" : entry["aegisdps"])
-                                                                          + "</td><td>" + ("0%".Equals(entry["aegismismatch%"]) ? "" : entry["aegismismatch%"])
-                                                                          + "</td>");
-            HTMLine += "0".Equals(entry["healing"]) ? "<td class=\"heal\"></td><td></td><td></td><td></td><td></td>"
-                                                  : "<td class=\"heal\">" + entry["healing"] + " - " + entry["hps%"]
-                                                    + "</td><td>" + entry["hps"]
-                                                    + "</td><td>" + entry["healcrit%"] + "</td>"
-                                                    + "</td><td>" + ("0".Equals(entry["aegisheal"]) ? "" : entry["aegisheal"])
-                                                    + "</td><td>" + ("0.00".Equals(entry["aegishps"]) ? "" : entry["aegishps"]);
+            string HTMLine =  "<tr class=\"" + TrOnClick + "\"" + hiddenStr + "><td class=\"col1\">"
+                               + ("".Equals(entry["duration"]) ? "<b>" + nameStr + "</b>" : "<strong>" + nameStr + "</strong>")
+                               + duration + "</td>";
+            if(checkBox_SWLHtml.Checked)
+            {
+                HTMLine += "0".Equals(entry["dmg"]) ? "<td></td><td></td><td></td><td></td><td></td>"
+                                                  : "<td>" + entry["dmg"] + " - " + entry["dps%"] + "</td><td>"
+                                                    + ("".Equals(duration) ? "" + "</td><td>" + ("0%".Equals(entry["crit%"]) ? "" : entry["crit%"])
+                                                                              + "</td><td>" + ("0%".Equals(entry["glance%"]) ? "" : entry["glance%"])
+                                                                              + "</td><td>" + ("0%".Equals(entry["evade%"]) ? "" : entry["evade%"])
+                                                                              + "</td>"
+                                                                            : entry["dps"] + "</td><td>" + entry["crit%"]
+                                                                              + "</td><td>" + entry["glance%"]
+                                                                              + "</td><td>" + entry["evade%"]
+                                                                              + "</td>");
+                HTMLine += "0".Equals(entry["healing"]) ? "<td class=\"heal\"></td><td></td><td></td>"
+                                                      : "<td class=\"heal\">" + entry["healing"] + " - " + entry["hps%"]
+                                                        + "</td><td>" + entry["hps"]
+                                                        + "</td><td>" + entry["healcrit%"] + "</td>";
+            }
+            else
+            {
+                HTMLine += "0".Equals(entry["dmg"]) ? "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>"
+                                                  : "<td>" + entry["dmg"] + " - " + entry["dps%"] + "</td><td>"
+                                                    + ("".Equals(duration) ? "" + "</td><td>" + ("0%".Equals(entry["pen%"]) ? "" : entry["pen%"])
+                                                                              + "</td><td>" + ("0%".Equals(entry["crit%"]) ? "" : entry["crit%"])
+                                                                              + "</td><td>" + ("0%".Equals(entry["glance%"]) ? "" : entry["glance%"])
+                                                                              + "</td><td>" + ("0%".Equals(entry["block%"]) ? "" : entry["block%"])
+                                                                              + "</td><td>" + ("0%".Equals(entry["evade%"]) ? "" : entry["evade%"])
+                                                                              + "</td><td>" + ("0".Equals(entry["aegisdmg"]) ? "" : entry["aegisdmg"])
+                                                                              + "</td><td>" + ("0.00".Equals(entry["aegisdps"]) ? "" : entry["aegisdps"])
+                                                                              + "</td><td>" + ("0%".Equals(entry["aegismismatch%"]) ? "" : entry["aegismismatch%"])
+                                                                              + "</td>"
+                                                                            : entry["dps"] + "</td><td>" + entry["pen%"]
+                                                                              + "</td><td>" + entry["crit%"]
+                                                                              + "</td><td>" + entry["glance%"]
+                                                                              + "</td><td>" + entry["block%"]
+                                                                              + "</td><td>" + entry["evade%"]
+                                                                              + "</td><td>" + ("0".Equals(entry["aegisdmg"]) ? "" : entry["aegisdmg"])
+                                                                              + "</td><td>" + ("0.00".Equals(entry["aegisdps"]) ? "" : entry["aegisdps"])
+                                                                              + "</td><td>" + ("0%".Equals(entry["aegismismatch%"]) ? "" : entry["aegismismatch%"])
+                                                                              + "</td>");
+                HTMLine += "0".Equals(entry["healing"]) ? "<td class=\"heal\"></td><td></td><td></td><td></td><td></td>"
+                                                      : "<td class=\"heal\">" + entry["healing"] + " - " + entry["hps%"]
+                                                        + "</td><td>" + entry["hps"]
+                                                        + "</td><td>" + entry["healcrit%"] + "</td>"
+                                                        + "</td><td>" + ("0".Equals(entry["aegisheal"]) ? "" : entry["aegisheal"])
+                                                        + "</td><td>" + ("0.00".Equals(entry["aegishps"]) ? "" : entry["aegishps"]);
+            }
             HTMLine += "</tr>";
             line.AppendFormat(HTMLine);
         }
@@ -2243,7 +2302,14 @@ namespace SecretParse_Plugin
                 line.AppendFormat(HTML_TITLE, encounter.Title, encounter.DPS.ToString("#,##0", usCulture), combat_duration, hitpoints);
 
                 // ---------- GROUP DAMAGE
-                line.Append(HTML_TABLE_DAMAGE);
+                if(checkBox_SWLHtml.Checked)
+                {
+                    line.Append(HTML_TABLE_DAMAGE_SWL);
+                }
+                else
+                {
+                    line.Append(HTML_TABLE_DAMAGE);
+                }
                 int row = 0;
                 int IsMultipleDeath = -1;
                 foreach (var name in displayOrder.Values)
@@ -3661,6 +3727,7 @@ namespace SecretParse_Plugin
             xmlSettings.AddControlSetting(checkBox_ExportColored.Name, checkBox_ExportColored);
             xmlSettings.AddControlSetting(checkBox_ExportSplit.Name, checkBox_ExportSplit);
             xmlSettings.AddControlSetting(checkBox_ExportHtml.Name, checkBox_ExportHtml);
+            xmlSettings.AddControlSetting(checkBox_SWLHtml.Name, checkBox_SWLHtml);
             xmlSettings.AddControlSetting(checkBox_ExportAllies.Name, checkBox_ExportAllies);
             xmlSettings.AddControlSetting(checkBox_DontExportShortEnc.Name, checkBox_DontExportShortEnc);
             xmlSettings.AddControlSetting(checkBox_EnableTSWAddon.Name, checkBox_EnableTSWAddon);
@@ -4069,7 +4136,12 @@ namespace SecretParse_Plugin
                 ActGlobals.oFormActMain.SetOptionsHelpText(helpPrefix);
             }
         }
-
+		
+        private void checkBox_SWLHtml_MouseHover(object sender, EventArgs e)
+        {
+            ActGlobals.oFormActMain.SetOptionsHelpText("Use SWL version of the HTML script\nThis removes Aegis, Penetration, and Block from the HTML export");
+        }
+		
         private void checkBox_ExportAllies_MouseHover(object sender, EventArgs e)
         {
             ActGlobals.oFormActMain.SetOptionsHelpText("Export you team/raid members to the /act and /actchat scripts\n\n" +
